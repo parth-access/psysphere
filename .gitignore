@@ -5,3 +5,16 @@ coverage/
 *.log
 .env*
 !.env.example
+.env
+.env.local
+.env.*.local
+
+node_modules
+
+.next
+
+.vercel
+
+dist
+
+out

@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: var(--font-serif), "Playfair Display", Georgia, serif;
+  --font-sans: var(--font-sans), "Inter", sans-serif;
+  
+  /* Premium Calming Editorial Color Palette - Updated to Sleek Interface */
+  --color-brand-ivory: #FDFCFB;
+  --color-brand-beige: #E8E6E1;
+  --color-brand-cream: #F9F8F6;
+  --color-brand-stone-soft: #E8E6E1;
+  --color-brand-charcoal: #2C2C2C;
+  --color-brand-charcoal-muted: #9A968F;
+  --color-brand-accent: #2C2C2C;
+  --color-brand-accent-hover: #1A1A1A;
+  --color-brand-sage: #5E5B52;
+  --color-brand-sage-light: #F9F8F6;
+  
+  /* Standard utilities mapped for styling */
+  --animate-fade-in: fade-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-slide-up: slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { transform: translateY(10px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+html, body {
+  background-color: var(--color-brand-ivory);
+  color: var(--color-brand-charcoal);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom scrollbar matching the minimal aesthetic */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-brand-stone-soft);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #d6d3d1;
+}

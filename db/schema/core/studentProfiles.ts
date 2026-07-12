@@ -1,3 +1,4 @@
+import { timestamps } from "../common";
 import {
   pgTable,
   uuid,
@@ -30,17 +31,7 @@ export const studentProfiles = pgTable(
 
     notes: text("notes"),
 
-    createdAt: timestamp("created_at", {
-      withTimezone: true,
-    })
-      .defaultNow()
-      .notNull(),
-
-    updatedAt: timestamp("updated_at", {
-      withTimezone: true,
-    })
-      .defaultNow()
-      .notNull(),
+    ...timestamps,
   },
   (table) => ({
     admissionIdx: index("student_profiles_admission_idx").on(

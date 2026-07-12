@@ -1,3 +1,5 @@
+import { roleEnum } from "../enums";
+import { timestamps, auditColumns } from "../common";
 import {
   pgTable,
   uuid,
@@ -14,9 +16,7 @@ export const profiles = pgTable(
 
     clerkId: text("clerk_id").notNull().unique(),
 
-    role: text("role", {
-      enum: ["teacher", "student"],
-    }).notNull(),
+    role: roleEnum("role").notNull(),
 
     fullName: text("full_name").notNull(),
 
@@ -30,21 +30,9 @@ export const profiles = pgTable(
       withTimezone: true,
     }),
 
-    createdAt: timestamp("created_at", {
-      withTimezone: true,
-    })
-      .defaultNow()
-      .notNull(),
+    ...timestamps,
 
-    updatedAt: timestamp("updated_at", {
-      withTimezone: true,
-    })
-      .defaultNow()
-      .notNull(),
-
-    createdBy: uuid("created_by"),
-
-    updatedBy: uuid("updated_by"),
+    ...auditColumns,
   },
   (table) => ({
     clerkIdx: index("profiles_clerk_idx").on(table.clerkId),

@@ -1,3 +1,4 @@
+import { classLevelEnum } from "../enums";
 import {
   pgTable,
   uuid,
@@ -15,7 +16,7 @@ export const batches = pgTable(
 
     name: text("name").notNull(),
 
-    classLevel: text("class_level").notNull(),
+    classLevel: classLevelEnum("class_level").notNull(),
 
     academicYear: text("academic_year").notNull(),
 

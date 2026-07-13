@@ -43,7 +43,6 @@ export const assignmentAttemptStatusEnum = pgEnum(
   [
     "draft",
     "submitted",
-    "late",
     "resubmitted",
   ]
 );

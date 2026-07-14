@@ -9,8 +9,8 @@ import {
 import { studentProfiles } from "./studentProfiles";
 import { batches } from "./batches";
 
-import { timestamps } from "../common";
-import { enrollmentStatusEnum } from "../enums";
+import { timestamps } from "../system/common";
+import { enrollmentStatusEnum } from "../system/enums";
 
 export const enrollments = pgTable(
   "enrollments",

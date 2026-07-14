@@ -7,8 +7,8 @@ import {
 } from "drizzle-orm/pg-core";
 
 import { batches } from "../core/batches";
-import { timestamps, auditColumns } from "../common";
-import { classSessionStatusEnum } from "../enums";
+import { timestamps, auditColumns } from "../system/common";
+import { classSessionStatusEnum } from "../system/enums";
 
 export const classSessions = pgTable(
   "class_sessions",

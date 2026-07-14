@@ -12,7 +12,7 @@ import {
 import { sql } from "drizzle-orm";
 
 import { batches } from "../core/batches";
-import { timestamps, auditColumns } from "../common";
+import { timestamps, auditColumns } from "../system/common";
 
 export const assignments = pgTable(
   "assignments",

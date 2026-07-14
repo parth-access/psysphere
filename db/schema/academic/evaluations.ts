@@ -10,7 +10,7 @@ import {
 
 import { assignmentAttempts } from "./assignmentAttempts";
 import { profiles } from "../core/profiles";
-import { timestamps } from "../common";
+import { timestamps } from "../system/common";
 
 export const evaluations = pgTable(
   "evaluations",

@@ -1,4 +1,4 @@
-import { classLevelEnum } from "../enums";
+import { classLevelEnum } from "../system/enums";
 import {
   pgTable,
   uuid,
@@ -7,7 +7,7 @@ import {
   index,
 } from "drizzle-orm/pg-core";
 
-import { timestamps, auditColumns } from "../common";
+import { timestamps, auditColumns } from "../system/common";
 
 export const batches = pgTable(
   "batches",

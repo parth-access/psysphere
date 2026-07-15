@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter, Playfair_Display } from 'next/font/google';
+import { ClerkProvider } from '@clerk/nextjs';
 import './globals.css'; // Global styles
 
 const inter = Inter({
@@ -21,10 +22,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${playfairDisplay.variable}`}>
-      <body suppressHydrationWarning className="min-h-screen antialiased bg-brand-ivory text-brand-charcoal">
-        {children}
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en" className={`${inter.variable} ${playfairDisplay.variable}`}>
+        <body suppressHydrationWarning className="min-h-screen antialiased bg-brand-ivory text-brand-charcoal">
+          {children}
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

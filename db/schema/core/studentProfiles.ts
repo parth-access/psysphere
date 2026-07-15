@@ -1,4 +1,4 @@
-import { timestamps } from "../system/common";
+import { timestamps } from "../common";
 import {
   pgTable,
   uuid,

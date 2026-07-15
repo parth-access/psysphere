@@ -9,8 +9,8 @@ import {
 import { classSessions } from "./classSessions";
 import { studentProfiles } from "../core/studentProfiles";
 import { profiles } from "../core/profiles";
-import { timestamps } from "../system/common";
-import { attendanceStatusEnum } from "../system/enums";
+import { timestamps } from "../common";
+import { attendanceStatusEnum } from "../enums";
 
 export const attendance = pgTable(
   "attendance",

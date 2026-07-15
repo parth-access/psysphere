@@ -18,6 +18,7 @@ import {
   Settings,
   HelpCircle
 } from 'lucide-react';
+import { UserButton, useClerk } from "@clerk/nextjs";
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
@@ -35,7 +36,6 @@ interface AppShellProps {
   activeId: string;
   onActiveIdChange: (id: string) => void;
   userRole: 'teacher' | 'student';
-  onLogout?: () => void;
 }
 
 export const navigationItems: NavItem[] = [
@@ -51,8 +51,8 @@ export const AppShell = ({
   activeId,
   onActiveIdChange,
   userRole,
-  onLogout,
 }: AppShellProps) => {
+  const { signOut } = useClerk();
   const [isMobileOpen, setIsMobileOpen] = React.useState(false);
   const [showNotifications, setShowNotifications] = React.useState(false);
   const [showUserMenu, setShowUserMenu] = React.useState(false);
@@ -230,7 +230,7 @@ export const AppShell = ({
             </div>
           </div>
           <button 
-            onClick={() => onLogout?.()}
+            onClick={() => signOut()}
             className="w-full flex items-center space-x-2 px-3 py-2 text-xs font-medium text-brand-charcoal-muted hover:text-brand-charcoal hover:bg-brand-beige/50 rounded-xs cursor-pointer text-left transition-colors"
           >
             <LogOut className="h-3.5 w-3.5" />
@@ -332,68 +332,15 @@ export const AppShell = ({
               </AnimatePresence>
             </div>
 
-            {/* Profile Drop placeholder */}
+            {/* User Profile */}
             <div className="relative">
-              <button
-                onClick={() => setShowUserMenu(!showUserMenu)}
-                className="flex items-center space-x-1.5 focus:outline-none cursor-pointer"
-              >
-                <div className="w-8 h-8 rounded-full bg-brand-beige border border-brand-stone-soft flex items-center justify-center font-serif text-xs font-semibold text-brand-charcoal">
-                  {userRole === 'teacher' ? 'AS' : 'PS'}
-                </div>
-              </button>
-
-              <AnimatePresence>
-                {showUserMenu && (
-                  <>
-                    <div 
-                      className="fixed inset-0 z-20" 
-                      onClick={() => setShowUserMenu(false)} 
-                    />
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 10 }}
-                      className="absolute right-0 mt-2 w-56 bg-white border border-brand-stone-soft rounded-xs shadow-lg py-1.5 z-30"
-                    >
-                      <div className="px-3.5 py-2 border-b border-brand-stone-soft/50">
-                        <p className="text-xs font-semibold text-brand-charcoal">
-                          {userRole === 'teacher' ? 'Aristha Sen' : 'Pranav Sharma'}
-                        </p>
-                        <p className="text-[10px] text-brand-charcoal-muted">
-                          {userRole === 'teacher' ? 'sen.psychology@institute.edu' : 'pranav@student.in'}
-                        </p>
-                      </div>
-                      <div className="py-1">
-                        <button className="w-full flex items-center space-x-2 px-3.5 py-1.5 text-xs text-brand-charcoal-muted hover:text-brand-charcoal hover:bg-brand-cream text-left">
-                          <User className="h-3.5 w-3.5" />
-                          <span>My Academic Profile</span>
-                        </button>
-                        <button className="w-full flex items-center space-x-2 px-3.5 py-1.5 text-xs text-brand-charcoal-muted hover:text-brand-charcoal hover:bg-brand-cream text-left">
-                          <Settings className="h-3.5 w-3.5" />
-                          <span>Preferences</span>
-                        </button>
-                        <button className="w-full flex items-center space-x-2 px-3.5 py-1.5 text-xs text-brand-charcoal-muted hover:text-brand-charcoal hover:bg-brand-cream text-left">
-                          <HelpCircle className="h-3.5 w-3.5" />
-                          <span>Workspace Help</span>
-                        </button>
-                      </div>
-                      <div className="border-t border-brand-stone-soft/50 pt-1 mt-1">
-                        <button
-                          onClick={() => {
-                            setShowUserMenu(false);
-                            onLogout?.();
-                          }}
-                          className="w-full flex items-center space-x-2 px-3.5 py-1.5 text-xs text-red-600 hover:bg-red-50 text-left"
-                        >
-                          <LogOut className="h-3.5 w-3.5" />
-                          <span>Sign Out</span>
-                        </button>
-                      </div>
-                    </motion.div>
-                  </>
-                )}
-              </AnimatePresence>
+              <UserButton 
+                appearance={{
+                  elements: {
+                    userButtonAvatarBox: "w-8 h-8 rounded-full border border-brand-stone-soft"
+                  }
+                }}
+              />
             </div>
             
           </div>
@@ -499,7 +446,7 @@ export const AppShell = ({
                 <button
                   onClick={() => {
                     setIsMobileOpen(false);
-                    onLogout?.();
+                    signOut();
                   }}
                   className="w-full flex items-center space-x-2.5 px-3 py-2 text-xs font-medium text-brand-charcoal-muted hover:text-brand-charcoal hover:bg-brand-beige/50 rounded-xs cursor-pointer text-left transition-colors"
                 >

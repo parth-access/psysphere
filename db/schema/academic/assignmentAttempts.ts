@@ -9,8 +9,8 @@ import {
 
 import { assignments } from "./assignments";
 import { studentProfiles } from "../core/studentProfiles";
-import { timestamps } from "../system/common";
-import { assignmentAttemptStatusEnum } from "../system/enums";
+import { timestamps } from "../common";
+import { assignmentAttemptStatusEnum } from "../enums";
 
 export const assignmentAttempts = pgTable(
   "assignment_attempts",

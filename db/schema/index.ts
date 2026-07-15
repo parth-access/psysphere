@@ -2,8 +2,8 @@
  * System
  * ============================================================ */
 
-export * from "./system/enums";
-export * from "./system/common";
+export * from "./enums";
+export * from "./common";
 
 /* ============================================================
  * Core

@@ -1,5 +1,5 @@
-import { roleEnum } from "../system/enums";
-import { timestamps, auditColumns } from "../system/common";
+import { roleEnum } from "../enums";
+import { timestamps, auditColumns } from "../common";
 import {
   pgTable,
   uuid,

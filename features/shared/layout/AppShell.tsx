@@ -35,7 +35,7 @@ interface AppShellProps {
   children: React.ReactNode;
   activeId: string;
   onActiveIdChange: (id: string) => void;
-  userRole: 'teacher' | 'student';
+  userRole: 'teacher' | 'student' | 'admin';
 }
 
 export const navigationItems: NavItem[] = [

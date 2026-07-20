@@ -1,20 +1,29 @@
 @import "tailwindcss";
-
 @theme {
   --font-serif: var(--font-serif), "Playfair Display", Georgia, serif;
   --font-sans: var(--font-sans), "Inter", sans-serif;
   
-  /* Premium Calming Editorial Color Palette - Updated to Sleek Interface */
-  --color-brand-ivory: #FDFCFB;
-  --color-brand-beige: #E8E6E1;
-  --color-brand-cream: #F9F8F6;
-  --color-brand-stone-soft: #E8E6E1;
-  --color-brand-charcoal: #2C2C2C;
-  --color-brand-charcoal-muted: #9A968F;
-  --color-brand-accent: #2C2C2C;
-  --color-brand-accent-hover: #1A1A1A;
-  --color-brand-sage: #5E5B52;
-  --color-brand-sage-light: #F9F8F6;
+  /* Premium Calming Editorial Color Palette */
+  --color-brand-canvas: #F8F5F2;
+  --color-brand-surface: #FFFFFF;
+  --color-brand-primary: #6D5BD0;
+  --color-brand-primary-hover: #5B49C6;
+  --color-brand-accent: #C9A227;
+  --color-brand-text: #1F2937;
+  --color-brand-text-muted: #6B7280;
+  --color-brand-border: #E8E5E0;
+  --color-brand-success: #3BA55D;
+  --color-brand-danger: #D14343;
+  
+  /* Legacy mapping just in case */
+  --color-brand-ivory: #F8F5F2;
+  --color-brand-beige: #E8E5E0;
+  --color-brand-cream: #FFFFFF;
+  --color-brand-stone-soft: #E8E5E0;
+  --color-brand-charcoal: #1F2937;
+  --color-brand-charcoal-muted: #6B7280;
+  --color-brand-sage: #6D5BD0;
+  --color-brand-sage-light: #F8F5F2;
   
   /* Standard utilities mapped for styling */
   --animate-fade-in: fade-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -25,15 +34,14 @@
   from { opacity: 0; }
   to { opacity: 1; }
 }
-
 @keyframes slide-up {
-  from { transform: translateY(10px); opacity: 0; }
+  from { transform: translateY(20px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 }
 
 html, body {
-  background-color: var(--color-brand-ivory);
-  color: var(--color-brand-charcoal);
+  background-color: var(--color-brand-canvas);
+  color: var(--color-brand-text);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
@@ -47,7 +55,7 @@ html, body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-brand-stone-soft);
+  background: var(--color-brand-border);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {

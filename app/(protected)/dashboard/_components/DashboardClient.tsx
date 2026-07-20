@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useSearchParams, useRouter } from 'next/navigation';
+import { useUser } from '@clerk/nextjs';
 import { AppShell } from '@/features/shared/layout/AppShell';
 import { H1, H2, H3, Subtitle, Body, Code } from '@/features/shared/ui/Typography';
 import { Button } from '@/features/shared/ui/Button';
@@ -37,25 +38,16 @@ import {
   GraduationCap
 } from 'lucide-react';
 
-export default function DashboardPage() {
+export function DashboardClient({ role }: { role: 'teacher' | 'student' | 'admin' }) {
   return (
     <React.Suspense fallback={<LoadingState mode="full" />}>
-      <DashboardContent />
+      <DashboardContent role={role} />
     </React.Suspense>
   );
 }
 
-function DashboardContent() {
-  const searchParams = useSearchParams();
+function DashboardContent({ role }: { role: 'teacher' | 'student' | 'admin' }) {
   const router = useRouter();
-  
-  // Resolve role from search parameters immediately to avoid setState inside useEffect
-  const roleParam = searchParams.get('role');
-  const role: 'teacher' | 'student' = (roleParam === 'student' || roleParam === 'teacher') ? roleParam : 'teacher';
-  
-  const setRole = (newRole: 'teacher' | 'student') => {
-    router.push(`/dashboard?role=${newRole}`);
-  };
   
   const [activeTab, setActiveTab] = React.useState('overview');
   
@@ -70,11 +62,6 @@ function DashboardContent() {
   const [formChapter, setFormChapter] = React.useState('Ch 1');
   const [formText, setFormText] = React.useState('');
 
-  const handleLogout = () => {
-    // Return to the minimal landing page
-    router.push('/');
-  };
-
   // Demo actions
   const triggerButtonLoading = () => {
     setIsBtnLoading(true);
@@ -86,7 +73,6 @@ function DashboardContent() {
       activeId={activeTab}
       onActiveIdChange={setActiveTab}
       userRole={role}
-      onLogout={handleLogout}
     >
       <SuspendedDashboardContent
         activeTab={activeTab}
@@ -106,7 +92,6 @@ function DashboardContent() {
         setFormChapter={setFormChapter}
         formText={formText}
         setFormText={setFormText}
-        setRole={setRole}
       />
     </AppShell>
   );
@@ -116,7 +101,7 @@ function DashboardContent() {
 interface ContentProps {
   activeTab: string;
   setActiveTab: (val: string) => void;
-  role: 'teacher' | 'student';
+  role: 'teacher' | 'student' | 'admin';
   isDialogOpen: boolean;
   setIsDialogOpen: (val: boolean) => void;
   isBtnLoading: boolean;
@@ -131,7 +116,6 @@ interface ContentProps {
   setFormChapter: (val: string) => void;
   formText: string;
   setFormText: (val: string) => void;
-  setRole: (val: 'teacher' | 'student') => void;
 }
 
 const SuspendedDashboardContent = ({
@@ -152,8 +136,10 @@ const SuspendedDashboardContent = ({
   setFormChapter,
   formText,
   setFormText,
-  setRole,
 }: ContentProps) => {
+  const { user } = useUser();
+  const userName = user ? `${user.firstName || ''} ${user.lastName || ''}`.trim() : (role === 'teacher' || role === 'admin' ? 'Dr. Aristha Sen' : 'Pranav Sharma');
+
 
   // Mock static data matching Class 11 & 12 psychology curriculum
   const academicResources = [
@@ -368,13 +354,6 @@ const SuspendedDashboardContent = ({
     }
   };
 
-  const handleRoleToggle = (newRole: 'teacher' | 'student') => {
-    setIsPageFlipping(true);
-    setTimeout(() => {
-      setRole(newRole);
-      setIsPageFlipping(false);
-    }, 550);
-  };
 
   return (
     <div className="space-y-6 relative">
@@ -404,40 +383,17 @@ const SuspendedDashboardContent = ({
           <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 pb-6 border-b border-brand-stone-soft/50">
             <div className="space-y-1.5">
               <span className="text-[10px] font-mono tracking-widest text-brand-charcoal-muted uppercase font-bold">
-                {role === 'teacher' ? 'EDUCATOR CONTROL DESK' : 'STUDENT LEARNING JOURNAL'}
+                {role === 'teacher' || role === 'admin' ? 'EDUCATOR CONTROL DESK' : 'STUDENT LEARNING JOURNAL'}
               </span>
               <H1 className="text-3xl font-serif font-normal leading-tight text-brand-charcoal">
-                Good morning, <span className="italic">{role === 'teacher' ? 'Dr. Aristha Sen.' : 'Pranav Sharma.'}</span>
+                Good morning, <span className="italic">{userName}.</span>
               </H1>
               <Subtitle className="text-sm font-light text-brand-charcoal-muted">
-                {role === 'teacher' 
+                {role === 'teacher' || role === 'admin' 
                   ? 'Welcome back to your workspace. You have 2 classes slated on your active timeline today.' 
                   : 'Welcome back, student. Keep up with scheduled updates and log today\'s academic reflections.'
                 }
               </Subtitle>
-            </div>
-            
-            {/* Acting Role Trigger (Switch View) */}
-            <div className="flex flex-col items-end gap-2 shrink-0">
-              <div className="flex items-center gap-1 bg-[#F5F2EC] p-1 border border-brand-stone-soft rounded-xs">
-                <span className="text-[9px] font-sans text-brand-charcoal-muted px-2 uppercase tracking-wider font-semibold">Switch Role</span>
-                <Button 
-                  variant={role === 'teacher' ? 'primary' : 'ghost'} 
-                  size="sm" 
-                  onClick={() => handleRoleToggle('teacher')}
-                  className="text-[10px] py-0.5 px-2.5 border-transparent h-7"
-                >
-                  Teacher
-                </Button>
-                <Button 
-                  variant={role === 'student' ? 'primary' : 'ghost'} 
-                  size="sm" 
-                  onClick={() => handleRoleToggle('student')}
-                  className="text-[10px] py-0.5 px-2.5 border-transparent h-7"
-                >
-                  Student
-                </Button>
-              </div>
             </div>
           </div>
 
@@ -492,7 +448,7 @@ const SuspendedDashboardContent = ({
               </div>
             </div>
           ) : (
-            role === 'teacher' ? (
+            role === 'teacher' || role === 'admin' ? (
               /* ==================== TEACHER WORKSPACE (Req 9: Control Desk layout) ==================== */
               <div className="space-y-8 animate-slide-up">
                 
@@ -1071,7 +1027,7 @@ const SuspendedDashboardContent = ({
               >
                 {isScheduleEmpty ? 'Show Populated' : 'Simulate Empty State'}
               </button>
-              {role === 'teacher' && (
+              {(role === 'teacher' || role === 'admin') && (
                 <Button variant="primary" size="sm" onClick={() => {
                   setFormName('New Scheduled Discussion');
                   setFormChapter('Ch 1');
@@ -1323,7 +1279,7 @@ const SuspendedDashboardContent = ({
                 Track assigned homework briefs, monitor class deadlines, and view graded evaluations.
               </Subtitle>
             </div>
-            {role === 'teacher' && (
+            {(role === 'teacher' || role === 'admin') && (
               <Button variant="primary" size="sm" onClick={() => {
                 setFormName('Unit 2 Essay: Theories of Self');
                 setFormChapter('Ch 2');
@@ -1364,7 +1320,7 @@ const SuspendedDashboardContent = ({
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
-                      {role === 'teacher' ? (
+                      {role === 'teacher' || role === 'admin' ? (
                         <Button variant="outline" size="sm" className="text-xs py-1" onClick={() => {
                           setFormName(assignment.title);
                           setFormChapter(assignment.grade === 'Class 12' ? 'Ch 1' : 'Ch 2');
@@ -1460,7 +1416,7 @@ const SuspendedDashboardContent = ({
       )}
 
       {/* Grades Ledger & Feedback Tab (Redesigned as Review Cards) */}
-      {activeTab === 'grading' && role === 'teacher' && (
+      {activeTab === 'grading' && (role === 'teacher' || role === 'admin') && (
         <div className="space-y-6 animate-slide-up">
           <div className="pb-4 border-b border-brand-stone-soft/50">
             <H2 className="text-xl font-medium">Grading & Feedback</H2>

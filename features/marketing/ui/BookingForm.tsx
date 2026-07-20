@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
-import { bookingSchema, BookingInput } from "@/server/actions/booking";
+import { bookingSchema, BookingInput } from "@/features/marketing/validations";
 import { submitBooking } from "@/server/actions/booking";
 import { pricing } from "@/constants/pricing";
 import { Button } from "./Button";
@@ -58,15 +58,16 @@ export function BookingForm() {
   const selectedClass = watch("classLevel");
   const selectedPackage = watch("packageType");
   const selectedDuration = watch("duration");
+  const watchedPrice = watch("price");
 
   const currentPricingTiers = pricing[selectedClass]?.[selectedPackage as "standard" | "cuet"] || [];
   const selectedTier = currentPricingTiers.find((t) => t.id === selectedDuration) || currentPricingTiers[0];
 
   useEffect(() => {
-    if (selectedTier && selectedTier.price !== watch("price")) {
+    if (selectedTier && selectedTier.price !== watchedPrice) {
       setValue("price", selectedTier.price);
     }
-  }, [selectedTier, setValue, watch]);
+  }, [selectedTier, setValue, watchedPrice]);
 
   const onSubmit = async (data: BookingInput) => {
     setIsSubmitting(true);

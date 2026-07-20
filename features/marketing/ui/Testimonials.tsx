@@ -1,6 +1,9 @@
 import { Container } from './Container';
 import { H2, Body } from './Typography';
+import { Button } from './Button';
 import Image from 'next/image';
+import Link from 'next/link';
+import { ANCHORS } from '@/constants/navigation';
 
 const testimonials = [
   {
@@ -53,6 +56,11 @@ export function Testimonials() {
               </div>
             </div>
           ))}
+        </div>
+        <div className="mt-16 text-center">
+          <Button href={ANCHORS.testimonials} variant="secondary">
+            Read More Reviews
+          </Button>
         </div>
       </Container>
     </section>

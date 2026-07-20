@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import Link from 'next/link';
 
 type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost';
 
@@ -7,11 +8,13 @@ export function Button({
   variant = 'primary',
   className = '',
   onClick,
+  href,
 }: {
   children: ReactNode;
   variant?: ButtonVariant;
   className?: string;
   onClick?: () => void;
+  href?: string;
 }) {
   const baseStyles = "inline-flex items-center justify-center font-sans font-medium transition-all duration-200 rounded-2xl px-6 py-3.5";
   
@@ -22,8 +25,18 @@ export function Button({
     ghost: "bg-transparent text-brand-text-muted hover:text-brand-text hover:bg-brand-surface",
   };
 
+  const combinedClassName = `${baseStyles} ${variants[variant]} ${className}`;
+
+  if (href) {
+    return (
+      <Link href={href} className={combinedClassName}>
+        {children}
+      </Link>
+    );
+  }
+
   return (
-    <button onClick={onClick} className={`${baseStyles} ${variants[variant]} ${className}`}>
+    <button onClick={onClick} className={combinedClassName}>
       {children}
     </button>
   );

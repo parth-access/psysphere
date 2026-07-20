@@ -1,6 +1,9 @@
 import { Container } from './Container';
 import { H2, H3, Body } from './Typography';
+import { Button } from './Button';
 import Image from 'next/image';
+import Link from 'next/link';
+import { ANCHORS } from '@/constants/navigation';
 
 export function TeacherProfile() {
   return (
@@ -44,6 +47,11 @@ export function TeacherProfile() {
               My goal is to make complex psychological concepts accessible, relatable, and applicable, 
               ensuring my students don&apos;t just pass exams, but develop a genuine passion for the subject.&quot;
             </Body>
+            <div className="mt-8 pt-8 border-t border-brand-border">
+              <Button href={ANCHORS.contact}>
+                Meet Your Mentor
+              </Button>
+            </div>
           </div>
         </div>
       </Container>

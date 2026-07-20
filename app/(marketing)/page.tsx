@@ -6,6 +6,7 @@ import { Courses } from '@/features/marketing/ui/Courses';
 import { Pricing } from '@/features/marketing/ui/Pricing';
 import { TeacherProfile } from '@/features/marketing/ui/TeacherProfile';
 import { Testimonials } from '@/features/marketing/ui/Testimonials';
+import { Footer } from '@/features/marketing/ui/Footer';
 
 export default function MarketingPage() {
   return (
@@ -14,19 +15,11 @@ export default function MarketingPage() {
       <Hero />
       <TrustSection />
       <WhyUs />
-      
-      {/* Sprint 2 */}
       <Courses />
       <Pricing />
       <TeacherProfile />
       <Testimonials />
-      
-      {/* 
-        Sprint 3:
-        <FAQ />
-        <Contact />
-        <Footer />
-      */}
+      <Footer />
     </main>
   );
 }

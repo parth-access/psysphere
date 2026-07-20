@@ -2,6 +2,7 @@ import { Container } from './Container';
 import { H2, Body } from './Typography';
 import { ArrowRight, Check } from 'lucide-react';
 import Link from 'next/link';
+import { ANCHORS } from '@/constants/navigation';
 
 const courses = [
   {
@@ -9,6 +10,7 @@ const courses = [
     title: 'Class 11',
     description: 'Build a strong foundation in Psychology. Perfect for students starting their journey.',
     features: ['NCERT Coverage', 'Concept Building', 'Regular Assessments'],
+    pricingQuery: '?class=class11&package=standard',
   },
   {
     id: 'class-12',
@@ -16,18 +18,21 @@ const courses = [
     description: 'Intensive board preparation with strategic study blueprints.',
     features: ['Board Focus', 'Answer Writing', 'Mock Exams'],
     highlight: true,
+    pricingQuery: '?class=class12&package=standard',
   },
   {
     id: 'cuet-ug',
     title: 'CUET-UG Crash',
     description: 'Targeted preparation for India\'s top psychology colleges.',
     features: ['MCQ Strategy', 'Time Management', 'University Guidance'],
+    pricingQuery: '?class=class12&package=cuet',
   },
   {
     id: 'integrated',
     title: 'Board + CUET',
     description: 'The ultimate dual-preparation strategy for ambitious students.',
     features: ['Syllabus Mapping', 'Dual Mock Tests', 'Priority Support'],
+    pricingQuery: '?class=class12&package=cuet',
   },
 ];
 
@@ -72,7 +77,7 @@ export function Courses() {
               </div>
               
               <Link 
-                href="#pricing" 
+                href={`${ANCHORS.pricing}${course.pricingQuery}`}
                 className={`inline-flex items-center justify-between w-full p-4 rounded-2xl font-medium text-sm transition-colors ${
                   course.highlight
                     ? 'bg-white text-brand-primary hover:bg-brand-canvas'

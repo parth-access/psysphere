@@ -2,6 +2,8 @@ import { Container } from './Container';
 import { H1, Body } from './Typography';
 import { Button } from './Button';
 import Image from 'next/image';
+import Link from 'next/link';
+import { NAVIGATION, ANCHORS } from '@/constants/navigation';
 
 export function Hero() {
   return (
@@ -22,10 +24,10 @@ export function Hero() {
               Small batches. Weekly tests. Expert mentorship.
             </Body>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button className="!px-8 !py-4 !text-base">
+              <Button href={NAVIGATION.bookDemo} className="!px-8 !py-4 !text-base">
                 Book Free Demo
               </Button>
-              <Button variant="secondary" className="!px-8 !py-4 !text-base">
+              <Button href={ANCHORS.pricing} variant="secondary" className="!px-8 !py-4 !text-base">
                 View Fee Plans
               </Button>
             </div>

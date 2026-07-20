@@ -1,15 +1,33 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Container } from './Container';
 import { H2, Body } from './Typography';
 import { Button } from './Button';
 import { Check } from 'lucide-react';
 import { pricing, CoursePricing, PricingTier } from '@/constants/pricing';
+import Link from 'next/link';
+import { NAVIGATION } from '@/constants/navigation';
 
-export function Pricing() {
+function PricingContent() {
+  const searchParams = useSearchParams();
   const [activeClass, setActiveClass] = useState<'class11' | 'class12'>('class11');
   const [activeType, setActiveType] = useState<'standard' | 'cuet'>('standard');
   
+  useEffect(() => {
+    const classParam = searchParams.get('class');
+    const packageParam = searchParams.get('package');
+    
+    if (classParam === 'class11' || classParam === 'class12') {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setActiveClass(classParam);
+    }
+    if (packageParam === 'standard' || packageParam === 'cuet') {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setActiveType(packageParam);
+    }
+  }, [searchParams]);
+
   const currentPricing = pricing[activeClass][activeType] || [];
 
   return (
@@ -106,15 +124,22 @@ export function Pricing() {
               
               <div className="p-8 pb-6 border-b border-brand-border flex-1">
                 <h3 className="font-serif text-xl font-semibold text-brand-text mb-2">{tier.name}</h3>
-                <div className="flex items-baseline gap-1 mb-4">
-                  <span className="text-3xl font-bold tracking-tight text-brand-text">₹{tier.price.toLocaleString()}</span>
+                <div className="flex items-baseline gap-1 mb-4 h-9 overflow-hidden relative">
+                  <span 
+                    key={tier.price} 
+                    className="text-3xl font-bold tracking-tight text-brand-text animate-slide-up absolute"
+                  >
+                    ₹{tier.price.toLocaleString()}
+                  </span>
                 </div>
                 <div className="text-sm text-brand-text-muted font-medium mb-1">
                   {tier.classes} Live Classes
                 </div>
                 {tier.save ? (
-                  <div className="text-sm font-semibold text-brand-success">
-                    Save ₹{tier.save.toLocaleString()}
+                  <div className="text-sm font-semibold text-brand-success h-5 overflow-hidden relative">
+                    <span key={tier.save} className="animate-slide-up absolute">
+                      Save ₹{tier.save.toLocaleString()}
+                    </span>
                   </div>
                 ) : (
                   <div className="h-5"></div>
@@ -131,6 +156,7 @@ export function Pricing() {
                   ))}
                 </ul>
                 <Button 
+                  href={`${NAVIGATION.bookDemo}?class=${activeClass}&package=${activeType}&duration=${tier.id}&price=${tier.price}`}
                   variant={tier.bestValue || tier.popular ? 'primary' : 'outline'} 
                   className={`w-full ${tier.bestValue ? 'bg-brand-text hover:bg-brand-text-muted shadow-none' : ''}`}
                 >
@@ -144,11 +170,19 @@ export function Pricing() {
         <div className="mt-20 text-center max-w-lg mx-auto bg-white p-8 rounded-3xl border border-brand-border shadow-sm">
           <h4 className="font-serif text-2xl font-semibold mb-3">Still confused?</h4>
           <p className="text-brand-text-muted mb-6">Let us help you choose the right plan for your academic goals.</p>
-          <Button variant="secondary" className="w-full sm:w-auto">
+          <Button href={NAVIGATION.bookDemo} variant="secondary" className="w-full sm:w-auto">
             Book a FREE counselling session
           </Button>
         </div>
       </Container>
     </section>
+  );
+}
+
+export function Pricing() {
+  return (
+    <Suspense fallback={<div className="h-96 flex items-center justify-center">Loading pricing...</div>}>
+      <PricingContent />
+    </Suspense>
   );
 }

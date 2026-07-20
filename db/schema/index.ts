@@ -23,3 +23,9 @@ export * from "./academic/attendance";
 export * from "./academic/assignments";
 export * from "./academic/assignmentAttempts";
 export * from "./academic/evaluations";
+
+/* ============================================================
+ * Marketing
+ * ============================================================ */
+
+export * from "./marketing/bookings";

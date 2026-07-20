@@ -65,3 +65,15 @@ export const priorityEnum = pgEnum("priority", [
   "normal",
   "high",
 ]);
+
+/* ============================================================
+ * Marketing
+ * ============================================================ */
+
+export const bookingStatusEnum = pgEnum("booking_status", [
+  "pending_demo",
+  "demo_scheduled",
+  "demo_completed",
+  "converted",
+  "cancelled",
+]);

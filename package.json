@@ -15,7 +15,7 @@
   "dependencies": {
     "@clerk/nextjs": "^7.5.18",
     "@google/genai": "^2.4.0",
-    "@hookform/resolvers": "^5.2.1",
+    "@hookform/resolvers": "^5.4.0",
     "autoprefixer": "^10.4.21",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -28,9 +28,11 @@
     "postgres": "^3.4.9",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
+    "react-hook-form": "^7.82.0",
     "svix": "^1.96.1",
     "tailwind-merge": "^3.3.1",
-    "uuid": "^14.0.1"
+    "uuid": "^14.0.1",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "4.1.11",

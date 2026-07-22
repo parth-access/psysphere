@@ -3,6 +3,7 @@ import { profiles } from "@/db/schema/core/profiles";
 import { studentProfiles } from "@/db/schema/core/studentProfiles";
 import { admissionRepository } from "../admissions/repository";
 import { createAdminClient } from "../auth/server";
+import { emailService } from "../email/service";
 import { count } from "drizzle-orm";
 
 export class OnboardingService {
@@ -19,10 +20,11 @@ export class OnboardingService {
     
     const tempPassword = `PsySphere@${Math.floor(1000 + Math.random() * 9000)}`;
     let supabaseUserId = `mock_user_${Math.random().toString(36).substring(7)}`;
+    let supabaseAdmin: any = null;
 
     // 3. Create Supabase User
     try {
-      const supabaseAdmin = createAdminClient();
+      supabaseAdmin = createAdminClient();
       const { data: userData, error: userError } = await supabaseAdmin.auth.admin.createUser({
         email: admission.email,
         email_confirm: true,
@@ -61,14 +63,46 @@ export class OnboardingService {
       updatedAt: new Date(),
     });
 
-    // 5. Send Email Notification (Mock or console logs)
-    console.log(`[Email Welcome Notification] To: ${admission.email}`);
-    console.log(`Welcome to PsySphere! Your student account is ready.`);
-    console.log(`Username/Email: ${admission.email}`);
-    console.log(`Temporary Password: ${tempPassword}`);
-    console.log(`Student ID: ${studentId}`);
+    // 5. Generate Password Setup Link
+    let passwordSetupUrl = `${process.env.APP_URL || "http://localhost:3000"}/reset-password`;
+    if (supabaseAdmin && supabaseUserId && !supabaseUserId.startsWith("mock_user_")) {
+      try {
+        const { data: linkData, error: linkError } = await supabaseAdmin.auth.admin.generateLink({
+          type: "invite",
+          email: admission.email,
+          options: {
+            redirectTo: `${process.env.APP_URL || "http://localhost:3000"}/reset-password`
+          }
+        });
 
-    // 6. Update Admission Status to DEMO_APPROVED
+        if (linkError) {
+          console.error("Failed to generate verification action link from Supabase:", linkError);
+        } else if (linkData?.properties?.action_link) {
+          passwordSetupUrl = linkData.properties.action_link;
+          console.log("Successfully generated secure Supabase invite URL:", passwordSetupUrl);
+        }
+      } catch (linkError) {
+        console.error("Exception generating invitation link from Supabase:", linkError);
+      }
+    }
+
+    // 6. Send Premium Email Notification via Resend (or Mock fallback)
+    try {
+      console.log(`[OnboardingService] Dispatching invitation email to ${admission.email}`);
+      const emailResult = await emailService.sendStudentInvitation(admission.email, {
+        studentName: admission.studentName,
+        studentId,
+        email: admission.email,
+        passwordSetupUrl,
+        teacherName: admission.assignedTeacher || "Dr. Aristha Sen",
+        demoDate: admission.demoDate || (admission.preferredDate ? `${admission.preferredDate} ${admission.preferredTime ? `at ${admission.preferredTime}` : ""}` : undefined)
+      });
+      console.log("[OnboardingService] Email sending output:", emailResult);
+    } catch (emailEx) {
+      console.error("[OnboardingService] Error calling email service:", emailEx);
+    }
+
+    // 7. Update Admission Status to DEMO_APPROVED
     await admissionRepository.updateStatus(admissionId, "DEMO_APPROVED");
 
     return { success: true, studentId, tempPassword, clerkUserId: supabaseUserId };

@@ -1,6 +1,5 @@
 "use client";
 
-import { UserButton } from "@clerk/nextjs";
 import { Menu, ChevronRight, Bell } from "lucide-react";
 import { usePathname } from "next/navigation";
 
@@ -35,7 +34,9 @@ export function StudentNavbar() {
             <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-brand-primary rounded-full"></span>
           </button>
           <div className="w-px h-6 bg-gray-200 mx-2"></div>
-          <UserButton appearance={{ elements: { avatarBox: "w-9 h-9 border border-gray-200" } }} />
+          <div className="w-9 h-9 border border-gray-200 rounded-full bg-[#F5F2EC] flex items-center justify-center font-serif text-sm text-brand-charcoal font-medium select-none">
+            U
+          </div>
         </div>
       </div>
     </header>

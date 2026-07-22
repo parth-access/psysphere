@@ -2,17 +2,8 @@ import { db } from "@/db";
 import { profiles } from "@/db/schema/core/profiles";
 import { studentProfiles } from "@/db/schema/core/studentProfiles";
 import { admissionRepository } from "../admissions/repository";
-import { createClerkClient } from "@clerk/nextjs/server";
+import { createAdminClient } from "../auth/server";
 import { count } from "drizzle-orm";
-
-const getClerkClient = () => {
-  const secretKey = process.env.CLERK_SECRET_KEY;
-  if (!secretKey) {
-    console.warn("CLERK_SECRET_KEY is missing. Falling back to local mock onboarding mode.");
-    return null;
-  }
-  return createClerkClient({ secretKey });
-};
 
 export class OnboardingService {
   async approveDemo(admissionId: string) {
@@ -27,29 +18,30 @@ export class OnboardingService {
     const studentId = `PSY-${year}-${String(studentNum).padStart(4, "0")}`;
     
     const tempPassword = `PsySphere@${Math.floor(1000 + Math.random() * 9000)}`;
-    let clerkUserId = `mock_user_${Math.random().toString(36).substring(7)}`;
+    let supabaseUserId = `mock_user_${Math.random().toString(36).substring(7)}`;
 
-    // 3. Create Clerk User
-    const clerk = getClerkClient();
-    if (clerk) {
-      try {
-        const clerkUser = await clerk.users.createUser({
-          emailAddress: [admission.email],
-          firstName: admission.studentName.split(' ')[0] || admission.studentName,
-          lastName: admission.studentName.split(' ').slice(1).join(' ') || "",
-          password: tempPassword,
-          publicMetadata: { role: 'student' }
-        });
-        clerkUserId = clerkUser.id;
-        console.log(`Successfully created Clerk user: ${clerkUserId}`);
-      } catch (error) {
-        console.error("Clerk user creation failed, using mock ID:", error);
+    // 3. Create Supabase User
+    try {
+      const supabaseAdmin = createAdminClient();
+      const { data: userData, error: userError } = await supabaseAdmin.auth.admin.createUser({
+        email: admission.email,
+        email_confirm: true,
+        password: tempPassword,
+        user_metadata: { role: "student", full_name: admission.studentName }
+      });
+      if (userError) {
+        console.error("Supabase user creation failed:", userError);
+      } else if (userData?.user) {
+        supabaseUserId = userData.user.id;
+        console.log(`Successfully created Supabase user: ${supabaseUserId}`);
       }
+    } catch (error) {
+      console.error("Supabase admin creation connection error, using mock ID:", error);
     }
 
     // 4. Create Student Profile and core Profile
     const [newProfile] = await db.insert(profiles).values({
-      clerkId: clerkUserId,
+      clerkId: supabaseUserId,
       role: "student",
       fullName: admission.studentName,
       email: admission.email,
@@ -79,9 +71,8 @@ export class OnboardingService {
     // 6. Update Admission Status to DEMO_APPROVED
     await admissionRepository.updateStatus(admissionId, "DEMO_APPROVED");
 
-    return { success: true, studentId, tempPassword, clerkUserId };
+    return { success: true, studentId, tempPassword, clerkUserId: supabaseUserId };
   }
 }
 
 export const onboardingService = new OnboardingService();
-

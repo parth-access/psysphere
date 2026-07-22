@@ -3,7 +3,6 @@
 import * as React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useUser } from '@clerk/nextjs';
 import { AppShell } from '@/features/shared/layout/AppShell';
 import { H1, H2, H3, Subtitle, Body, Code } from '@/features/shared/ui/Typography';
 import { Button } from '@/features/shared/ui/Button';
@@ -38,15 +37,20 @@ import {
   GraduationCap
 } from 'lucide-react';
 
-export function DashboardClient({ role }: { role: 'teacher' | 'student' | 'admin' }) {
+export interface UserProfileProp {
+  fullName: string;
+  email: string;
+}
+
+export function DashboardClient({ role, userProfile }: { role: 'teacher' | 'student' | 'admin'; userProfile?: UserProfileProp }) {
   return (
     <React.Suspense fallback={<LoadingState mode="full" />}>
-      <DashboardContent role={role} />
+      <DashboardContent role={role} userProfile={userProfile} />
     </React.Suspense>
   );
 }
 
-function DashboardContent({ role }: { role: 'teacher' | 'student' | 'admin' }) {
+function DashboardContent({ role, userProfile }: { role: 'teacher' | 'student' | 'admin'; userProfile?: UserProfileProp }) {
   const router = useRouter();
   
   const [activeTab, setActiveTab] = React.useState('overview');
@@ -78,6 +82,7 @@ function DashboardContent({ role }: { role: 'teacher' | 'student' | 'admin' }) {
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         role={role}
+        userProfile={userProfile}
         isDialogOpen={isDialogOpen}
         setIsDialogOpen={setIsDialogOpen}
         isBtnLoading={isBtnLoading}
@@ -102,6 +107,7 @@ interface ContentProps {
   activeTab: string;
   setActiveTab: (val: string) => void;
   role: 'teacher' | 'student' | 'admin';
+  userProfile?: UserProfileProp;
   isDialogOpen: boolean;
   setIsDialogOpen: (val: boolean) => void;
   isBtnLoading: boolean;
@@ -122,6 +128,7 @@ const SuspendedDashboardContent = ({
   activeTab,
   setActiveTab,
   role,
+  userProfile,
   isDialogOpen,
   setIsDialogOpen,
   isBtnLoading,
@@ -137,8 +144,7 @@ const SuspendedDashboardContent = ({
   formText,
   setFormText,
 }: ContentProps) => {
-  const { user } = useUser();
-  const userName = user ? `${user.firstName || ''} ${user.lastName || ''}`.trim() : (role === 'teacher' || role === 'admin' ? 'Dr. Aristha Sen' : 'Pranav Sharma');
+  const userName = userProfile?.fullName || (role === 'teacher' || role === 'admin' ? 'Dr. Aristha Sen' : 'Pranav Sharma');
 
 
   // Mock static data matching Class 11 & 12 psychology curriculum

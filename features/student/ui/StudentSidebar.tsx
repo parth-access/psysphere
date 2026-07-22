@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { 
@@ -8,7 +10,7 @@ import {
   HelpCircle,
   LogOut
 } from "lucide-react";
-import { SignOutButton } from "@clerk/nextjs";
+import { signOutAction } from "@/src/domains/auth/actions";
 
 const NAV_ITEMS = [
   { label: "Dashboard", href: "/student", icon: LayoutDashboard },
@@ -49,12 +51,15 @@ export function StudentSidebar() {
       </nav>
 
       <div className="px-4 mt-auto">
-        <SignOutButton>
-          <button className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50/50 w-full transition-colors">
-            <LogOut className="w-4 h-4 text-gray-400" />
-            Logout
-          </button>
-        </SignOutButton>
+        <button 
+          onClick={async () => {
+            await signOutAction();
+          }}
+          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50/50 w-full transition-colors cursor-pointer"
+        >
+          <LogOut className="w-4 h-4 text-gray-400" />
+          Logout
+        </button>
       </div>
     </div>
   );

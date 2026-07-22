@@ -43,7 +43,7 @@ export class OnboardingService {
 
     // 4. Create Student Profile and core Profile
     const [newProfile] = await db.insert(profiles).values({
-      clerkId: supabaseUserId,
+      id: supabaseUserId,
       role: "student",
       fullName: admission.studentName,
       email: admission.email,
@@ -105,7 +105,7 @@ export class OnboardingService {
     // 7. Update Admission Status to DEMO_APPROVED
     await admissionRepository.updateStatus(admissionId, "DEMO_APPROVED");
 
-    return { success: true, studentId, tempPassword, clerkUserId: supabaseUserId };
+    return { success: true, studentId, tempPassword, userId: supabaseUserId };
   }
 }
 

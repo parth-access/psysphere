@@ -12,9 +12,7 @@ import {
 export const profiles = pgTable(
   "profiles",
   {
-    id: uuid("id").defaultRandom().primaryKey(),
-
-    clerkId: text("clerk_id").notNull().unique(),
+    id: uuid("id").primaryKey(),
 
     role: roleEnum("role").notNull(),
 
@@ -35,8 +33,6 @@ export const profiles = pgTable(
     ...auditColumns,
   },
   (table) => ({
-    clerkIdx: index("profiles_clerk_idx").on(table.clerkId),
-
     roleIdx: index("profiles_role_idx").on(table.role),
 
     emailIdx: index("profiles_email_idx").on(table.email),

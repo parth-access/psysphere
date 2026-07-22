@@ -14,14 +14,14 @@ async function main() {
 
   // 2. Add Teachers
   const [t1] = await db.insert(profiles).values({
-    clerkId: "teacher_1",
+    id: "10000000-0000-0000-0000-000000000001",
     role: "teacher",
     fullName: "Dravina Gupta",
     email: "dravina@psysphere.com"
   }).returning();
 
   const [t2] = await db.insert(profiles).values({
-    clerkId: "teacher_2",
+    id: "10000000-0000-0000-0000-000000000002",
     role: "teacher",
     fullName: "Dr. Sharma",
     email: "sharma@psysphere.com"
@@ -64,7 +64,7 @@ async function main() {
 
   // 4. Add Students
   const [s1] = await db.insert(profiles).values({
-    clerkId: "student_1",
+    id: "20000000-0000-0000-0000-000000000001",
     role: "student",
     fullName: "Rahul Verma",
     email: "rahul@example.com"
@@ -79,7 +79,7 @@ async function main() {
   });
 
   const [s2] = await db.insert(profiles).values({
-    clerkId: "student_2",
+    id: "20000000-0000-0000-0000-000000000002",
     role: "student",
     fullName: "Priya Desai",
     email: "priya@example.com"

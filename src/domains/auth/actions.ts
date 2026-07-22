@@ -48,7 +48,7 @@ export async function getCurrentProfile() {
 
   const [profile] = await db.select()
     .from(profiles)
-    .where(eq(profiles.clerkId, user.id))
+    .where(eq(profiles.id, user.id))
     .limit(1);
 
   return profile || null;

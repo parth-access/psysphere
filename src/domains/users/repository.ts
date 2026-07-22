@@ -7,7 +7,6 @@ export class UserRepository {
   async findAllStudents() {
     return await db.select({
       id: profiles.id,
-      clerkId: profiles.clerkId,
       fullName: profiles.fullName,
       email: profiles.email,
       role: profiles.role,

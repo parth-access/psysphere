@@ -13,7 +13,7 @@ export const getProfile = async () => {
   const [profile] = await db
     .select()
     .from(profiles)
-    .where(eq(profiles.clerkId, userId))
+    .where(eq(profiles.id, userId))
     .limit(1);
   return profile || null;
 };

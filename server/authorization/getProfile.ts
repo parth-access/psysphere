@@ -1,10 +1,12 @@
-import { auth } from "@clerk/nextjs/server";
+import { createClient } from "@/src/domains/auth/server";
 import { db } from "../db";
 import { profiles } from "../../db/schema";
 import { eq } from "drizzle-orm";
 
 export const getProfile = async () => {
-  const { userId } = await auth();
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const userId = user?.id;
   if (!userId) {
     return null;
   }

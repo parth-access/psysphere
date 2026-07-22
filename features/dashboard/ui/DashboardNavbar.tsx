@@ -1,6 +1,5 @@
 "use client";
 
-import { UserButton } from "@clerk/nextjs";
 import { Menu, ChevronRight } from "lucide-react";
 import { usePathname } from "next/navigation";
 
@@ -30,7 +29,9 @@ export function DashboardNavbar() {
           </div>
         </div>
         <div className="flex items-center gap-4">
-          <UserButton appearance={{ elements: { avatarBox: "w-9 h-9 border border-gray-200" } }} />
+          <div className="w-9 h-9 border border-gray-200 rounded-full bg-[#F5F2EC] flex items-center justify-center font-serif text-sm text-brand-charcoal font-medium select-none">
+            U
+          </div>
         </div>
       </div>
     </header>

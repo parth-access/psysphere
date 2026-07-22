@@ -1,11 +1,13 @@
-import { currentUser } from "@clerk/nextjs/server";
+import { createClient } from "@/src/domains/auth/server";
 import { redirect } from "next/navigation";
 
 /**
- * Returns the currently authenticated user's profile from Clerk.
+ * Returns the currently authenticated user's profile from Supabase.
  */
 export const getCurrentUser = async () => {
-  return await currentUser();
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  return user;
 };
 
 /**
@@ -13,7 +15,7 @@ export const getCurrentUser = async () => {
  * Redirects if they are not authenticated.
  */
 export const requireCurrentUser = async () => {
-  const user = await currentUser();
+  const user = await getCurrentUser();
   if (!user) {
     redirect("/sign-in");
   }

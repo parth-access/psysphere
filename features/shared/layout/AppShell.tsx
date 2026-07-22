@@ -18,10 +18,10 @@ import {
   Settings,
   HelpCircle
 } from 'lucide-react';
-import { UserButton, useClerk } from "@clerk/nextjs";
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
+import { signOutAction } from "@/src/domains/auth/actions";
 
 export interface NavItem {
   id: string;
@@ -52,7 +52,9 @@ export const AppShell = ({
   onActiveIdChange,
   userRole,
 }: AppShellProps) => {
-  const { signOut } = useClerk();
+  const handleSignOut = async () => {
+    await signOutAction();
+  };
   const [isMobileOpen, setIsMobileOpen] = React.useState(false);
   const [showNotifications, setShowNotifications] = React.useState(false);
   const [showUserMenu, setShowUserMenu] = React.useState(false);
@@ -230,7 +232,7 @@ export const AppShell = ({
             </div>
           </div>
           <button 
-            onClick={() => signOut()}
+            onClick={handleSignOut}
             className="w-full flex items-center space-x-2 px-3 py-2 text-xs font-medium text-brand-charcoal-muted hover:text-brand-charcoal hover:bg-brand-beige/50 rounded-xs cursor-pointer text-left transition-colors"
           >
             <LogOut className="h-3.5 w-3.5" />
@@ -334,13 +336,9 @@ export const AppShell = ({
 
             {/* User Profile */}
             <div className="relative">
-              <UserButton 
-                appearance={{
-                  elements: {
-                    userButtonAvatarBox: "w-8 h-8 rounded-full border border-brand-stone-soft"
-                  }
-                }}
-              />
+              <div className="w-8 h-8 rounded-full bg-brand-beige border border-brand-stone-soft flex items-center justify-center text-[10px] font-bold text-brand-charcoal select-none">
+                {userRole === 'teacher' ? 'AS' : 'PS'}
+              </div>
             </div>
             
           </div>
@@ -444,9 +442,9 @@ export const AppShell = ({
               {/* Mobile Footer */}
               <div className="p-4 border-t border-brand-stone-soft/60">
                 <button
-                  onClick={() => {
+                  onClick={async () => {
                     setIsMobileOpen(false);
-                    signOut();
+                    await handleSignOut();
                   }}
                   className="w-full flex items-center space-x-2.5 px-3 py-2 text-xs font-medium text-brand-charcoal-muted hover:text-brand-charcoal hover:bg-brand-beige/50 rounded-xs cursor-pointer text-left transition-colors"
                 >

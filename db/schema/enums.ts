@@ -3,7 +3,6 @@ import { pgEnum } from "drizzle-orm/pg-core";
 /* ============================================================
  * Identity
  * ============================================================ */
-
 export const roleEnum = pgEnum("role", [
   "admin",
   "teacher",
@@ -13,7 +12,6 @@ export const roleEnum = pgEnum("role", [
 /* ============================================================
  * Academic
  * ============================================================ */
-
 export const classLevelEnum = pgEnum("class_level", [
   "class_11",
   "class_12",
@@ -50,7 +48,6 @@ export const assignmentAttemptStatusEnum = pgEnum(
 /* ============================================================
  * Communication
  * ============================================================ */
-
 export const announcementTargetEnum = pgEnum(
   "announcement_target",
   [
@@ -67,13 +64,16 @@ export const priorityEnum = pgEnum("priority", [
 ]);
 
 /* ============================================================
- * Marketing
+ * Admissions
  * ============================================================ */
-
-export const bookingStatusEnum = pgEnum("booking_status", [
-  "pending_demo",
-  "demo_scheduled",
-  "demo_completed",
-  "converted",
-  "cancelled",
+export const admissionStatusEnum = pgEnum("admission_status", [
+  "LEAD",
+  "DEMO_BOOKED",
+  "DEMO_APPROVED",
+  "DEMO_SCHEDULED",
+  "DEMO_COMPLETED",
+  "ENROLLED",
+  "REJECTED",
+  "INACTIVE",
+  "ALUMNI"
 ]);

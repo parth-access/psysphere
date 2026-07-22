@@ -28,4 +28,4 @@ export * from "./academic/evaluations";
  * Marketing
  * ============================================================ */
 
-export * from "./marketing/bookings";
+export * from "./core/admissions";

@@ -1,7 +1,7 @@
 "use server";
 
-import { db } from "@/server/db";
-import { bookings } from "@/db/schema/marketing/bookings";
+import { db } from "@/db";
+import { admissions } from "@/db/schema/core/admissions";
 import { z } from "zod";
 import { bookingSchema, BookingInput } from "@/features/marketing/validations";
 
@@ -9,20 +9,21 @@ export async function submitBooking(input: BookingInput) {
   try {
     const validated = bookingSchema.parse(input);
 
-    const result = await db.insert(bookings).values({
+    const result = await db.insert(admissions).values({
       studentName: validated.studentName,
       parentName: validated.parentName,
       email: validated.email,
       phone: validated.phone,
       class: validated.classLevel,
+      program: validated.packageType,
       package: validated.packageType,
       duration: validated.duration,
       preferredDate: validated.preferredDate,
       preferredTime: validated.preferredTime,
       notes: validated.notes || null,
       price: validated.price,
-      status: "pending_demo",
-    }).returning({ id: bookings.id });
+      status: "LEAD",
+    }).returning({ id: admissions.id });
 
     // Mock Email Notification
     console.log(`[Email Mock] Parent Confirmation sent to: ${validated.email}`);

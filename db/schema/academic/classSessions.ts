@@ -1,0 +1,55 @@
+import {
+  pgTable,
+  uuid,
+  text,
+  timestamp,
+  index,
+} from "drizzle-orm/pg-core";
+
+import { batches } from "../core/batches";
+import { timestamps, auditColumns } from "../common";
+import { classSessionStatusEnum } from "../enums";
+
+export const classSessions = pgTable(
+  "class_sessions",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+
+    batchId: uuid("batch_id")
+      .notNull()
+      .references(() => batches.id, {
+        onDelete: "cascade",
+      }),
+
+    title: text("title").notNull(),
+
+    topicTitle: text("topic_title").notNull(),
+
+    meetingUrl: text("meeting_url").notNull(),
+
+    startsAt: timestamp("starts_at", {
+      withTimezone: true,
+    }).notNull(),
+
+    endsAt: timestamp("ends_at", {
+      withTimezone: true,
+    }).notNull(),
+
+    status: classSessionStatusEnum("status")
+      .default("scheduled")
+      .notNull(),
+
+    teacherNotes: text("teacher_notes"),
+
+    ...timestamps,
+
+    ...auditColumns,
+  },
+  (table) => ({
+    batchIdx: index("class_sessions_batch_idx").on(table.batchId),
+
+    statusIdx: index("class_sessions_status_idx").on(table.status),
+
+    startIdx: index("class_sessions_start_idx").on(table.startsAt),
+  })
+);

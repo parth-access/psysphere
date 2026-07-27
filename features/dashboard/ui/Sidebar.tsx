@@ -9,20 +9,22 @@ import {
   BookOpen, 
   CalendarDays, 
   Settings,
-  LogOut
+  LogOut,
+  GraduationCap
 } from "lucide-react";
 import { signOutAction } from "@/src/domains/auth/actions";
 
 const NAV_ITEMS = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+  { label: "Admissions", href: "/dashboard/admissions", icon: CalendarDays },
   { label: "Students", href: "/dashboard/students", icon: Users },
+  { label: "Teachers", href: "/dashboard/teachers", icon: GraduationCap },
   { label: "Batches", href: "/dashboard/batches", icon: Layers },
   { label: "Classes", href: "/dashboard/classes", icon: BookOpen },
-  { label: "Admissions", href: "/dashboard/admissions", icon: CalendarDays },
   { label: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
 
-export function Sidebar() {
+export function Sidebar({ userProfile }: { userProfile?: { fullName: string; role: string } | null }) {
   const pathname = usePathname();
 
   return (
@@ -52,7 +54,19 @@ export function Sidebar() {
         })}
       </nav>
 
-      <div className="px-4 mt-auto">
+      {userProfile && (
+        <div className="mx-4 mb-4 p-3 bg-[#F5F2EC]/50 border border-gray-100 rounded-xl flex items-center gap-3">
+          <div className="w-9 h-9 shrink-0 rounded-full bg-brand-primary text-white flex items-center justify-center font-bold text-xs">
+            {userProfile.fullName.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-xs font-semibold text-gray-900 truncate">{userProfile.fullName}</p>
+            <p className="text-[10px] text-gray-500 capitalize">{userProfile.role}</p>
+          </div>
+        </div>
+      )}
+
+      <div className="px-4">
         <button 
           onClick={async () => {
             await signOutAction();

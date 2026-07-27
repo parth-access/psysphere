@@ -1,9 +1,11 @@
-export const dynamic = "force-dynamic";
 import { PageHeader } from "@/features/dashboard/ui/PageHeader";
 import { DashboardCard } from "@/features/dashboard/ui/DashboardCard";
 import { DataTable } from "@/features/dashboard/ui/DataTable";
 import { teacherRepository } from "@/src/domains/users/repository";
-import Link from "next/link";
+import { Plus, UserCheck } from "lucide-react";
+import { createTeacherAction } from "./actions";
+
+export const dynamic = "force-dynamic";
 
 export default async function TeachersPage() {
   const teachersData = await teacherRepository.findAllTeachers();
@@ -12,25 +14,74 @@ export default async function TeachersPage() {
     { header: "Teacher Name", accessorKey: "fullName" as const, className: "font-medium text-gray-900" },
     { header: "Email", accessorKey: "email" as const, className: "text-gray-500" },
     {
-      header: "Actions",
+      header: "Status",
       cell: (item: any) => (
-        <div className="flex items-center gap-3 text-sm">
-          <Link href={`/dashboard/teachers/${item.id}`} className="text-brand-primary hover:text-brand-primary-hover font-medium">View Profile</Link>
-        </div>
+        <span className="text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100 px-2 py-0.5 rounded-full">
+          {item.isActive ? "Active" : "Inactive"}
+        </span>
       )
     }
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 max-w-7xl mx-auto">
       <PageHeader 
         title="Teachers" 
-        description="Manage teaching staff and their class schedules." 
+        description="Manage teaching faculty, credentials, and classroom assignments." 
       />
 
-      <DashboardCard>
-        <DataTable data={teachersData} columns={columns} />
-      </DashboardCard>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Main List Column */}
+        <div className="lg:col-span-2 space-y-6">
+          <h2 className="text-lg font-serif font-semibold text-gray-900 flex items-center gap-2">
+            <UserCheck className="w-5 h-5 text-brand-primary" />
+            Active Faculty ({teachersData.length})
+          </h2>
+
+          <DashboardCard>
+            <DataTable data={teachersData} columns={columns} />
+          </DashboardCard>
+        </div>
+
+        {/* Creation Column */}
+        <div className="space-y-6">
+          <DashboardCard title="Invite New Teacher">
+            <form action={createTeacherAction} className="space-y-4">
+              <div>
+                <label className="text-xs font-semibold text-gray-700 uppercase tracking-wider block mb-1">Full Name</label>
+                <input 
+                  type="text" 
+                  name="fullName" 
+                  required 
+                  placeholder="e.g. Dr. Aristha Sen" 
+                  className="w-full px-4 py-2 border border-gray-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-semibold text-gray-700 uppercase tracking-wider block mb-1">Registered Email</label>
+                <input 
+                  type="email" 
+                  name="email" 
+                  required 
+                  placeholder="e.g. aristha.sen@psysphere.com" 
+                  className="w-full px-4 py-2 border border-gray-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
+                />
+              </div>
+
+              <div className="pt-2">
+                <button 
+                  type="submit" 
+                  className="w-full flex items-center justify-center gap-2 bg-brand-primary text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-brand-primary-hover transition-colors cursor-pointer"
+                >
+                  <Plus className="w-4 h-4" />
+                  Invite Faculty
+                </button>
+              </div>
+            </form>
+          </DashboardCard>
+        </div>
+      </div>
     </div>
   );
 }

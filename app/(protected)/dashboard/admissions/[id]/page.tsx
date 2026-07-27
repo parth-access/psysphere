@@ -4,7 +4,7 @@ import { StatusBadge } from "@/features/dashboard/ui/StatusBadge";
 import { Check, CircleDot, Circle, Calendar, Clock, Monitor, User, Video, Mail, Key } from "lucide-react";
 import { admissionRepository } from "@/src/domains/admissions/repository";
 import { teacherRepository } from "@/src/domains/users/repository";
-import { approveAdmissionAction, rejectAdmissionAction, convertAdmissionAction, scheduleDemoFormAction } from "../actions";
+import { approveAdmissionAction, rejectAdmissionAction, convertAdmissionAction, scheduleDemoFormAction, saveAdmissionNotesAction } from "../actions";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -252,16 +252,20 @@ export default async function AdmissionDetailsPage({ params }: { params: Promise
           </DashboardCard>
           
           <DashboardCard title="Internal Notes">
-            <textarea 
-              className="w-full p-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary min-h-[100px]"
-              placeholder="Add internal comments about this admission..."
-              defaultValue={admission.notes || "Student is highly interested. Highlight key teaching strategies during demo."}
-            />
-            <div className="mt-3 flex justify-end">
-              <button className="px-4 py-2 border border-gray-200 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50">
-                Save Note
-              </button>
-            </div>
+            <form action={saveAdmissionNotesAction} className="space-y-3">
+              <input type="hidden" name="id" value={admissionId} />
+              <textarea 
+                name="notes"
+                className="w-full p-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary min-h-[100px]"
+                placeholder="Add internal comments about this admission..."
+                defaultValue={admission.notes || "Student is highly interested. Highlight key teaching strategies during demo."}
+              />
+              <div className="flex justify-end">
+                <button type="submit" className="px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-medium hover:bg-gray-800 cursor-pointer">
+                  Save Note
+                </button>
+              </div>
+            </form>
           </DashboardCard>
         </div>
 

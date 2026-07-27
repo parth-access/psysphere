@@ -1,5 +1,5 @@
 {
-  "id": "f164dd14-9314-4808-a04a-5193c95f1f94",
+  "id": "f95439ed-9054-47fa-b24f-b2984c01bf43",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -12,13 +12,6 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "clerk_id": {
-          "name": "clerk_id",
-          "type": "text",
-          "primaryKey": false,
           "notNull": true
         },
         "role": {
@@ -87,21 +80,6 @@
         }
       },
       "indexes": {
-        "profiles_clerk_idx": {
-          "name": "profiles_clerk_idx",
-          "columns": [
-            {
-              "expression": "clerk_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
         "profiles_role_idx": {
           "name": "profiles_role_idx",
           "columns": [
@@ -136,13 +114,6 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "profiles_clerk_id_unique": {
-          "name": "profiles_clerk_id_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "clerk_id"
-          ]
-        },
         "profiles_email_unique": {
           "name": "profiles_email_unique",
           "nullsNotDistinct": false,
@@ -1309,6 +1280,42 @@
           "type": "varchar(50)",
           "primaryKey": false,
           "notNull": true
+        },
+        "package": {
+          "name": "package",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "duration": {
+          "name": "duration",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "price": {
+          "name": "price",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "preferred_date": {
+          "name": "preferred_date",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "preferred_time": {
+          "name": "preferred_time",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "notes": {
+          "name": "notes",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "status": {
           "name": "status",

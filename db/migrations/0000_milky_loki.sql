@@ -8,8 +8,7 @@ CREATE TYPE "public"."enrollment_status" AS ENUM('active', 'completed', 'dropped
 CREATE TYPE "public"."priority" AS ENUM('low', 'normal', 'high');--> statement-breakpoint
 CREATE TYPE "public"."role" AS ENUM('admin', 'teacher', 'student');--> statement-breakpoint
 CREATE TABLE "profiles" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"clerk_id" text NOT NULL,
+	"id" uuid PRIMARY KEY NOT NULL,
 	"role" "role" NOT NULL,
 	"full_name" text NOT NULL,
 	"email" text NOT NULL,
@@ -20,7 +19,6 @@ CREATE TABLE "profiles" (
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"created_by" uuid,
 	"updated_by" uuid,
-	CONSTRAINT "profiles_clerk_id_unique" UNIQUE("clerk_id"),
 	CONSTRAINT "profiles_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint
@@ -139,6 +137,12 @@ CREATE TABLE "admissions" (
 	"phone" varchar(20) NOT NULL,
 	"class" varchar(50) NOT NULL,
 	"program" varchar(50) NOT NULL,
+	"package" varchar(50),
+	"duration" varchar(50),
+	"price" integer,
+	"preferred_date" varchar(20),
+	"preferred_time" varchar(20),
+	"notes" text,
 	"status" "admission_status" DEFAULT 'LEAD' NOT NULL,
 	"assigned_teacher" text,
 	"demo_date" date,
@@ -158,7 +162,6 @@ ALTER TABLE "assignment_attempts" ADD CONSTRAINT "assignment_attempts_assignment
 ALTER TABLE "assignment_attempts" ADD CONSTRAINT "assignment_attempts_student_profile_id_student_profiles_profile_id_fk" FOREIGN KEY ("student_profile_id") REFERENCES "public"."student_profiles"("profile_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "evaluations" ADD CONSTRAINT "evaluations_assignment_attempt_id_assignment_attempts_id_fk" FOREIGN KEY ("assignment_attempt_id") REFERENCES "public"."assignment_attempts"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "evaluations" ADD CONSTRAINT "evaluations_evaluated_by_profiles_id_fk" FOREIGN KEY ("evaluated_by") REFERENCES "public"."profiles"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-CREATE INDEX "profiles_clerk_idx" ON "profiles" USING btree ("clerk_id");--> statement-breakpoint
 CREATE INDEX "profiles_role_idx" ON "profiles" USING btree ("role");--> statement-breakpoint
 CREATE INDEX "profiles_email_idx" ON "profiles" USING btree ("email");--> statement-breakpoint
 CREATE INDEX "student_profiles_admission_idx" ON "student_profiles" USING btree ("admission_number");--> statement-breakpoint

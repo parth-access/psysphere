@@ -1,6 +1,6 @@
 {
-  "id": "8aeac7d5-2d22-4d71-9225-0c306cbc73c0",
-  "prevId": "f164dd14-9314-4808-a04a-5193c95f1f94",
+  "id": "3f60c4af-00d4-4df1-a8c5-5b0584c70549",
+  "prevId": "f95439ed-9054-47fa-b24f-b2984c01bf43",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -91,9 +91,9 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         },
         "profiles_email_idx": {
           "name": "profiles_email_idx",
@@ -106,9 +106,9 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {},
@@ -116,10 +116,10 @@
       "uniqueConstraints": {
         "profiles_email_unique": {
           "name": "profiles_email_unique",
-          "nullsNotDistinct": false,
           "columns": [
             "email"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       },
       "policies": {},
@@ -199,34 +199,34 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "student_profiles_profile_id_profiles_id_fk": {
           "name": "student_profiles_profile_id_profiles_id_fk",
           "tableFrom": "student_profiles",
-          "tableTo": "profiles",
           "columnsFrom": [
             "profile_id"
           ],
+          "tableTo": "profiles",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "student_profiles_admission_number_unique": {
           "name": "student_profiles_admission_number_unique",
-          "nullsNotDistinct": false,
           "columns": [
             "admission_number"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       },
       "policies": {},
@@ -315,9 +315,9 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         },
         "batches_class_level_idx": {
           "name": "batches_class_level_idx",
@@ -330,9 +330,9 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         },
         "batches_academic_year_idx": {
           "name": "batches_academic_year_idx",
@@ -345,9 +345,9 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {},
@@ -428,9 +428,9 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         },
         "enrollments_batch_idx": {
           "name": "enrollments_batch_idx",
@@ -443,48 +443,48 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "enrollments_student_profile_id_student_profiles_profile_id_fk": {
           "name": "enrollments_student_profile_id_student_profiles_profile_id_fk",
           "tableFrom": "enrollments",
-          "tableTo": "student_profiles",
           "columnsFrom": [
             "student_profile_id"
           ],
+          "tableTo": "student_profiles",
           "columnsTo": [
             "profile_id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         },
         "enrollments_batch_id_batches_id_fk": {
           "name": "enrollments_batch_id_batches_id_fk",
           "tableFrom": "enrollments",
-          "tableTo": "batches",
           "columnsFrom": [
             "batch_id"
           ],
+          "tableTo": "batches",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "enrollments_student_batch_unique": {
           "name": "enrollments_student_batch_unique",
-          "nullsNotDistinct": false,
           "columns": [
             "student_profile_id",
             "batch_id"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       },
       "policies": {},
@@ -591,9 +591,9 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         },
         "class_sessions_status_idx": {
           "name": "class_sessions_status_idx",
@@ -606,9 +606,9 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         },
         "class_sessions_start_idx": {
           "name": "class_sessions_start_idx",
@@ -621,24 +621,24 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "class_sessions_batch_id_batches_id_fk": {
           "name": "class_sessions_batch_id_batches_id_fk",
           "tableFrom": "class_sessions",
-          "tableTo": "batches",
           "columnsFrom": [
             "batch_id"
           ],
+          "tableTo": "batches",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
@@ -718,9 +718,9 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         },
         "attendance_student_idx": {
           "name": "attendance_student_idx",
@@ -733,61 +733,61 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "attendance_session_id_class_sessions_id_fk": {
           "name": "attendance_session_id_class_sessions_id_fk",
           "tableFrom": "attendance",
-          "tableTo": "class_sessions",
           "columnsFrom": [
             "session_id"
           ],
+          "tableTo": "class_sessions",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         },
         "attendance_student_profile_id_student_profiles_profile_id_fk": {
           "name": "attendance_student_profile_id_student_profiles_profile_id_fk",
           "tableFrom": "attendance",
-          "tableTo": "student_profiles",
           "columnsFrom": [
             "student_profile_id"
           ],
+          "tableTo": "student_profiles",
           "columnsTo": [
             "profile_id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         },
         "attendance_marked_by_profiles_id_fk": {
           "name": "attendance_marked_by_profiles_id_fk",
           "tableFrom": "attendance",
-          "tableTo": "profiles",
           "columnsFrom": [
             "marked_by"
           ],
+          "tableTo": "profiles",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "set null"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "attendance_session_student_unique": {
           "name": "attendance_session_student_unique",
-          "nullsNotDistinct": false,
           "columns": [
             "session_id",
             "student_profile_id"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       },
       "policies": {},
@@ -893,9 +893,9 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         },
         "assignments_published_idx": {
           "name": "assignments_published_idx",
@@ -908,9 +908,9 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         },
         "assignments_due_idx": {
           "name": "assignments_due_idx",
@@ -923,9 +923,9 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         },
         "assignments_results_published_idx": {
           "name": "assignments_results_published_idx",
@@ -938,24 +938,24 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "assignments_batch_id_batches_id_fk": {
           "name": "assignments_batch_id_batches_id_fk",
           "tableFrom": "assignments",
-          "tableTo": "batches",
           "columnsFrom": [
             "batch_id"
           ],
+          "tableTo": "batches",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
@@ -1040,9 +1040,9 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         },
         "assignment_attempts_student_idx": {
           "name": "assignment_attempts_student_idx",
@@ -1055,49 +1055,49 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "assignment_attempts_assignment_id_assignments_id_fk": {
           "name": "assignment_attempts_assignment_id_assignments_id_fk",
           "tableFrom": "assignment_attempts",
-          "tableTo": "assignments",
           "columnsFrom": [
             "assignment_id"
           ],
+          "tableTo": "assignments",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         },
         "assignment_attempts_student_profile_id_student_profiles_profile_id_fk": {
           "name": "assignment_attempts_student_profile_id_student_profiles_profile_id_fk",
           "tableFrom": "assignment_attempts",
-          "tableTo": "student_profiles",
           "columnsFrom": [
             "student_profile_id"
           ],
+          "tableTo": "student_profiles",
           "columnsTo": [
             "profile_id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "assignment_attempts_unique_attempt": {
           "name": "assignment_attempts_unique_attempt",
-          "nullsNotDistinct": false,
           "columns": [
             "assignment_id",
             "student_profile_id",
             "attempt_number"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       },
       "policies": {},
@@ -1172,9 +1172,9 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         },
         "evaluations_evaluator_idx": {
           "name": "evaluations_evaluator_idx",
@@ -1187,47 +1187,47 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "evaluations_assignment_attempt_id_assignment_attempts_id_fk": {
           "name": "evaluations_assignment_attempt_id_assignment_attempts_id_fk",
           "tableFrom": "evaluations",
-          "tableTo": "assignment_attempts",
           "columnsFrom": [
             "assignment_attempt_id"
           ],
+          "tableTo": "assignment_attempts",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         },
         "evaluations_evaluated_by_profiles_id_fk": {
           "name": "evaluations_evaluated_by_profiles_id_fk",
           "tableFrom": "evaluations",
-          "tableTo": "profiles",
           "columnsFrom": [
             "evaluated_by"
           ],
+          "tableTo": "profiles",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "set null"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "evaluations_unique_attempt": {
           "name": "evaluations_unique_attempt",
-          "nullsNotDistinct": false,
           "columns": [
             "assignment_attempt_id"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       },
       "policies": {},
@@ -1451,10 +1451,10 @@
     }
   },
   "schemas": {},
+  "views": {},
   "sequences": {},
   "roles": {},
   "policies": {},
-  "views": {},
   "_meta": {
     "columns": {},
     "schemas": {},

@@ -1,28 +1,157 @@
 "use server";
+import crypto from "crypto";
 
 import { db } from "@/db";
 import { profiles } from "@/db/schema/core/profiles";
 import { revalidatePath } from "next/cache";
+import { createAdminClient } from "@/src/domains/auth/server";
+import { emailService } from "@/src/domains/email/service";
+import { requireRole } from "@/server/authorization/requireRole";
+import { z } from "zod";
+import { eq } from "drizzle-orm";
+
+const createTeacherSchema = z.object({
+  fullName: z.string().min(1, "Teacher Full Name is required").max(100, "Full Name too long"),
+  email: z.string().email("Invalid email format"),
+});
 
 export async function createTeacherAction(formData: FormData) {
-  const fullName = formData.get("fullName") as string;
-  const email = formData.get("email") as string;
+  // Ensure only authorized admins can create teacher profiles
+  await requireRole(["admin"]);
 
-  if (!fullName || !email) {
-    throw new Error("Teacher Full Name and Registered Email are required.");
+  const rawFullName = formData.get("fullName") as string;
+  const rawEmail = formData.get("email") as string;
+
+  const validated = createTeacherSchema.parse({
+    fullName: rawFullName,
+    email: rawEmail,
+  });
+
+  const email = validated.email.toLowerCase();
+
+  // 1. Detect duplicate emails in local database first
+  const [existingDbProfile] = await db.select().from(profiles).where(eq(profiles.email, email));
+  if (existingDbProfile) {
+    throw new Error(`A faculty or user profile with email '${email}' already exists in the database.`);
   }
 
-  const id = crypto.randomUUID();
+  // 2. Setup Supabase Admin and check for duplicate in Auth identity source of truth
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!supabaseUrl || !supabaseServiceKey) {
+    throw new Error("Supabase is unconfigured. Cannot securely create teacher accounts.");
+  }
 
-  await db.insert(profiles).values({
-    id,
-    fullName,
-    email,
-    role: "teacher",
-    isActive: true,
-    createdAt: new Date(),
-    updatedAt: new Date()
-  });
+  const supabaseAdmin = createAdminClient();
+
+  try {
+    const { data: listData, error: listError } = await supabaseAdmin.auth.admin.listUsers();
+    if (listError) {
+      throw new Error(`Failed to inspect existing auth accounts: ${listError.message}`);
+    }
+    const existingAuthUser = listData?.users?.find(
+      (u) => u.email?.toLowerCase() === email
+    );
+    if (existingAuthUser) {
+      throw new Error(`An authentication account with email '${email}' already exists in Supabase Auth.`);
+    }
+  } catch (lookupErr: unknown) {
+    const msg = lookupErr instanceof Error ? lookupErr.message : String(lookupErr);
+    console.warn(`[createTeacherAction] Auth lookup warning: ${msg}`);
+  }
+
+  // 3. Create the User in Supabase Auth using the Admin client
+  let supabaseUserId = "";
+  const securePassword = crypto.randomUUID();
+
+  try {
+    const { data: userData, error: userError } = await supabaseAdmin.auth.admin.createUser({
+      email: email,
+      email_confirm: true,
+      password: securePassword,
+      user_metadata: { role: "teacher", full_name: validated.fullName }
+    });
+
+    if (userError) {
+      console.error("Supabase Admin user creation failed:", userError);
+      throw new Error(`Supabase Auth creation failed: ${userError.message}`);
+    }
+
+    if (!userData?.user) {
+      throw new Error("Supabase Auth returned an empty user object.");
+    }
+
+    supabaseUserId = userData.user.id;
+    console.log(`Successfully created Supabase Auth user for teacher: ${supabaseUserId}`);
+  } catch (error: any) {
+    console.error("Teacher authentication setup exception:", error);
+    throw new Error(error.message || "Failed to provision authentication account for teacher.");
+  }
+
+  // 4. Insert Teacher Profile into our local DB with transaction safety
+  try {
+    await db.insert(profiles).values({
+      id: supabaseUserId,
+      fullName: validated.fullName,
+      email: email,
+      role: "teacher",
+      isActive: true,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    });
+  } catch (dbError: any) {
+    console.error("Failed to insert teacher profile into local PostgreSQL:", dbError);
+    // Rollback: Delete created user from Supabase if DB insert fails to keep them in sync
+    try {
+      await supabaseAdmin.auth.admin.deleteUser(supabaseUserId);
+      console.log(`Cleaned up Supabase Auth user ${supabaseUserId} after local DB insertion failure.`);
+    } catch (cleanupError) {
+      console.error("Failed to clean up Supabase user after DB failure:", cleanupError);
+    }
+    throw new Error(`Database persistence failed: ${dbError.message || dbError}`);
+  }
+
+  // 5. Generate secure invitation / password setup link from Supabase
+  let passwordSetupUrl = `${process.env.APP_URL || "http://localhost:3000"}/reset-password`;
+  try {
+    const { data: linkData, error: linkError } = await supabaseAdmin.auth.admin.generateLink({
+      type: "invite",
+      email: email,
+      options: {
+        redirectTo: `${process.env.APP_URL || "http://localhost:3000"}/reset-password`
+      }
+    });
+
+    if (linkError) {
+      console.error("Failed to generate teacher invite link from Supabase:", linkError);
+    } else if (linkData?.properties?.action_link) {
+      passwordSetupUrl = linkData.properties.action_link;
+      console.log("Successfully generated secure Supabase teacher invite URL:", passwordSetupUrl);
+    }
+  } catch (linkError) {
+    console.error("Exception generating teacher invitation link from Supabase:", linkError);
+  }
+
+  // 6. Send Invite Email via Resend - do not rollback if email fails, return success with warning!
+  let emailSent = false;
+  let emailErrorMsg = "";
+  try {
+    const emailResult = await emailService.sendTeacherActivation(email, {
+      teacherName: validated.fullName,
+      email,
+      passwordSetupUrl
+    });
+    if (emailResult.success) {
+      emailSent = true;
+      console.log(`Successfully dispatched teacher invitation email to ${email}`);
+    } else {
+      emailErrorMsg = emailResult.error || "Unknown email error";
+      console.error(`Failed to send teacher activation email: ${emailErrorMsg}`);
+    }
+  } catch (emailError: any) {
+    emailErrorMsg = emailError?.message || String(emailError);
+    console.error("Failed to send teacher activation email:", emailError);
+  }
 
   revalidatePath("/dashboard/teachers");
   revalidatePath("/dashboard");

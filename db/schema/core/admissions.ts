@@ -18,6 +18,8 @@ export const admissions = pgTable("admissions", {
   status: admissionStatusEnum("status").default("LEAD").notNull(),
   assignedTeacher: text("assigned_teacher"),
   demoDate: date("demo_date"),
+  demoTime: varchar("demo_time", { length: 20 }),
+  meetingUrl: text("meeting_url"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });

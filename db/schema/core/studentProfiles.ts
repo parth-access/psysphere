@@ -6,6 +6,7 @@ import {
   date,
   timestamp,
   index,
+  integer,
 } from "drizzle-orm/pg-core";
 
 import { profiles } from "./profiles";
@@ -39,3 +40,8 @@ export const studentProfiles = pgTable(
     ),
   })
 );
+
+export const studentIdCounters = pgTable("student_id_counters", {
+  year: integer("year").primaryKey(),
+  lastValue: integer("last_value").default(0).notNull(),
+});

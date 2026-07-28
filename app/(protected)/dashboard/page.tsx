@@ -39,12 +39,12 @@ export default async function DashboardHomePage() {
     );
   const todayClassesCount = Number(todayClassesResult?.value) || 0;
 
-  // 2. Fetch Upcoming Tests/Assignments count
-  const [upcomingTestsResult] = await db
+  // 2. Fetch Upcoming Assignments count
+  const [upcomingAssignmentsResult] = await db
     .select({ value: count() })
     .from(assignments)
     .where(gt(assignments.dueAt, new Date()));
-  const upcomingTestsCount = Number(upcomingTestsResult?.value) || 0;
+  const upcomingAssignmentsCount = Number(upcomingAssignmentsResult?.value) || 0;
 
   // 3. Fetch Pending Admissions count
   const [pendingDemosResult] = await db
@@ -112,7 +112,7 @@ export default async function DashboardHomePage() {
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
         <StatCard label="Today's Classes" value={todayClassesCount} />
-        <StatCard label="Upcoming Tests" value={upcomingTestsCount} />
+        <StatCard label="Upcoming Assignments" value={upcomingAssignmentsCount} />
         <StatCard label="Pending Leads" value={pendingAdmissionsCount} />
         <StatCard label="Active Students" value={activeStudentsCount} />
         <StatCard label="Active Batches" value={activeBatchesCount} />

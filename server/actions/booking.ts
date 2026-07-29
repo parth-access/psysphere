@@ -44,6 +44,7 @@ export async function submitBooking(input: BookingInput) {
     // 2. Send Lead Notification to PsySphere Admin Email
     try {
       await emailService.sendNewLeadInternal({
+        admissionId: bookingId,
         studentName: validated.studentName,
         parentName: validated.parentName,
         email: validated.email,

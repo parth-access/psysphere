@@ -8,7 +8,8 @@ import {
   NewLeadInternalPayload,
   DemoScheduledPayload,
   DemoRejectedPayload,
-  TeacherActivationPayload
+  TeacherActivationPayload,
+  PostDemoConversionPayload
 } from "../types";
 
 export function getDemoApprovedTemplate(payload: DemoApprovedPayload): string {
@@ -204,7 +205,7 @@ export function getNewLeadInternalTemplate(payload: NewLeadInternalPayload): str
 
     <p>Please log in to the PsySphere Admin OS to review, assign a faculty member, and approve this lead.</p>
     <div class="btn-container">
-      <a href="${process.env.APP_URL || "http://localhost:3000"}/dashboard/admissions" class="btn" target="_blank">Open Admissions Dashboard</a>
+      <a href="${process.env.APP_URL || "http://localhost:3000"}/dashboard/admissions/${payload.admissionId}" class="btn" target="_blank">Open Admissions Dashboard</a>
     </div>
   `;
   return renderBaseEmailLayout("[NEW LEAD] Demo Booking Request", content);
@@ -270,5 +271,29 @@ export function getTeacherActivationTemplate(payload: TeacherActivationPayload):
     <p>Warmest regards,<br>The PsySphere Administration Team</p>
   `;
   return renderBaseEmailLayout("Faculty Account Invitation | PsySphere", content);
+}
+
+export function getPostDemoConversionTemplate(payload: PostDemoConversionPayload): string {
+  const content = `
+    <h1>How Was Your PsySphere Demo? 💜</h1>
+    <p>Dear ${payload.studentName},</p>
+    <p>Thank you for attending your live interactive psychology demo session with us. We hope you found the whiteboard session and instructional approach valuable!</p>
+    
+    <p>To help you decide if PsySphere is the right fit for your Class 11/12 boards and CUET preparation, we have created a temporary student portal preview for you. You can explore the dashboard and try out its interactive features below:</p>
+    
+    <div class="btn-container" style="margin-bottom: 16px;">
+      <a href="${payload.previewUrl}" class="btn" target="_blank">Explore Preview Experience</a>
+    </div>
+    
+    <p>Ready to lock in your enrollment and secure your batch placement? You can complete your official registration and package selection here:</p>
+    
+    <div class="btn-container" style="margin-top: 16px;">
+      <a href="${payload.joinUrl}" class="btn" target="_blank" style="background-color: #7C3AED;">Continue & Enroll Now</a>
+    </div>
+
+    <p>If you have any questions or would like to discuss payment structures and schedules, feel free to reply directly to this email.</p>
+    <p>Warmest regards,<br>The PsySphere Team</p>
+  `;
+  return renderBaseEmailLayout("How Was Your PsySphere Demo? Continue Your Journey With Us 💜", content);
 }
 

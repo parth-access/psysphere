@@ -14,11 +14,11 @@ export const MOCK_RECENT_ACTIVITY = [
   { id: 5, text: "Weekly Test scheduled", time: "1 day ago", type: "academic" },
 ];
 
-export const MOCK_BOOKINGS = [
-  { id: "B-1001", studentName: "Rohan Sharma", parentName: "Rajeev Sharma", class: "Class 12", phone: "+91 9876543210", preferredSlot: "Mon, 4:00 PM", status: "pending" },
-  { id: "B-1002", studentName: "Ananya Gupta", parentName: "Meera Gupta", class: "Class 11", phone: "+91 9876543211", preferredSlot: "Tue, 5:00 PM", status: "approved" },
-  { id: "B-1003", studentName: "Vikram Singh", parentName: "Anita Singh", class: "Class 12", phone: "+91 9876543212", preferredSlot: "Wed, 4:00 PM", status: "completed" },
-  { id: "B-1004", studentName: "Sneha Patel", parentName: "Ramesh Patel", class: "Class 11", phone: "+91 9876543213", preferredSlot: "Thu, 6:00 PM", status: "cancelled" },
+export const MOCK_ADMISSIONS = [
+  { id: "ADM-2026-001", studentName: "Rohan Sharma", parentName: "Rajeev Sharma", email: "rohan@example.com", phone: "+91 9876543210", class: "Class 12", program: "Standard", status: "LEAD", assignedTeacher: "Unassigned", demoDate: "TBD" },
+  { id: "ADM-2026-002", studentName: "Ananya Gupta", parentName: "Meera Gupta", email: "ananya@example.com", phone: "+91 9876543211", class: "Class 11", program: "CUET Prep", status: "DEMO_APPROVED", assignedTeacher: "Dravina Gupta", demoDate: "15 July 2026" },
+  { id: "ADM-2026-003", studentName: "Vikram Singh", parentName: "Anita Singh", email: "vikram@example.com", phone: "+91 9876543212", class: "Class 12", program: "Standard", status: "DEMO_COMPLETED", assignedTeacher: "Dr. Sharma", demoDate: "10 July 2026" },
+  { id: "ADM-2026-004", studentName: "Sneha Patel", parentName: "Ramesh Patel", email: "sneha@example.com", phone: "+91 9876543213", class: "Class 11", program: "Standard", status: "REJECTED", assignedTeacher: "Unassigned", demoDate: "TBD" },
 ];
 
 export const MOCK_STUDENTS = [

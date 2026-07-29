@@ -13,6 +13,7 @@ export interface DemoRequestReceivedPayload {
 }
 
 export interface NewLeadInternalPayload {
+  admissionId: string;
   studentName: string;
   parentName: string;
   email: string;
@@ -57,6 +58,12 @@ export interface TeacherActivationPayload {
   teacherName: string;
   email: string;
   passwordSetupUrl: string;
+}
+
+export interface PostDemoConversionPayload {
+  studentName: string;
+  previewUrl: string;
+  joinUrl: string;
 }
 
 export interface PasswordSetupPayload {

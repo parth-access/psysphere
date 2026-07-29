@@ -60,7 +60,7 @@ export class OnboardingService {
         studentName: admission.studentName,
         email: admission.email,
         demoDate: admission.preferredDate ? `${admission.preferredDate} ${admission.preferredTime ? `at ${admission.preferredTime}` : ""}` : "TBD",
-      });
+      }, admissionId);
       if (!emailResult.success) {
         console.error(`⚠️ Demo approval email delivery failed: ${emailResult.error}`);
       }
@@ -289,7 +289,7 @@ export class OnboardingService {
         passwordSetupUrl,
         teacherName: admission.assignedTeacher || "Dr. Aristha Sen",
         demoDate: admission.demoDate || undefined,
-      });
+      }, admissionId);
       if (!emailResult.success) {
         console.error(`⚠️ Invitation email delivery failed for ${admission.email}: ${emailResult.error}`);
       }

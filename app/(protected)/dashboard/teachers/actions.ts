@@ -44,20 +44,26 @@ export async function createTeacherAction(formData: FormData) {
 
   const supabaseAdmin = createAdminClient();
 
+  let existingAuthUser = false;
   try {
     const { data: listData, error: listError } = await supabaseAdmin.auth.admin.listUsers();
     if (listError) {
-      throw new Error(`Failed to inspect existing auth accounts: ${listError.message}`);
-    }
-    const existingAuthUser = listData?.users?.find(
-      (u) => u.email?.toLowerCase() === email
-    );
-    if (existingAuthUser) {
-      throw new Error(`An authentication account with email '${email}' already exists in Supabase Auth.`);
+      console.warn(`[createTeacherAction] Auth lookup warning: ${listError.message}`);
+    } else {
+      const found = listData?.users?.find(
+        (u) => u.email?.toLowerCase() === email
+      );
+      if (found) {
+        existingAuthUser = true;
+      }
     }
   } catch (lookupErr: unknown) {
     const msg = lookupErr instanceof Error ? lookupErr.message : String(lookupErr);
     console.warn(`[createTeacherAction] Auth lookup warning: ${msg}`);
+  }
+
+  if (existingAuthUser) {
+    throw new Error(`An authentication account with email '${email}' already exists in Supabase Auth.`);
   }
 
   // 3. Create the User in Supabase Auth using the Admin client
@@ -112,10 +118,10 @@ export async function createTeacherAction(formData: FormData) {
   }
 
   // 5. Generate secure invitation / password setup link from Supabase
-  let passwordSetupUrl = `${process.env.APP_URL || "http://localhost:3000"}/reset-password`;
+  let passwordSetupUrl = "";
   try {
     const { data: linkData, error: linkError } = await supabaseAdmin.auth.admin.generateLink({
-      type: "invite",
+      type: "recovery",
       email: email,
       options: {
         redirectTo: `${process.env.APP_URL || "http://localhost:3000"}/reset-password`
@@ -123,13 +129,19 @@ export async function createTeacherAction(formData: FormData) {
     });
 
     if (linkError) {
-      console.error("Failed to generate teacher invite link from Supabase:", linkError);
-    } else if (linkData?.properties?.action_link) {
-      passwordSetupUrl = linkData.properties.action_link;
-      console.log("Successfully generated secure Supabase teacher invite URL:", passwordSetupUrl);
+      console.error("Failed to generate secure teacher recovery link from Supabase:", linkError);
+      throw new Error(`Failed to generate secure password setup link: ${linkError.message}`);
     }
-  } catch (linkError) {
-    console.error("Exception generating teacher invitation link from Supabase:", linkError);
+
+    if (!linkData?.properties?.action_link) {
+      throw new Error("Supabase generateLink did not return a valid action link.");
+    }
+
+    passwordSetupUrl = linkData.properties.action_link;
+    console.log("Successfully generated secure Supabase teacher recovery URL.");
+  } catch (error: any) {
+    console.error("Exception generating teacher recovery link from Supabase:", error);
+    throw new Error(error.message || "Failed to generate secure password setup link.");
   }
 
   // 6. Send Invite Email via Resend - do not rollback if email fails, return success with warning!
@@ -140,7 +152,7 @@ export async function createTeacherAction(formData: FormData) {
       teacherName: validated.fullName,
       email,
       passwordSetupUrl
-    });
+    }, supabaseUserId);
     if (emailResult.success) {
       emailSent = true;
       console.log(`Successfully dispatched teacher invitation email to ${email}`);

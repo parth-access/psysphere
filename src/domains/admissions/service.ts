@@ -4,6 +4,7 @@ import { db } from "@/db";
 import { profiles } from "@/db/schema/core/profiles";
 import { eq } from "drizzle-orm";
 import { emailService } from "../email/service";
+import { prospectTokenService } from "./tokens";
 
 export class AdmissionService {
   /**
@@ -46,7 +47,7 @@ export class AdmissionService {
     try {
       const emailResult = await emailService.sendDemoRejected(admission.email, {
         studentName: admission.studentName
-      });
+      }, id);
       if (!emailResult.success) {
         console.error(`⚠️ Demo rejection email delivery failed: ${emailResult.error}`);
       }
@@ -104,7 +105,7 @@ export class AdmissionService {
         demoTime: demoTime,
         teacherName: teacher.fullName,
         googleMeetUrl: meetingUrl
-      }, isRescheduled);
+      }, isRescheduled, id);
       
       if (!emailResult.success) {
         console.error(`⚠️ Demo scheduled email delivery failed: ${emailResult.error}`);
@@ -133,6 +134,28 @@ export class AdmissionService {
     }
 
     const updated = await admissionRepository.updateStatus(id, "DEMO_COMPLETED");
+
+    // Generate secure prospect experience / join token
+    try {
+      const rawToken = await prospectTokenService.generateToken(id);
+      const appUrl = process.env.APP_URL || "http://localhost:3000";
+      const previewUrl = `${appUrl}/experience/${rawToken}`;
+      const joinUrl = `${appUrl}/join/${rawToken}`;
+
+      const emailResult = await emailService.sendPostDemoConversion(admission.email, {
+        studentName: admission.studentName,
+        previewUrl,
+        joinUrl
+      }, id);
+
+      if (!emailResult.success) {
+        console.error(`⚠️ Post-demo conversion email delivery failed: ${emailResult.error}`);
+      }
+    } catch (tokenErr: unknown) {
+      const msg = tokenErr instanceof Error ? tokenErr.message : String(tokenErr);
+      console.error("⚠️ Failed to generate token or send post-demo email:", msg);
+    }
+
     return updated[0];
   }
   

@@ -15,9 +15,13 @@ import {
 } from "../actions";
 import Link from "next/link";
 
+import { enforcePageRole } from "@/server/authorization/requireRole";
+import { ROLES } from "@/server/authorization/roles";
+
 export const dynamic = "force-dynamic";
 
 export default async function AdmissionDetailsPage({ params }: { params: Promise<{ id: string }> }) {
+  await enforcePageRole([ROLES.ADMIN]);
   const resolvedParams = await params;
   const admissionId = resolvedParams.id;
   

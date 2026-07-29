@@ -1,10 +1,13 @@
-"use client";
-
 import { PageHeader } from "@/features/dashboard/ui/PageHeader";
 import { DashboardCard } from "@/features/dashboard/ui/DashboardCard";
 import { SectionHeader } from "@/features/dashboard/ui/SectionHeader";
+import { enforcePageRole } from "@/server/authorization/requireRole";
+import { ROLES } from "@/server/authorization/roles";
 
-export default function SettingsPage() {
+export const dynamic = "force-dynamic";
+
+export default async function SettingsPage() {
+  await enforcePageRole([ROLES.ADMIN]);
   return (
     <div className="space-y-8">
       <PageHeader 

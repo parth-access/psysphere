@@ -3,7 +3,7 @@ import { StatCard } from "@/features/dashboard/ui/StatCard";
 import { DashboardCard } from "@/features/dashboard/ui/DashboardCard";
 import { db } from "@/db";
 import { eq, desc } from "drizzle-orm";
-import { requireRole } from "@/server/authorization/requireRole";
+import { enforcePageRole } from "@/server/authorization/requireRole";
 import { ROLES } from "@/server/authorization/roles";
 import { classSessions } from "@/db/schema/academic/classSessions";
 import { assignments } from "@/db/schema/academic/assignments";
@@ -17,7 +17,7 @@ import {
 export const dynamic = "force-dynamic";
 
 export default async function TeacherDashboardPage() {
-  const profile = await requireRole([ROLES.TEACHER, ROLES.ADMIN]);
+  const profile = await enforcePageRole([ROLES.TEACHER, ROLES.ADMIN]);
   
   // 1. Get Scheduled Classes
   const scheduledClasses = await db

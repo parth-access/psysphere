@@ -15,17 +15,19 @@ import {
 import { signOutAction } from "@/src/domains/auth/actions";
 
 const NAV_ITEMS = [
-  { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { label: "Admissions", href: "/dashboard/admissions", icon: CalendarDays },
-  { label: "Students", href: "/dashboard/students", icon: Users },
-  { label: "Teachers", href: "/dashboard/teachers", icon: GraduationCap },
-  { label: "Batches", href: "/dashboard/batches", icon: Layers },
-  { label: "Classes", href: "/dashboard/classes", icon: BookOpen },
-  { label: "Settings", href: "/dashboard/settings", icon: Settings },
+  { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard, roles: ["admin", "teacher", "student"] },
+  { label: "Admissions", href: "/dashboard/admissions", icon: CalendarDays, roles: ["admin"] },
+  { label: "Students", href: "/dashboard/students", icon: Users, roles: ["admin"] },
+  { label: "Teachers", href: "/dashboard/teachers", icon: GraduationCap, roles: ["admin"] },
+  { label: "Batches", href: "/dashboard/batches", icon: Layers, roles: ["admin"] },
+  { label: "Classes", href: "/dashboard/classes", icon: BookOpen, roles: ["admin", "teacher"] },
+  { label: "Settings", href: "/dashboard/settings", icon: Settings, roles: ["admin"] },
 ];
 
 export function Sidebar({ userProfile }: { userProfile?: { fullName: string; role: string } | null }) {
   const pathname = usePathname();
+  const currentRole = userProfile?.role || "student";
+  const visibleNavItems = NAV_ITEMS.filter((item) => item.roles.includes(currentRole));
 
   return (
     <div className="w-64 h-screen bg-[#FDFBF7] border-r border-gray-200 flex flex-col fixed left-0 top-0 pt-6 pb-6">
@@ -35,7 +37,7 @@ export function Sidebar({ userProfile }: { userProfile?: { fullName: string; rol
       </div>
 
       <nav className="flex-1 px-4 space-y-1 overflow-y-auto">
-        {NAV_ITEMS.map((item) => {
+        {visibleNavItems.map((item) => {
           const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href));
           return (
             <Link

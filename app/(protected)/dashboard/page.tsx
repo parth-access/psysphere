@@ -18,24 +18,13 @@ import {
   ClipboardList,
   CircleDot
 } from "lucide-react";
-import { getCurrentProfile } from "@/src/domains/auth/actions";
-import { redirect } from "next/navigation";
+import { enforcePageRole } from "@/server/authorization/requireRole";
+import { ROLES } from "@/server/authorization/roles";
 
 export const dynamic = "force-dynamic";
 
 export default async function DashboardHomePage() {
-  const profile = await getCurrentProfile();
-  if (!profile) {
-    redirect("/sign-in");
-  }
-
-  if (profile.role === "teacher") {
-    redirect("/dashboard/teacher");
-  }
-
-  if (profile.role === "student") {
-    redirect("/dashboard/student");
-  }
+  const profile = await enforcePageRole([ROLES.ADMIN]);
 
   // 1. Fetch Today's Classes count
   const todayStart = new Date();

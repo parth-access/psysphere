@@ -3,7 +3,7 @@ import { StatCard } from "@/features/dashboard/ui/StatCard";
 import { DashboardCard } from "@/features/dashboard/ui/DashboardCard";
 import { db } from "@/db";
 import { eq, and, desc } from "drizzle-orm";
-import { requireRole } from "@/server/authorization/requireRole";
+import { enforcePageRole } from "@/server/authorization/requireRole";
 import { ROLES } from "@/server/authorization/roles";
 import { studentProfiles } from "@/db/schema/core/studentProfiles";
 import { enrollments } from "@/db/schema/core/enrollments";
@@ -19,7 +19,7 @@ import {
 export const dynamic = "force-dynamic";
 
 export default async function StudentDashboardPage() {
-  const profile = await requireRole([ROLES.STUDENT, ROLES.ADMIN]);
+  const profile = await enforcePageRole([ROLES.STUDENT, ROLES.ADMIN]);
   
   // 1. Find Student Profile
   const [studentProfile] = await db

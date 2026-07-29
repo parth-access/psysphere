@@ -6,10 +6,13 @@ import { enrollments } from "@/db/schema/core/enrollments";
 import { eq, count } from "drizzle-orm";
 import { Users, CalendarClock, BookOpen, Layers, Plus, Calendar } from "lucide-react";
 import { createBatchAction } from "./actions";
+import { enforcePageRole } from "@/server/authorization/requireRole";
+import { ROLES } from "@/server/authorization/roles";
 
 export const dynamic = "force-dynamic";
 
 export default async function BatchesPage() {
+  await enforcePageRole([ROLES.ADMIN]);
   // Query batches along with real enrollment aggregates from database
   const batchesList = await db
     .select({

@@ -2,8 +2,9 @@ import { createClient } from "@/src/domains/auth/server";
 import { db } from "../db";
 import { profiles } from "../../db/schema";
 import { eq } from "drizzle-orm";
+import { cache } from "react";
 
-export const getProfile = async () => {
+export const getProfile = cache(async () => {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   const userId = user?.id;
@@ -16,7 +17,7 @@ export const getProfile = async () => {
     .where(eq(profiles.id, userId))
     .limit(1);
   return profile || null;
-};
+});
 
 export const requireProfile = async () => {
   const profile = await getProfile();

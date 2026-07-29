@@ -4,10 +4,13 @@ import { DataTable } from "@/features/dashboard/ui/DataTable";
 import { teacherRepository } from "@/src/domains/users/repository";
 import { Plus, UserCheck } from "lucide-react";
 import { createTeacherAction } from "./actions";
+import { enforcePageRole } from "@/server/authorization/requireRole";
+import { ROLES } from "@/server/authorization/roles";
 
 export const dynamic = "force-dynamic";
 
 export default async function TeachersPage() {
+  await enforcePageRole([ROLES.ADMIN]);
   const teachersData = await teacherRepository.findAllTeachers();
 
   const columns = [

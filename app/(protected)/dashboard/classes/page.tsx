@@ -7,10 +7,13 @@ import { batches } from "@/db/schema/core/batches";
 import { eq, desc } from "drizzle-orm";
 import { Plus, Video, Calendar as CalendarIcon, Clock, BookOpen } from "lucide-react";
 import { createClassSessionAction } from "./actions";
+import { enforcePageRole } from "@/server/authorization/requireRole";
+import { ROLES } from "@/server/authorization/roles";
 
 export const dynamic = "force-dynamic";
 
 export default async function ClassesPage() {
+  await enforcePageRole([ROLES.ADMIN, ROLES.TEACHER]);
   // 1. Fetch live class sessions joined with their parent batch
   const sessions = await db
     .select({

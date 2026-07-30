@@ -4,8 +4,8 @@ import { StatusBadge } from "@/features/dashboard/ui/StatusBadge";
 import { db } from "@/db";
 import { classSessions } from "@/db/schema/academic/classSessions";
 import { batches } from "@/db/schema/core/batches";
-import { eq, desc } from "drizzle-orm";
-import { Plus, Video, Calendar as CalendarIcon, Clock, BookOpen } from "lucide-react";
+import { eq, desc, isNotNull, and } from "drizzle-orm";
+import { Plus, Video, Calendar as CalendarIcon, Clock, BookOpen, GraduationCap } from "lucide-react";
 import { createClassSessionAction } from "./actions";
 import { enforcePageRole } from "@/server/authorization/requireRole";
 import { ROLES } from "@/server/authorization/roles";
@@ -13,9 +13,17 @@ import { ROLES } from "@/server/authorization/roles";
 export const dynamic = "force-dynamic";
 
 export default async function ClassesPage() {
-  await enforcePageRole([ROLES.ADMIN, ROLES.TEACHER]);
+  const profile = await enforcePageRole([ROLES.ADMIN, ROLES.TEACHER]);
+
   // 1. Fetch live class sessions joined with their parent batch
-  const sessions = await db
+  // Admins see all classes; teachers only see classes for their assigned batches
+  const sessionsConditions = [];
+
+  if (profile.role === "teacher") {
+    sessionsConditions.push(eq(batches.teacherId, profile.id));
+  }
+
+  const sessionsQuery = db
     .select({
       id: classSessions.id,
       title: classSessions.title,
@@ -27,20 +35,37 @@ export default async function ClassesPage() {
       batchName: batches.name,
     })
     .from(classSessions)
-    .innerJoin(batches, eq(classSessions.batchId, batches.id))
-    .orderBy(desc(classSessions.startsAt));
+    .innerJoin(batches, eq(classSessions.batchId, batches.id));
+
+  if (sessionsConditions.length > 0) {
+    sessionsQuery.where(and(...sessionsConditions));
+  }
+
+  const sessions = await sessionsQuery.orderBy(desc(classSessions.startsAt));
 
   // 2. Fetch active batches to schedule sessions onto
+  // Admins can schedule for any batch with an assigned teacher; teachers only for their assigned batches
+  const batchesConditions = [eq(batches.isActive, true)];
+
+  if (profile.role === "teacher") {
+    batchesConditions.push(eq(batches.teacherId, profile.id));
+  } else {
+    batchesConditions.push(isNotNull(batches.teacherId));
+  }
+
   const batchesList = await db
     .select()
     .from(batches)
-    .where(eq(batches.isActive, true));
+    .where(and(...batchesConditions));
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto">
       <PageHeader 
         title="Classes Schedule" 
-        description="Schedule, host, and track live interactive digital whiteboarding lectures and doubt-clearing sessions."
+        description={profile.role === "admin" 
+          ? "Schedule, host, and track live interactive digital whiteboarding lectures and doubt-clearing sessions globally."
+          : "Schedule and host interactive live lessons for your assigned batch cohorts."
+        }
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -54,7 +79,12 @@ export default async function ClassesPage() {
           {sessions.length === 0 ? (
             <div className="text-center py-12 bg-white border border-gray-100 rounded-2xl text-gray-500">
               <p className="text-sm font-medium">No live classes scheduled yet.</p>
-              <p className="text-xs text-gray-400 mt-1">Schedule a session for an active student batch on the right panel.</p>
+              <p className="text-xs text-gray-400 mt-1">
+                {profile.role === "admin" 
+                  ? "Schedule a session for an active student batch on the right panel."
+                  : "You don't have any classes scheduled yet. Create one using the form on the right."
+                }
+              </p>
             </div>
           ) : (
             <div className="flex flex-col gap-4">
@@ -119,8 +149,13 @@ export default async function ClassesPage() {
         <div className="space-y-6">
           <DashboardCard title="Schedule Lecture">
             {batchesList.length === 0 ? (
-              <div className="text-center py-6 text-sm text-gray-500">
-                <p className="font-medium">Please create an active batch cohort first before scheduling any live lectures.</p>
+              <div className="text-center py-6 text-sm text-gray-500 p-2">
+                <p className="font-medium text-amber-600 bg-amber-50 border border-amber-100 p-4 rounded-xl">
+                  {profile.role === "admin"
+                    ? "Please create an active batch cohort and assign an instructor before scheduling any live lectures."
+                    : "You are not currently assigned to any active batch cohorts. Please contact the administrator to assign you to a batch."
+                  }
+                </p>
               </div>
             ) : (
               <form action={createClassSessionAction} className="space-y-4">

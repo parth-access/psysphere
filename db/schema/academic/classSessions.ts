@@ -7,6 +7,7 @@ import {
 } from "drizzle-orm/pg-core";
 
 import { batches } from "../core/batches";
+import { profiles } from "../core/profiles";
 import { timestamps, auditColumns } from "../common";
 import { classSessionStatusEnum } from "../enums";
 
@@ -19,6 +20,11 @@ export const classSessions = pgTable(
       .notNull()
       .references(() => batches.id, {
         onDelete: "cascade",
+      }),
+
+    teacherId: uuid("teacher_id")
+      .references(() => profiles.id, {
+        onDelete: "set null",
       }),
 
     title: text("title").notNull(),
@@ -51,5 +57,7 @@ export const classSessions = pgTable(
     statusIdx: index("class_sessions_status_idx").on(table.status),
 
     startIdx: index("class_sessions_start_idx").on(table.startsAt),
+
+    teacherIdx: index("class_sessions_teacher_idx").on(table.teacherId),
   })
 );

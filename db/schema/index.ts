@@ -4,6 +4,7 @@
 
 export * from "./enums";
 export * from "./common";
+export * from "./system/googleCredentials";
 
 /* ============================================================
  * Core

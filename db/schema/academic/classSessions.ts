@@ -47,6 +47,8 @@ export const classSessions = pgTable(
 
     teacherNotes: text("teacher_notes"),
 
+    googleEventId: text("google_event_id"),
+
     ...timestamps,
 
     ...auditColumns,

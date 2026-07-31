@@ -5,10 +5,11 @@ import { db } from "@/db";
 import { classSessions } from "@/db/schema/academic/classSessions";
 import { batches } from "@/db/schema/core/batches";
 import { eq, desc, isNotNull, and } from "drizzle-orm";
-import { Plus, Video, Calendar as CalendarIcon, Clock, BookOpen, GraduationCap } from "lucide-react";
+import { Plus, Video, Calendar as CalendarIcon, Clock, BookOpen, AlertTriangle } from "lucide-react";
 import { createClassSessionAction } from "./actions";
 import { enforcePageRole } from "@/server/authorization/requireRole";
 import { ROLES } from "@/server/authorization/roles";
+import { getConnectedClient } from "@/server/integrations/google";
 
 export const dynamic = "force-dynamic";
 
@@ -57,6 +58,9 @@ export default async function ClassesPage() {
     .select()
     .from(batches)
     .where(and(...batchesConditions));
+
+  // 3. Query centralized Google integration status
+  const googleConnection = await getConnectedClient();
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto">
@@ -194,15 +198,15 @@ export default async function ClassesPage() {
                   />
                 </div>
 
-                <div>
-                  <label className="text-xs font-semibold text-gray-700 uppercase tracking-wider block mb-1">Meeting Link (Meet/Zoom)</label>
-                  <input 
-                    type="url" 
-                    name="meetingUrl" 
-                    required 
-                    defaultValue="https://meet.google.com/abc-defg-hij"
-                    className="w-full px-4 py-2 border border-gray-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
-                  />
+                {/* Meet integration alert badge */}
+                <div className="bg-[#FAF8F5] border border-gray-100 p-4 rounded-xl space-y-1.5">
+                  <div className="flex items-center gap-2 text-xs font-semibold text-brand-primary">
+                    <Video className="w-4 h-4 shrink-0" />
+                    <span>Google Meet Video-Conference</span>
+                  </div>
+                  <p className="text-[11px] text-gray-600 leading-relaxed">
+                    A secure Google Calendar event and unique Google Meet conference room link will be automatically generated and synced upon lecture scheduling.
+                  </p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
@@ -242,13 +246,44 @@ export default async function ClassesPage() {
                 </div>
 
                 <div className="pt-2">
-                  <button 
-                    type="submit" 
-                    className="w-full flex items-center justify-center gap-2 bg-brand-primary text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-brand-primary-hover transition-colors cursor-pointer"
-                  >
-                    <Plus className="w-4 h-4" />
-                    Schedule Lecture
-                  </button>
+                  {!googleConnection ? (
+                    <div className="space-y-3">
+                      <div className="p-3.5 bg-amber-50 border border-amber-100 rounded-xl text-xs text-amber-800 font-medium leading-relaxed flex items-start gap-2">
+                        <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                        <div>
+                          {profile.role === "admin" ? (
+                            <>
+                              <strong>Google integration is not connected.</strong> Please connect and authorize the system Google account first in the{" "}
+                              <a href="/dashboard/settings" className="underline hover:text-amber-900 font-bold">
+                                Settings page
+                              </a>{" "}
+                              before scheduling live lectures.
+                            </>
+                          ) : (
+                            <>
+                              <strong>Google Calendar service is currently offline.</strong> Please contact your administrator to configure the system Google account before scheduling classes.
+                            </>
+                          )}
+                        </div>
+                      </div>
+                      <button 
+                        type="button" 
+                        disabled
+                        className="w-full flex items-center justify-center gap-2 bg-gray-100 text-gray-400 py-2.5 rounded-xl text-sm font-semibold cursor-not-allowed"
+                      >
+                        <Plus className="w-4 h-4 text-gray-300" />
+                        Schedule Lecture (Offline)
+                      </button>
+                    </div>
+                  ) : (
+                    <button 
+                      type="submit" 
+                      className="w-full flex items-center justify-center gap-2 bg-brand-primary text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-brand-primary-hover transition-colors cursor-pointer"
+                    >
+                      <Plus className="w-4 h-4" />
+                      Schedule Lecture
+                    </button>
+                  )}
                 </div>
               </form>
             )}

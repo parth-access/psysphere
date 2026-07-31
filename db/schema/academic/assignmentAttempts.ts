@@ -5,6 +5,7 @@ import {
   timestamp,
   index,
   unique,
+  text,
 } from "drizzle-orm/pg-core";
 
 import { assignments } from "./assignments";
@@ -36,6 +37,10 @@ export const assignmentAttempts = pgTable(
     submittedAt: timestamp("submitted_at", {
       withTimezone: true,
     }),
+
+    submissionContent: text("submission_content"),
+
+    attachmentUrl: text("attachment_url"),
 
     ...timestamps,
   },

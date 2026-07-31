@@ -39,7 +39,13 @@ export default async function BatchesPage() {
     })
     .from(batches)
     .leftJoin(profiles, eq(batches.teacherId, profiles.id))
-    .leftJoin(enrollments, eq(batches.id, enrollments.batchId))
+    .leftJoin(
+      enrollments,
+      and(
+        eq(batches.id, enrollments.batchId),
+        eq(enrollments.status, "active")
+      )
+    )
     .groupBy(batches.id, profiles.fullName);
 
   return (

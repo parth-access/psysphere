@@ -78,18 +78,37 @@ export async function enrollStudentAction(formData: FormData) {
     .limit(1);
 
   if (existingEnrollment) {
-    throw new Error("Student is already enrolled in this batch cohort.");
+    if (existingEnrollment.status === "active") {
+      throw new Error("Student is already active in this batch cohort.");
+    }
+    if (existingEnrollment.status === "completed") {
+      throw new Error("Cannot reactivate a student who has already completed this batch cohort.");
+    }
+    if (existingEnrollment.status === "dropped") {
+      // Reactivate existing enrollment
+      await db
+        .update(enrollments)
+        .set({
+          status: "active",
+          enrolledAt: new Date(),
+          leftAt: null,
+          updatedAt: new Date(),
+        })
+        .where(eq(enrollments.id, existingEnrollment.id));
+    } else {
+      throw new Error(`Cannot reactivate student with enrollment status: ${existingEnrollment.status}`);
+    }
+  } else {
+    // Perform enrollment
+    await db.insert(enrollments).values({
+      batchId: validated.batchId,
+      studentProfileId: validated.studentProfileId,
+      status: "active",
+      enrolledAt: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
   }
-
-  // Perform enrollment
-  await db.insert(enrollments).values({
-    batchId: validated.batchId,
-    studentProfileId: validated.studentProfileId,
-    status: "active",
-    enrolledAt: new Date(),
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  });
 
   revalidatePath(`/dashboard/batches/${validated.batchId}`);
   revalidatePath(`/dashboard/batches`);
@@ -151,7 +170,12 @@ export async function removeStudentFromBatchAction(formData: FormData) {
   }
 
   await db
-    .delete(enrollments)
+    .update(enrollments)
+    .set({
+      status: "dropped",
+      leftAt: new Date(),
+      updatedAt: new Date(),
+    })
     .where(eq(enrollments.id, enrollmentId));
 
   revalidatePath(`/dashboard/batches/${batchId}`);

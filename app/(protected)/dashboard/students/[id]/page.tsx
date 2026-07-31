@@ -43,7 +43,13 @@ export default async function StudentDetailsPage({ params }: PageProps) {
     })
     .from(profiles)
     .leftJoin(studentProfiles, eq(profiles.id, studentProfiles.profileId))
-    .leftJoin(enrollments, eq(studentProfiles.profileId, enrollments.studentProfileId))
+    .leftJoin(
+      enrollments,
+      and(
+        eq(studentProfiles.profileId, enrollments.studentProfileId),
+        eq(enrollments.status, "active")
+      )
+    )
     .leftJoin(batches, eq(enrollments.batchId, batches.id))
     .where(and(eq(profiles.id, studentId), eq(profiles.role, "student")))
     .limit(1);

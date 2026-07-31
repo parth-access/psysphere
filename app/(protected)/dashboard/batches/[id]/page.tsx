@@ -72,7 +72,7 @@ export default async function BatchDetailsPage({ params }: PageProps) {
     .from(enrollments)
     .innerJoin(studentProfiles, eq(enrollments.studentProfileId, studentProfiles.profileId))
     .innerJoin(profiles, eq(studentProfiles.profileId, profiles.id))
-    .where(eq(enrollments.batchId, batchId));
+    .where(and(eq(enrollments.batchId, batchId), eq(enrollments.status, "active")));
 
   // 3. Fetch all active teachers for the update dropdown
   const activeTeachers = await db

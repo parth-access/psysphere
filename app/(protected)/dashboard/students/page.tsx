@@ -5,8 +5,11 @@ import { DataTable } from "@/features/dashboard/ui/DataTable";
 import { StatusBadge } from "@/features/dashboard/ui/StatusBadge";
 import { studentRepository } from "@/src/domains/users/repository";
 import Link from "next/link";
+import { enforcePageRole } from "@/server/authorization/requireRole";
+import { ROLES } from "@/server/authorization/roles";
 
 export default async function StudentsPage() {
+  await enforcePageRole([ROLES.ADMIN]);
   const studentsData = await studentRepository.findAllStudents();
 
   const columns = [

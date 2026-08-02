@@ -36,6 +36,8 @@ export async function signOutAction() {
   redirect("/sign-in");
 }
 
+import { getProfile } from "@/server/authorization/getProfile";
+
 export async function getCurrentUser() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -43,13 +45,5 @@ export async function getCurrentUser() {
 }
 
 export async function getCurrentProfile() {
-  const user = await getCurrentUser();
-  if (!user) return null;
-
-  const [profile] = await db.select()
-    .from(profiles)
-    .where(eq(profiles.id, user.id))
-    .limit(1);
-
-  return profile || null;
+  return getProfile();
 }

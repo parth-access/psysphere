@@ -220,11 +220,11 @@ export const AppShell = ({
         <div className="p-6 border-t border-brand-stone-soft/60 bg-brand-cream">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-8 h-8 rounded-full bg-brand-beige border border-brand-stone-soft/85 flex items-center justify-center text-[10px] font-bold text-brand-charcoal">
-              {userRole === 'teacher' ? 'AS' : 'PS'}
+              {userRole === 'teacher' ? 'DG' : 'PS'}
             </div>
             <div className="flex-1 overflow-hidden">
               <p className="text-sm font-medium text-brand-charcoal truncate">
-                {userRole === 'teacher' ? 'Aristha Sen' : 'Pranav Sharma'}
+                {userRole === 'teacher' ? 'Dravina Gupta' : 'Pranav Sharma'}
               </p>
               <p className="text-[10px] text-brand-charcoal-muted truncate">
                 {userRole === 'teacher' ? 'Lead Educator' : 'Student Access'}
@@ -393,11 +393,11 @@ export const AppShell = ({
               <div className="p-4 bg-brand-cream border-b border-brand-stone-soft/30">
                 <div className="flex items-center space-x-3">
                   <div className="w-8 h-8 rounded-full bg-brand-beige flex items-center justify-center font-serif text-xs font-semibold text-brand-charcoal">
-                    {userRole === 'teacher' ? 'AS' : 'PS'}
+                    {userRole === 'teacher' ? 'DG' : 'PS'}
                   </div>
                   <div className="overflow-hidden">
                     <p className="text-xs font-semibold text-brand-charcoal truncate">
-                      {userRole === 'teacher' ? 'Aristha Sen' : 'Pranav Sharma'}
+                      {userRole === 'teacher' ? 'Dravina Gupta' : 'Pranav Sharma'}
                     </p>
                     <p className="text-[10px] text-brand-charcoal-muted uppercase">
                       {userRole} • Class 12

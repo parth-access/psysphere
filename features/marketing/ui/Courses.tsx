@@ -11,6 +11,7 @@ const courses = [
     description: 'Build a strong foundation in Psychology. Perfect for students starting their journey.',
     features: ['NCERT Coverage', 'Concept Building', 'Regular Assessments'],
     pricingQuery: '?class=class11&package=standard',
+    route: '/courses/class-11',
   },
   {
     id: 'class-12',
@@ -19,6 +20,7 @@ const courses = [
     features: ['Board Focus', 'Answer Writing', 'Mock Exams'],
     highlight: true,
     pricingQuery: '?class=class12&package=standard',
+    route: '/courses/class-12',
   },
   {
     id: 'cuet-ug',
@@ -26,6 +28,7 @@ const courses = [
     description: 'Targeted preparation for India\'s top psychology colleges.',
     features: ['MCQ Strategy', 'Time Management', 'University Guidance'],
     pricingQuery: '?class=class12&package=cuet',
+    route: '/courses/cuet-ug',
   },
   {
     id: 'integrated',
@@ -33,6 +36,7 @@ const courses = [
     description: 'The ultimate dual-preparation strategy for ambitious students.',
     features: ['Syllabus Mapping', 'Dual Mock Tests', 'Priority Support'],
     pricingQuery: '?class=class12&package=cuet',
+    route: '/courses/boards-cuet',
   },
 ];
 
@@ -77,7 +81,7 @@ export function Courses() {
               </div>
               
               <Link 
-                href={`${ANCHORS.pricing}${course.pricingQuery}`}
+                href={course.route}
                 className={`inline-flex items-center justify-between w-full p-4 rounded-2xl font-medium text-sm transition-colors ${
                   course.highlight
                     ? 'bg-white text-brand-primary hover:bg-brand-canvas'

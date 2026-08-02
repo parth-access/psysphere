@@ -1,123 +1,502 @@
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 import { EMAIL_DEFAULTS } from "./constants";
-import { 
-  SendEmailResponse, 
-  DemoApprovedPayload, 
-  StudentInvitationPayload, 
-  PasswordSetupPayload, 
-  WelcomeStudentPayload 
+import { db } from "@/db";
+import { emailDeliveries } from "@/db/schema";
+
+import {
+  SendEmailResponse,
+  DemoApprovedPayload,
+  StudentInvitationPayload,
+  PasswordSetupPayload,
+  WelcomeStudentPayload,
+  DemoRequestReceivedPayload,
+  NewLeadInternalPayload,
+  DemoScheduledPayload,
+  DemoRejectedPayload,
+  TeacherActivationPayload,
+  PostDemoConversionPayload,
 } from "./types";
-import { 
-  getDemoApprovedTemplate, 
-  getStudentInvitationTemplate, 
-  getPasswordSetupTemplate, 
-  getWelcomeStudentTemplate 
+
+import {
+  getDemoApprovedTemplate,
+  getStudentInvitationTemplate,
+  getPasswordSetupTemplate,
+  getWelcomeStudentTemplate,
+  getDemoRequestReceivedTemplate,
+  getNewLeadInternalTemplate,
+  getDemoScheduledTemplate,
+  getDemoRejectedTemplate,
+  getTeacherActivationTemplate,
+  getPostDemoConversionTemplate,
 } from "./templates";
 
-let resendInstance: Resend | null = null;
+/* ============================================================
+ * SMTP Transport
+ * ============================================================ */
 
-function getResendClient(): Resend | null {
-  if (resendInstance) return resendInstance;
+let transporter: nodemailer.Transporter | null = null;
 
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey || apiKey === "MY_RESEND_API_KEY") {
-    console.warn(
-      "⚠️ [EmailService] RESEND_API_KEY is missing or unconfigured. Running in Mock/Simulated Email Mode."
+function getTransporter(): nodemailer.Transporter | null {
+  if (transporter) {
+    return transporter;
+  }
+
+  const host = process.env.SMTP_HOST;
+  const port = Number(process.env.SMTP_PORT || 465);
+  const secure = process.env.SMTP_SECURE === "true";
+  const user = process.env.SMTP_USER;
+  const pass = process.env.SMTP_PASS;
+
+  if (!host || !user || !pass) {
+    console.error(
+      "❌ [EmailService] SMTP configuration is missing. Email delivery is disabled."
     );
+
     return null;
   }
 
-  try {
-    resendInstance = new Resend(apiKey);
-    return resendInstance;
-  } catch (error) {
-    console.error("❌ [EmailService] Failed to initialize Resend client:", error);
-    return null;
-  }
+  transporter = nodemailer.createTransport({
+    host,
+    port,
+    secure,
+    auth: {
+      user,
+      pass,
+    },
+  });
+
+  return transporter;
 }
+
+/* ============================================================
+ * Email Service
+ * ============================================================ */
 
 export class EmailService {
   /**
-   * General-purpose low-level HTML email sender
+   * General-purpose HTML email sender.
+   *
+   * All PsySphere transactional emails ultimately pass through
+   * this method.
+   *
+   * Delivery attempts are logged to email_deliveries.
    */
   async sendHtmlEmail(
-    to: string, 
-    subject: string, 
-    htmlContent: string, 
-    from: string = EMAIL_DEFAULTS.FROM
+    to: string,
+    subject: string,
+    htmlContent: string,
+    from: string = EMAIL_DEFAULTS.FROM,
+    options?: {
+      type: string;
+      relatedEntityType?: string;
+      relatedEntityId?: string;
+    }
   ): Promise<SendEmailResponse> {
-    const resend = getResendClient();
+    const smtp = getTransporter();
 
-    if (!resend) {
-      console.log(`
-📱 [EmailService SIMULATOR]
-To:      ${to}
-From:    ${from}
-Subject: ${subject}
------------------ CONTENT -----------------
-An email was successfully generated. Below is a raw excerpt of the HTML payload:
-${htmlContent.slice(0, 800)}...
--------------------------------------------
-      `);
-      return { success: true, data: { id: `mock_email_${Math.random().toString(36).substring(7)}`, simulated: true } };
+    const type = options?.type || "unknown";
+    const relatedEntityType = options?.relatedEntityType || null;
+    const relatedEntityId = options?.relatedEntityId || null;
+
+    /* ========================================================
+     * SMTP unavailable
+     * ======================================================== */
+
+    if (!smtp) {
+      console.warn(
+        `[EmailService] Unsent - SMTP is not configured. Target: ${to}, Subject: ${subject}`
+      );
+
+      try {
+        await db.insert(emailDeliveries).values({
+          type,
+          recipient: to,
+          subject,
+          provider: "smtp",
+          status: "failed",
+          errorMessage:
+            "Email service is not configured (missing SMTP configuration)",
+          relatedEntityType,
+          relatedEntityId,
+        });
+      } catch (dbErr) {
+        console.error(
+          "❌ [EmailService] Failed to log unsent email delivery:",
+          dbErr
+        );
+      }
+
+      return {
+        success: false,
+        error: "Email service is not configured",
+      };
     }
 
+    /* ========================================================
+     * Send email
+     * ======================================================== */
+
     try {
-      const result = await resend.emails.send({
+      const result = await smtp.sendMail({
         from,
         to,
         subject,
         html: htmlContent,
+        replyTo: EMAIL_DEFAULTS.REPLY_TO,
       });
 
-      if (result.error) {
-        console.error("❌ [EmailService] Resend returned an error:", result.error);
-        return { success: false, error: result.error.message };
+      console.log(
+        `✅ [EmailService] Successfully sent email to ${to} (ID: ${result.messageId})`
+      );
+
+      /* ======================================================
+       * Log successful delivery
+       * ====================================================== */
+
+      try {
+        await db.insert(emailDeliveries).values({
+          type,
+          recipient: to,
+          subject,
+          provider: "smtp",
+          providerMessageId: result.messageId || null,
+          status: "success",
+          relatedEntityType,
+          relatedEntityId,
+        });
+      } catch (dbErr) {
+        console.error(
+          "❌ [EmailService] Email sent, but successful delivery logging failed:",
+          dbErr
+        );
       }
 
-      console.log(`✅ [EmailService] Successfully sent email to ${to} (ID: ${result.data?.id})`);
-      return { success: true, data: result.data };
-    } catch (error: any) {
-      console.error(`❌ [EmailService] Exception caught sending email to ${to}:`, error);
-      return { success: false, error: error?.message || String(error) };
+      return {
+        success: true,
+        data: {
+          id: result.messageId,
+        },
+      };
+    } catch (error: unknown) {
+      /* ======================================================
+       * SMTP failure
+       * ====================================================== */
+
+      const errMsg =
+        error instanceof Error ? error.message : String(error);
+
+      console.error(
+        `❌ [EmailService] Failed to send email to ${to}:`,
+        error
+      );
+
+      try {
+        await db.insert(emailDeliveries).values({
+          type,
+          recipient: to,
+          subject,
+          provider: "smtp",
+          status: "failed",
+          errorMessage: errMsg,
+          relatedEntityType,
+          relatedEntityId,
+        });
+      } catch (dbErr) {
+        console.error(
+          "❌ [EmailService] Failed to log SMTP failure:",
+          dbErr
+        );
+      }
+
+      return {
+        success: false,
+        error: errMsg,
+      };
     }
   }
 
-  /**
-   * Sends the Demo Approved confirmation email
-   */
-  async sendDemoApproved(to: string, payload: DemoApprovedPayload): Promise<SendEmailResponse> {
+  /* ============================================================
+   * Demo Approved
+   * ============================================================ */
+
+  async sendDemoApproved(
+    to: string,
+    payload: DemoApprovedPayload,
+    admissionId?: string
+  ): Promise<SendEmailResponse> {
     const html = getDemoApprovedTemplate(payload);
-    const subject = `Welcome to PsySphere | Your Demo Class is Confirmed`;
-    return this.sendHtmlEmail(to, subject, html);
+
+    const subject =
+      "Welcome to PsySphere | Your Demo Class is Confirmed";
+
+    return this.sendHtmlEmail(
+      to,
+      subject,
+      html,
+      EMAIL_DEFAULTS.FROM,
+      {
+        type: "demo_approved",
+        relatedEntityType: "admission",
+        relatedEntityId: admissionId,
+      }
+    );
   }
 
-  /**
-   * Sends the Account Set-up / Student Invitation email
-   */
-  async sendStudentInvitation(to: string, payload: StudentInvitationPayload): Promise<SendEmailResponse> {
+  /* ============================================================
+   * Student Invitation
+   * ============================================================ */
+
+  async sendStudentInvitation(
+    to: string,
+    payload: StudentInvitationPayload,
+    admissionId?: string
+  ): Promise<SendEmailResponse> {
     const html = getStudentInvitationTemplate(payload);
-    const subject = `Welcome to PsySphere | Setup Your Account`;
-    return this.sendHtmlEmail(to, subject, html);
+
+    const subject =
+      "Welcome to PsySphere | Setup Your Account";
+
+    return this.sendHtmlEmail(
+      to,
+      subject,
+      html,
+      EMAIL_DEFAULTS.FROM,
+      {
+        type: "student_invitation",
+        relatedEntityType: "admission",
+        relatedEntityId: admissionId,
+      }
+    );
   }
 
-  /**
-   * Sends a Password Setup or Reset link directly
-   */
-  async sendPasswordSetup(to: string, payload: PasswordSetupPayload): Promise<SendEmailResponse> {
+  /* ============================================================
+   * Password Setup
+   * ============================================================ */
+
+  async sendPasswordSetup(
+    to: string,
+    payload: PasswordSetupPayload,
+    userId?: string
+  ): Promise<SendEmailResponse> {
     const html = getPasswordSetupTemplate(payload);
-    const subject = `PsySphere | Create Your Password`;
-    return this.sendHtmlEmail(to, subject, html);
+
+    const subject =
+      "PsySphere | Create Your Password";
+
+    return this.sendHtmlEmail(
+      to,
+      subject,
+      html,
+      EMAIL_DEFAULTS.FROM,
+      {
+        type: "password_setup",
+        relatedEntityType: "profile",
+        relatedEntityId: userId,
+      }
+    );
   }
 
-  /**
-   * Sends the Welcome Core Student notification
-   */
-  async sendWelcomeStudent(to: string, payload: WelcomeStudentPayload): Promise<SendEmailResponse> {
+  /* ============================================================
+   * Welcome Student
+   * ============================================================ */
+
+  async sendWelcomeStudent(
+    to: string,
+    payload: WelcomeStudentPayload,
+    userId?: string
+  ): Promise<SendEmailResponse> {
     const html = getWelcomeStudentTemplate(payload);
-    const subject = `Welcome to PsySphere Core Student Portal`;
-    return this.sendHtmlEmail(to, subject, html);
+
+    const subject =
+      "Welcome to PsySphere Core Student Portal";
+
+    return this.sendHtmlEmail(
+      to,
+      subject,
+      html,
+      EMAIL_DEFAULTS.FROM,
+      {
+        type: "welcome_student",
+        relatedEntityType: "profile",
+        relatedEntityId: userId,
+      }
+    );
+  }
+
+  /* ============================================================
+   * Demo Request Received
+   * ============================================================ */
+
+  async sendDemoRequestReceived(
+    to: string,
+    payload: DemoRequestReceivedPayload,
+    admissionId?: string
+  ): Promise<SendEmailResponse> {
+    const html = getDemoRequestReceivedTemplate(payload);
+
+    const subject =
+      "Demo Class Request Received | PsySphere";
+
+    return this.sendHtmlEmail(
+      to,
+      subject,
+      html,
+      EMAIL_DEFAULTS.FROM,
+      {
+        type: "demo_request_received",
+        relatedEntityType: "admission",
+        relatedEntityId: admissionId,
+      }
+    );
+  }
+
+  /* ============================================================
+   * New Lead Internal Notification
+   * ============================================================ */
+
+  async sendNewLeadInternal(
+    payload: NewLeadInternalPayload
+  ): Promise<SendEmailResponse> {
+    const html = getNewLeadInternalTemplate(payload);
+
+    const subject =
+      `[NEW LEAD] Demo Request - ${payload.studentName}`;
+
+    const adminEmail =
+      process.env.EMAIL_REPLY_TO ||
+      "psysphereclasses@gmail.com";
+
+    return this.sendHtmlEmail(
+      adminEmail,
+      subject,
+      html,
+      EMAIL_DEFAULTS.FROM,
+      {
+        type: "new_lead_internal",
+        relatedEntityType: "admission",
+        relatedEntityId: payload.admissionId,
+      }
+    );
+  }
+
+  /* ============================================================
+   * Demo Scheduled / Rescheduled
+   * ============================================================ */
+
+  async sendDemoScheduled(
+    to: string,
+    payload: DemoScheduledPayload,
+    isRescheduled?: boolean,
+    admissionId?: string
+  ): Promise<SendEmailResponse> {
+    const html = getDemoScheduledTemplate(
+      payload,
+      isRescheduled
+    );
+
+    const subject = isRescheduled
+      ? "Your Live Demo has been Rescheduled! | PsySphere"
+      : "Your Live Demo is Scheduled! | PsySphere";
+
+    return this.sendHtmlEmail(
+      to,
+      subject,
+      html,
+      EMAIL_DEFAULTS.FROM,
+      {
+        type: isRescheduled
+          ? "demo_rescheduled"
+          : "demo_scheduled",
+        relatedEntityType: "admission",
+        relatedEntityId: admissionId,
+      }
+    );
+  }
+
+  /* ============================================================
+   * Demo Rejected / Cancelled
+   * ============================================================ */
+
+  async sendDemoRejected(
+    to: string,
+    payload: DemoRejectedPayload,
+    admissionId?: string
+  ): Promise<SendEmailResponse> {
+    const html = getDemoRejectedTemplate(payload);
+
+    const subject =
+      "Demo Request Update | PsySphere";
+
+    return this.sendHtmlEmail(
+      to,
+      subject,
+      html,
+      EMAIL_DEFAULTS.FROM,
+      {
+        type: "demo_rejected",
+        relatedEntityType: "admission",
+        relatedEntityId: admissionId,
+      }
+    );
+  }
+
+  /* ============================================================
+   * Teacher Activation
+   * ============================================================ */
+
+  async sendTeacherActivation(
+    to: string,
+    payload: TeacherActivationPayload,
+    teacherId?: string
+  ): Promise<SendEmailResponse> {
+    const html = getTeacherActivationTemplate(payload);
+
+    const subject =
+      "Welcome to PsySphere Faculty | Activate Your Account";
+
+    return this.sendHtmlEmail(
+      to,
+      subject,
+      html,
+      EMAIL_DEFAULTS.FROM,
+      {
+        type: "teacher_activation",
+        relatedEntityType: "profile",
+        relatedEntityId: teacherId,
+      }
+    );
+  }
+
+  /* ============================================================
+   * Post-Demo Conversion
+   * ============================================================ */
+
+  async sendPostDemoConversion(
+    to: string,
+    payload: PostDemoConversionPayload,
+    admissionId?: string
+  ): Promise<SendEmailResponse> {
+    const html = getPostDemoConversionTemplate(payload);
+
+    const subject =
+      "How Was Your PsySphere Demo? Continue Your Journey With Us 💜";
+
+    return this.sendHtmlEmail(
+      to,
+      subject,
+      html,
+      EMAIL_DEFAULTS.FROM,
+      {
+        type: "post_demo_conversion",
+        relatedEntityType: "admission",
+        relatedEntityId: admissionId,
+      }
+    );
   }
 }
+
+/* ============================================================
+ * Singleton
+ * ============================================================ */
 
 export const emailService = new EmailService();

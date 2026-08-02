@@ -8,6 +8,7 @@ import {
 } from "drizzle-orm/pg-core";
 
 import { timestamps, auditColumns } from "../common";
+import { profiles } from "./profiles";
 
 export const batches = pgTable(
   "batches",
@@ -21,6 +22,11 @@ export const batches = pgTable(
     academicYear: text("academic_year").notNull(),
 
     schedule: text("schedule"),
+
+    teacherId: uuid("teacher_id")
+      .references(() => profiles.id, {
+        onDelete: "set null",
+      }),
 
     isActive: boolean("is_active")
       .default(true)
@@ -39,6 +45,10 @@ export const batches = pgTable(
 
     academicYearIdx: index("batches_academic_year_idx").on(
       table.academicYear
+    ),
+
+    teacherIdIdx: index("batches_teacher_id_idx").on(
+      table.teacherId
     ),
   })
 );

@@ -6,8 +6,11 @@ import { StatusBadge } from "@/features/dashboard/ui/StatusBadge";
 import { admissionRepository } from "@/src/domains/admissions/repository";
 import Link from "next/link";
 import { approveAdmissionAction, rejectAdmissionAction, convertAdmissionAction } from "./actions";
+import { enforcePageRole } from "@/server/authorization/requireRole";
+import { ROLES } from "@/server/authorization/roles";
 
 export default async function AdmissionsPage() {
+  await enforcePageRole([ROLES.ADMIN]);
   const admissionsData = await admissionRepository.findAll();
 
   const columns = [

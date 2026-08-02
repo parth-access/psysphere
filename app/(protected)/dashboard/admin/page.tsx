@@ -1,8 +1,8 @@
-import { requireRole } from "@/server/authorization/requireRole";
+import { enforcePageRole } from "@/server/authorization/requireRole";
 import { ROLES } from "@/server/authorization/roles";
-import { DashboardClient } from "../_components/DashboardClient";
+import { redirect } from "next/navigation";
 
 export default async function AdminDashboardPage() {
-  await requireRole([ROLES.ADMIN]);
-  return <DashboardClient role={ROLES.ADMIN} />;
+  await enforcePageRole([ROLES.ADMIN]);
+  redirect("/dashboard");
 }

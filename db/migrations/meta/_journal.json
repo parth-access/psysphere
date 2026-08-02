@@ -15,6 +15,41 @@
       "when": 1785141224841,
       "tag": "0001_profiles-auth-fk",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1785242443482,
+      "tag": "0002_stale_next_avengers",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1785264018160,
+      "tag": "0003_smooth_darwin",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1785433874266,
+      "tag": "0004_bright_power_pack",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1785504684929,
+      "tag": "0005_huge_wind_dancer",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1785526060042,
+      "tag": "0006_chemical_khan",
+      "breakpoints": true
     }
   ]
 }

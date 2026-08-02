@@ -4,12 +4,45 @@ export interface SendEmailResponse {
   error?: string;
 }
 
+export interface DemoRequestReceivedPayload {
+  studentName: string;
+  classLevel: string;
+  programType: string;
+  preferredDate?: string;
+  preferredTime?: string;
+}
+
+export interface NewLeadInternalPayload {
+  admissionId: string;
+  studentName: string;
+  parentName: string;
+  email: string;
+  phone: string;
+  classLevel: string;
+  programType: string;
+  preferredDate?: string;
+  preferredTime?: string;
+  notes?: string;
+}
+
 export interface DemoApprovedPayload {
   studentName: string;
   email: string;
   demoDate: string;
   teacherName?: string;
   googleMeetUrl?: string;
+}
+
+export interface DemoScheduledPayload {
+  studentName: string;
+  demoDate: string;
+  demoTime: string;
+  teacherName: string;
+  googleMeetUrl: string;
+}
+
+export interface DemoRejectedPayload {
+  studentName: string;
 }
 
 export interface StudentInvitationPayload {
@@ -19,6 +52,18 @@ export interface StudentInvitationPayload {
   passwordSetupUrl: string;
   teacherName?: string;
   demoDate?: string;
+}
+
+export interface TeacherActivationPayload {
+  teacherName: string;
+  email: string;
+  passwordSetupUrl: string;
+}
+
+export interface PostDemoConversionPayload {
+  studentName: string;
+  previewUrl: string;
+  joinUrl: string;
 }
 
 export interface PasswordSetupPayload {
@@ -32,3 +77,4 @@ export interface WelcomeStudentPayload {
   studentId: string;
   email: string;
 }
+

@@ -19,9 +19,15 @@ export class AdmissionRepository {
       .returning();
   }
 
-  async updateDemoDetails(id: string, teacherId: string, demoDate: string) {
+  async updateDemoDetails(id: string, teacherId: string, demoDate: string, demoTime?: string, meetingUrl?: string) {
     return await db.update(admissions)
-      .set({ assignedTeacher: teacherId, demoDate, updatedAt: new Date() })
+      .set({ 
+        assignedTeacher: teacherId, 
+        demoDate, 
+        demoTime: demoTime || null, 
+        meetingUrl: meetingUrl || null, 
+        updatedAt: new Date() 
+      })
       .where(eq(admissions.id, id))
       .returning();
   }

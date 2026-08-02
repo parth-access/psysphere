@@ -56,7 +56,7 @@ export default async function TeachersPage() {
                   type="text" 
                   name="fullName" 
                   required 
-                  placeholder="e.g. Dr. Aristha Sen" 
+                  placeholder="e.g. Dravina Gupta" 
                   className="w-full px-4 py-2 border border-gray-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
                 />
               </div>
@@ -67,7 +67,7 @@ export default async function TeachersPage() {
                   type="email" 
                   name="email" 
                   required 
-                  placeholder="e.g. aristha.sen@psysphere.com" 
+                  placeholder="e.g. dravina@psysphere.com" 
                   className="w-full px-4 py-2 border border-gray-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
                 />
               </div>

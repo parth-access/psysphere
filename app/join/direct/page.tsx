@@ -33,7 +33,7 @@ export default function DirectJoinPage() {
               <div className="w-6 h-6 rounded-full bg-[#7C3AED] text-white flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">1</div>
               <div>
                 <h4 className="font-semibold text-xs text-purple-950">Book a Live Whiteboard Demo</h4>
-                <p className="text-gray-500 text-[11px] mt-0.5">Meet Dr. Aristha Sen and experience our visual, conceptual pedagogy firsthand.</p>
+                <p className="text-gray-500 text-[11px] mt-0.5">Meet Dravina Gupta and experience our visual, conceptual pedagogy firsthand.</p>
               </div>
             </div>
             <div className="flex gap-3">

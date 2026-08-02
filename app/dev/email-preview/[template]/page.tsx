@@ -39,7 +39,7 @@ const FIXTURES = {
   admissionId: "dev-admission-uuid-1234",
   demoDate: "30 July 2026",
   demoTime: "5:00 PM - 6:00 PM",
-  teacherName: "Dr. Aristha Sen",
+  teacherName: "Dravina Gupta",
   googleMeetUrl: "https://meet.google.com/abc-defg-hij",
   previewUrl: "http://localhost:3000/experience/dev-preview-token-123",
   joinUrl: "http://localhost:3000/join/dev-join-token-123",

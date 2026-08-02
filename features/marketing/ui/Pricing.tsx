@@ -23,7 +23,7 @@ function PricingContent() {
       setActiveClass(classParam);
     }
     if (packageParam === 'standard' || packageParam === 'cuet') {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+       
       setActiveType(packageParam);
     }
   }, [searchParams]);

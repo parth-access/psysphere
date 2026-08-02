@@ -14,18 +14,25 @@ export function TodaysFocus() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [newTaskText, setNewTaskText] = useState("");
 
+  const getDefaultTasks = (): Task[] => [
+    { id: "1", text: "Check Assignment 2 & grade active submissions", completed: false, category: "Grading" },
+    { id: "2", text: "Upload the upcoming Memory worksheet to Class 11 portal", completed: false, category: "Resources" },
+    { id: "3", text: "Review last lecture's notes and prepare introductory slides", completed: false, category: "Preparation" },
+  ];
+
   // Load from local storage on mount
   useEffect(() => {
     const saved = localStorage.getItem("psysphere_teacher_focus");
     if (saved) {
       try {
-        setTasks(JSON.parse(saved));
+        const parsed = JSON.parse(saved);
+        setTimeout(() => setTasks(parsed), 0);
       } catch (e) {
         // Fallback to default tasks
-        setTasks(getDefaultTasks());
+        setTimeout(() => setTasks(getDefaultTasks()), 0);
       }
     } else {
-      setTasks(getDefaultTasks());
+      setTimeout(() => setTasks(getDefaultTasks()), 0);
     }
   }, []);
 
@@ -34,12 +41,6 @@ export function TodaysFocus() {
     setTasks(newTasks);
     localStorage.setItem("psysphere_teacher_focus", JSON.stringify(newTasks));
   };
-
-  const getDefaultTasks = (): Task[] => [
-    { id: "1", text: "Check Assignment 2 & grade active submissions", completed: false, category: "Grading" },
-    { id: "2", text: "Upload the upcoming Memory worksheet to Class 11 portal", completed: false, category: "Resources" },
-    { id: "3", text: "Review last lecture's notes and prepare introductory slides", completed: false, category: "Preparation" },
-  ];
 
   const handleToggle = (id: string) => {
     const updated = tasks.map((task) =>

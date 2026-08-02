@@ -287,7 +287,7 @@ export class OnboardingService {
         studentId: studentId,
         email: admission.email,
         passwordSetupUrl,
-        teacherName: admission.assignedTeacher || "Dr. Aristha Sen",
+        teacherName: admission.assignedTeacher || "Dravina Gupta",
         demoDate: admission.demoDate || undefined,
       }, admissionId);
       if (!emailResult.success) {

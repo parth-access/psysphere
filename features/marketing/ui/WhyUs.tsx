@@ -3,7 +3,7 @@ import { H2, Body } from './Typography';
 import { BookOpen, Brain, CheckCircle, FileText, Target, Users } from 'lucide-react';
 
 const features = [
-  { icon: Users, title: 'Expert Faculty', desc: 'Learn directly from educators with 10+ years of psychology teaching experience.' },
+  { icon: Users, title: 'Expert Faculty', desc: 'Learn directly from dedicated educators with 2 Years Teaching Experience in psychology.' },
   { icon: Brain, title: 'Concept-Based Learning', desc: 'No rote memorization. We build a deep understanding of psychological principles.' },
   { icon: CheckCircle, title: 'Weekly Tests', desc: 'Regular assessments to track progress and identify areas for improvement.' },
   { icon: BookOpen, title: 'Study Material', desc: 'Premium, curated notes and practice booklets designed for board exams.' },

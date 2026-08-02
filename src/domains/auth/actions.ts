@@ -3,7 +3,6 @@
 import { createClient } from "./server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { getProfile } from "@/server/authorization/getProfile";
 import { db } from "@/db";
 import { profiles } from "@/db/schema/core/profiles";
 import { eq } from "drizzle-orm";
@@ -37,6 +36,7 @@ export async function signOutAction() {
   redirect("/sign-in");
 }
 
+import { getProfile } from "@/server/authorization/getProfile";
 
 export async function getCurrentUser() {
   const supabase = await createClient();

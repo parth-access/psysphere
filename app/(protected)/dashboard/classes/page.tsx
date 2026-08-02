@@ -114,98 +114,154 @@ export default async function ClassesPage() {
                 );
               }
 
+              const featuredNextSession = activeSessions[0];
+              const remainingSessions = activeSessions.slice(1);
+
+              const startsAtFeatured = new Date(featuredNextSession.startsAt);
+              const endsAtFeatured = new Date(featuredNextSession.endsAt);
+              const diffMsFeatured = startsAtFeatured.getTime() - now.getTime();
+              const diffMinsFeatured = Math.ceil(diffMsFeatured / (1000 * 60));
+
+              let featuredCountdownText = "";
+              let isLive = false;
+              if (now >= startsAtFeatured && now <= endsAtFeatured) {
+                featuredCountdownText = "LIVE NOW";
+                isLive = true;
+              } else if (diffMinsFeatured > 0 && diffMinsFeatured <= 60) {
+                featuredCountdownText = `Starts in ${diffMinsFeatured} mins`;
+              } else {
+                const dayStr = startsAtFeatured.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" });
+                const timeStr = startsAtFeatured.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+                featuredCountdownText = `${dayStr} at ${timeStr}`;
+              }
+
               return (
-                <div className="flex flex-col gap-4">
-                  {activeSessions.map((cls) => {
-                    const startsAt = new Date(cls.startsAt);
-                    const endsAt = new Date(cls.endsAt);
-                    const diffMs = startsAt.getTime() - now.getTime();
-                    const diffMins = Math.ceil(diffMs / (1000 * 60));
-
-                    let contextualStatus: "Upcoming" | "Starts Soon" | "Live" = "Upcoming";
-                    let badgeStyle = "bg-stone-50 text-stone-600 border-stone-200";
-                    let buttonText = "Join Call";
-                    let buttonStyle = "bg-stone-50 text-stone-700 hover:bg-stone-100 border border-stone-200/60";
-
-                    if (now >= startsAt && now <= endsAt) {
-                      contextualStatus = "Live";
-                      badgeStyle = "bg-rose-50 text-rose-700 border-rose-200 font-bold animate-pulse";
-                      buttonText = "Join Live Class";
-                      buttonStyle = "bg-brand-primary text-white hover:bg-brand-primary-hover border-transparent shadow-sm scale-102";
-                    } else if (diffMins > 0 && diffMins <= 15) {
-                      contextualStatus = "Starts Soon";
-                      badgeStyle = "bg-amber-50 text-amber-700 border-amber-200 font-semibold";
-                      buttonText = "Join Now";
-                      buttonStyle = "bg-brand-primary text-white hover:bg-brand-primary-hover border-transparent shadow-sm";
-                    }
-
-                    const durationMins = Math.round((endsAt.getTime() - startsAt.getTime()) / (1000 * 60));
-
-                    return (
-                      <DashboardCard key={cls.id} className="p-0 hover:border-brand-primary/10 transition-all duration-300 hover:shadow-xs">
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-6 gap-6">
-                          <div className="flex-1 space-y-3">
-                            <div className="flex items-center gap-2.5 flex-wrap">
-                              <span className="text-[10px] font-bold px-2 py-0.5 bg-brand-surface text-brand-primary border border-brand-primary/10 rounded-md uppercase tracking-wider">
-                                {cls.batchName}
-                              </span>
-                              <span className={cn("px-2 py-0.5 text-[10px] font-bold rounded-md border uppercase tracking-wider", badgeStyle)}>
-                                {contextualStatus === "Starts Soon" ? `Starts Soon (${diffMins}m)` : contextualStatus}
-                              </span>
-                            </div>
-                            
-                            <div>
-                              <h3 className="font-serif font-bold text-lg text-stone-900 leading-snug">{cls.title}</h3>
-                              <p className="text-xs text-stone-600 mt-1 flex items-center gap-1.5">
-                                <span className="text-stone-400">Topic:</span>
-                                <span className="font-semibold text-stone-700">{cls.topicTitle}</span>
-                              </p>
-                            </div>
-
-                            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-stone-500 pt-1.5 border-t border-stone-50">
-                              <span className="flex items-center gap-1.5">
-                                <CalendarIcon className="w-3.5 h-3.5 text-stone-400" />
-                                {startsAt.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
-                              </span>
-                              <span className="flex items-center gap-1.5">
-                                <Clock className="w-3.5 h-3.5 text-stone-400" />
-                                {startsAt.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })} ({durationMins} mins)
-                              </span>
-                              <span className="flex items-center gap-1 text-teal-600 font-medium">
-                                <Video className="w-3.5 h-3.5 text-teal-500" />
-                                Meet Configured
-                              </span>
-                            </div>
-                          </div>
-                          
-                          <div className="w-full sm:w-auto shrink-0">
-                            <a 
-                              href={cls.meetingUrl} 
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              className={cn(
-                                "w-full sm:w-auto px-5 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 whitespace-nowrap cursor-pointer",
-                                buttonStyle
-                              )}
-                            >
-                              <Video className="w-4 h-4" />
-                              {buttonText}
-                              <ExternalLink className="w-3 h-3 ml-0.5" />
-                            </a>
-                          </div>
+                <div className="space-y-6">
+                  {/* FEATURED NEXT CLASS BLOCK */}
+                  <div className="relative overflow-hidden bg-radial from-stone-50 to-white border-2 border-brand-primary/20 rounded-3xl p-6 shadow-sm transition-all hover:shadow-md">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-brand-surface/30 rounded-full blur-2xl -z-10" />
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                      <div className="space-y-3 flex-1">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-[9px] font-black px-2.5 py-1 bg-brand-primary text-white rounded-md uppercase tracking-wider">
+                            Next Class
+                          </span>
+                          <span className={cn(
+                            "px-2.5 py-1 text-[9px] font-bold rounded-md border uppercase tracking-wider",
+                            isLive 
+                              ? "bg-rose-50 text-rose-700 border-rose-200 animate-pulse" 
+                              : "bg-amber-50 text-amber-700 border-amber-200"
+                          )}>
+                            {featuredCountdownText}
+                          </span>
+                          <span className="text-[10px] font-bold px-2 py-0.5 bg-stone-100 text-stone-600 rounded-md uppercase tracking-wider">
+                            {featuredNextSession.batchName}
+                          </span>
                         </div>
-                      </DashboardCard>
-                    );
-                  })}
+
+                        <div>
+                          <h3 className="font-serif font-bold text-xl text-stone-900 leading-snug">{featuredNextSession.title}</h3>
+                          <p className="text-xs text-stone-600 mt-1 flex items-center gap-1.5">
+                            <span className="text-stone-400">Topic:</span>
+                            <span className="font-semibold text-stone-700">{featuredNextSession.topicTitle}</span>
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="shrink-0 w-full md:w-auto">
+                        <a 
+                          href={featuredNextSession.meetingUrl} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="w-full md:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-brand-primary text-white hover:bg-brand-primary-hover rounded-xl text-xs font-bold transition-all shadow-md hover:shadow-lg cursor-pointer transform hover:scale-102"
+                        >
+                          <Video className="w-4 h-4" />
+                          Join Lecture
+                          <ExternalLink className="w-3 h-3 ml-0.5" />
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* REMAINING CLASSES LIST */}
+                  {remainingSessions.length > 0 && (
+                    <div className="space-y-3">
+                      <span className="block text-[10px] font-bold text-stone-400 uppercase tracking-wider px-1">Other Scheduled Sessions</span>
+                      <div className="flex flex-col gap-4">
+                        {remainingSessions.map((cls) => {
+                          const clsStartsAt = new Date(cls.startsAt);
+                          const clsEndsAt = new Date(cls.endsAt);
+                          const clsDiffMs = clsStartsAt.getTime() - now.getTime();
+                          const clsDiffMins = Math.ceil(clsDiffMs / (1000 * 60));
+
+                          let badgeStyle = "bg-stone-50 text-stone-600 border-stone-200";
+                          let contextualStatus = "Upcoming";
+
+                          if (clsDiffMins > 0 && clsDiffMins <= 15) {
+                            contextualStatus = "Starts Soon";
+                            badgeStyle = "bg-amber-50 text-amber-700 border-amber-200 font-semibold";
+                          }
+
+                          const clsDurationMins = Math.round((clsEndsAt.getTime() - clsStartsAt.getTime()) / (1000 * 60));
+
+                          return (
+                            <DashboardCard key={cls.id} className="p-0 hover:border-brand-primary/10 transition-all duration-300 hover:shadow-xs">
+                              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 gap-6">
+                                <div className="flex-1 space-y-2.5">
+                                  <div className="flex items-center gap-2 flex-wrap">
+                                    <span className="text-[10px] font-bold px-2 py-0.5 bg-stone-100 text-stone-600 rounded-md uppercase tracking-wider">
+                                      {cls.batchName}
+                                    </span>
+                                    <span className={cn("px-2 py-0.5 text-[9px] font-bold rounded-md border uppercase tracking-wider", badgeStyle)}>
+                                      {contextualStatus === "Starts Soon" ? `Starts Soon (${clsDiffMins}m)` : contextualStatus}
+                                    </span>
+                                  </div>
+                                  
+                                  <div>
+                                    <h4 className="font-serif font-bold text-base text-stone-850 leading-snug">{cls.title}</h4>
+                                    <p className="text-xs text-stone-500 mt-0.5">Topic: <strong className="font-semibold text-stone-600">{cls.topicTitle}</strong></p>
+                                  </div>
+
+                                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-stone-400 pt-1 border-t border-stone-50">
+                                    <span className="flex items-center gap-1">
+                                      <CalendarIcon className="w-3.5 h-3.5 text-stone-400" />
+                                      {clsStartsAt.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                                    </span>
+                                    <span className="flex items-center gap-1">
+                                      <Clock className="w-3.5 h-3.5 text-stone-400" />
+                                      {clsStartsAt.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })} ({clsDurationMins}m)
+                                    </span>
+                                  </div>
+                                </div>
+                                
+                                <div className="w-full sm:w-auto shrink-0">
+                                  <a 
+                                    href={cls.meetingUrl} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="w-full sm:w-auto px-4 py-2 bg-stone-50 text-stone-700 hover:bg-stone-100 border border-stone-200/60 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 whitespace-nowrap cursor-pointer"
+                                  >
+                                    <Video className="w-3.5 h-3.5" />
+                                    Join Call
+                                    <ExternalLink className="w-3 h-3 ml-0.5" />
+                                  </a>
+                                </div>
+                              </div>
+                            </DashboardCard>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
                 </div>
               );
             })()}
           </div>
 
-          {/* Subsection 2: Completed & Past Lectures */}
+          {/* Subsection 2: Past Lectures */}
           <div className="space-y-4 pt-4">
             <h2 className="text-sm font-semibold text-stone-400 uppercase tracking-wider flex items-center justify-between border-t border-stone-100 pt-6">
-              <span>Completed &amp; Past History</span>
+              <span>Past Lectures</span>
               <span className="text-xs bg-stone-50 text-stone-400 px-2 py-0.5 rounded-full">
                 {sessions.filter(cls => cls.status === "cancelled" || cls.status === "completed" || new Date(cls.endsAt) <= new Date()).length}
               </span>

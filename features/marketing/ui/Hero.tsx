@@ -12,7 +12,7 @@ export function Hero() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-8 items-center">
           <div className="max-w-2xl animate-slide-up" style={{ animationDelay: '100ms' }}>
             <span className="inline-block py-1 px-3 rounded-full bg-brand-primary/10 text-brand-primary text-xs font-bold tracking-widest uppercase mb-6">
-              Premium Psychology Coaching
+              Class 11 & 12 • Learn Psychology
             </span>
             <H1 className="mb-6">
               Master Psychology.<br />
@@ -66,7 +66,7 @@ export function Hero() {
                 <div className="flex items-center text-brand-accent mb-0.5">
                   {'★★★★★'.split('').map((star, i) => <span key={i} className="text-sm">{star}</span>)}
                 </div>
-                <p className="text-xs font-medium text-brand-text">Trusted by 500+ Parents</p>
+                <p className="text-xs font-medium text-brand-text">Conceptual & Engage-First Learning</p>
               </div>
             </div>
           </div>

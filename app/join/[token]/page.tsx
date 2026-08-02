@@ -105,7 +105,7 @@ export default async function JoinTokenPage({ params }: PageProps) {
                   </div>
                   <div className="flex justify-between py-2 border-b border-gray-50 text-sm">
                     <span className="text-gray-500">Assigned Instructor</span>
-                    <span className="font-semibold text-gray-800">Dr. Aristha Sen</span>
+                    <span className="font-semibold text-gray-800">Dravina Gupta</span>
                   </div>
                 </div>
 

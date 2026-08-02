@@ -131,7 +131,7 @@ export function getWelcomeStudentTemplate(payload: WelcomeStudentPayload): strin
     </div>
 
     <p>We are dedicated to supporting your pursuit of academic excellence in Class 11 & 12 Psychology. We look forward to our first session!</p>
-    <p>To your success,<br>Dr. Aristha Sen & The PsySphere Faculty</p>
+    <p>To your success,<br>Dravina Gupta & The PsySphere Faculty</p>
   `;
   return renderBaseEmailLayout("Welcome to PsySphere!", content);
 }

@@ -5,11 +5,12 @@ import { db } from "@/db";
 import { classSessions } from "@/db/schema/academic/classSessions";
 import { batches } from "@/db/schema/core/batches";
 import { eq, desc, isNotNull, and } from "drizzle-orm";
-import { Plus, Video, Calendar as CalendarIcon, Clock, BookOpen, AlertTriangle } from "lucide-react";
+import { Plus, Video, Calendar as CalendarIcon, Clock, BookOpen, AlertTriangle, ExternalLink } from "lucide-react";
 import { createClassSessionAction } from "./actions";
 import { enforcePageRole } from "@/server/authorization/requireRole";
 import { ROLES } from "@/server/authorization/roles";
 import { getConnectedClient } from "@/server/integrations/google";
+import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -74,79 +75,217 @@ export default async function ClassesPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Sessions List */}
-        <div className="lg:col-span-2 space-y-6">
-          <h2 className="text-lg font-serif font-semibold text-gray-900 flex items-center gap-2">
-            <BookOpen className="w-5 h-5 text-brand-primary" />
-            Scheduled Class Sessions ({sessions.length})
-          </h2>
+        <div className="lg:col-span-2 space-y-8">
+          
+          {/* Subsection 1: Active & Upcoming Lectures */}
+          <div className="space-y-4">
+            <h2 className="text-sm font-semibold text-stone-500 uppercase tracking-wider flex items-center justify-between">
+              <span className="flex items-center gap-2">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-primary opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-primary"></span>
+                </span>
+                Active &amp; Upcoming Lectures
+              </span>
+              <span className="text-xs bg-stone-100 text-stone-600 px-2 py-0.5 rounded-full font-bold">
+                {sessions.filter(cls => cls.status !== "cancelled" && cls.status !== "completed" && new Date(cls.endsAt) > new Date()).length}
+              </span>
+            </h2>
 
-          {sessions.length === 0 ? (
-            <div className="text-center py-12 bg-white border border-gray-100 rounded-2xl text-gray-500">
-              <p className="text-sm font-medium">No live classes scheduled yet.</p>
-              <p className="text-xs text-gray-400 mt-1">
-                {profile.role === "admin" 
-                  ? "Schedule a session for an active student batch on the right panel."
-                  : "You don't have any classes scheduled yet. Create one using the form on the right."
-                }
-              </p>
-            </div>
-          ) : (
-            <div className="flex flex-col gap-4">
-              {sessions.map((cls) => {
-                const formattedDate = new Date(cls.startsAt).toLocaleDateString("en-GB", {
-                  day: "numeric",
-                  month: "short",
-                  year: "numeric"
-                });
-                const formattedTime = new Date(cls.startsAt).toLocaleTimeString("en-GB", {
-                  hour: "2-digit",
-                  minute: "2-digit"
-                });
+            {(() => {
+              const now = new Date();
+              const activeSessions = sessions.filter(cls => {
+                const endsAt = new Date(cls.endsAt);
+                return cls.status !== "cancelled" && cls.status !== "completed" && endsAt > now;
+              });
 
+              if (activeSessions.length === 0) {
                 return (
-                  <DashboardCard key={cls.id} className="p-0 hover:border-brand-primary/10 transition-colors">
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-6 gap-6">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2 flex-wrap">
-                          <h3 className="font-semibold text-lg text-gray-900">{cls.title}</h3>
-                          <StatusBadge status={cls.status as any} />
-                        </div>
-                        <p className="text-sm text-gray-600 mb-2">Topic: <strong className="font-medium">{cls.topicTitle}</strong></p>
-                        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-gray-500">
-                          <span className="flex items-center gap-2">
-                            <span className="w-2 h-2 rounded-full bg-brand-primary/50"></span>
-                            Cohort: {cls.batchName}
-                          </span>
-                          <span className="flex items-center gap-2">
-                            <CalendarIcon className="w-4 h-4" />
-                            {formattedDate}
-                          </span>
-                          <span className="flex items-center gap-2">
-                            <Clock className="w-4 h-4" />
-                            {formattedTime}
-                          </span>
-                        </div>
-                      </div>
-                      
-                      <div className="w-full sm:w-auto flex items-center gap-3">
-                        {cls.status !== "completed" && (
-                          <a 
-                            href={cls.meetingUrl} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="w-full sm:w-auto bg-brand-surface text-brand-primary border border-brand-primary/10 px-4 py-2 rounded-xl text-sm font-medium hover:bg-brand-primary/10 transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
-                          >
-                            <Video className="w-4 h-4" />
-                            Join Lecture
-                          </a>
-                        )}
-                      </div>
-                    </div>
-                  </DashboardCard>
+                  <div className="text-center py-10 px-4 bg-white border border-stone-150 rounded-2xl text-stone-500 shadow-3xs">
+                    <BookOpen className="w-10 h-10 text-stone-300 mx-auto mb-2.5" />
+                    <p className="text-sm font-semibold text-stone-800">No active or upcoming classes</p>
+                    <p className="text-xs text-stone-500 mt-1">
+                      {profile.role === "admin" 
+                        ? "Create a session for an active cohort using the schedule panel."
+                        : "No lectures on your immediate horizon. Feel free to plan one!"
+                      }
+                    </p>
+                  </div>
                 );
-              })}
-            </div>
-          )}
+              }
+
+              return (
+                <div className="flex flex-col gap-4">
+                  {activeSessions.map((cls) => {
+                    const startsAt = new Date(cls.startsAt);
+                    const endsAt = new Date(cls.endsAt);
+                    const diffMs = startsAt.getTime() - now.getTime();
+                    const diffMins = Math.ceil(diffMs / (1000 * 60));
+
+                    let contextualStatus: "Upcoming" | "Starts Soon" | "Live" = "Upcoming";
+                    let badgeStyle = "bg-stone-50 text-stone-600 border-stone-200";
+                    let buttonText = "Join Call";
+                    let buttonStyle = "bg-stone-50 text-stone-700 hover:bg-stone-100 border border-stone-200/60";
+
+                    if (now >= startsAt && now <= endsAt) {
+                      contextualStatus = "Live";
+                      badgeStyle = "bg-rose-50 text-rose-700 border-rose-200 font-bold animate-pulse";
+                      buttonText = "Join Live Class";
+                      buttonStyle = "bg-brand-primary text-white hover:bg-brand-primary-hover border-transparent shadow-sm scale-102";
+                    } else if (diffMins > 0 && diffMins <= 15) {
+                      contextualStatus = "Starts Soon";
+                      badgeStyle = "bg-amber-50 text-amber-700 border-amber-200 font-semibold";
+                      buttonText = "Join Now";
+                      buttonStyle = "bg-brand-primary text-white hover:bg-brand-primary-hover border-transparent shadow-sm";
+                    }
+
+                    const durationMins = Math.round((endsAt.getTime() - startsAt.getTime()) / (1000 * 60));
+
+                    return (
+                      <DashboardCard key={cls.id} className="p-0 hover:border-brand-primary/10 transition-all duration-300 hover:shadow-xs">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-6 gap-6">
+                          <div className="flex-1 space-y-3">
+                            <div className="flex items-center gap-2.5 flex-wrap">
+                              <span className="text-[10px] font-bold px-2 py-0.5 bg-brand-surface text-brand-primary border border-brand-primary/10 rounded-md uppercase tracking-wider">
+                                {cls.batchName}
+                              </span>
+                              <span className={cn("px-2 py-0.5 text-[10px] font-bold rounded-md border uppercase tracking-wider", badgeStyle)}>
+                                {contextualStatus === "Starts Soon" ? `Starts Soon (${diffMins}m)` : contextualStatus}
+                              </span>
+                            </div>
+                            
+                            <div>
+                              <h3 className="font-serif font-bold text-lg text-stone-900 leading-snug">{cls.title}</h3>
+                              <p className="text-xs text-stone-600 mt-1 flex items-center gap-1.5">
+                                <span className="text-stone-400">Topic:</span>
+                                <span className="font-semibold text-stone-700">{cls.topicTitle}</span>
+                              </p>
+                            </div>
+
+                            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-stone-500 pt-1.5 border-t border-stone-50">
+                              <span className="flex items-center gap-1.5">
+                                <CalendarIcon className="w-3.5 h-3.5 text-stone-400" />
+                                {startsAt.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                              </span>
+                              <span className="flex items-center gap-1.5">
+                                <Clock className="w-3.5 h-3.5 text-stone-400" />
+                                {startsAt.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })} ({durationMins} mins)
+                              </span>
+                              <span className="flex items-center gap-1 text-teal-600 font-medium">
+                                <Video className="w-3.5 h-3.5 text-teal-500" />
+                                Meet Configured
+                              </span>
+                            </div>
+                          </div>
+                          
+                          <div className="w-full sm:w-auto shrink-0">
+                            <a 
+                              href={cls.meetingUrl} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className={cn(
+                                "w-full sm:w-auto px-5 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 whitespace-nowrap cursor-pointer",
+                                buttonStyle
+                              )}
+                            >
+                              <Video className="w-4 h-4" />
+                              {buttonText}
+                              <ExternalLink className="w-3 h-3 ml-0.5" />
+                            </a>
+                          </div>
+                        </div>
+                      </DashboardCard>
+                    );
+                  })}
+                </div>
+              );
+            })()}
+          </div>
+
+          {/* Subsection 2: Completed & Past Lectures */}
+          <div className="space-y-4 pt-4">
+            <h2 className="text-sm font-semibold text-stone-400 uppercase tracking-wider flex items-center justify-between border-t border-stone-100 pt-6">
+              <span>Completed &amp; Past History</span>
+              <span className="text-xs bg-stone-50 text-stone-400 px-2 py-0.5 rounded-full">
+                {sessions.filter(cls => cls.status === "cancelled" || cls.status === "completed" || new Date(cls.endsAt) <= new Date()).length}
+              </span>
+            </h2>
+
+            {(() => {
+              const now = new Date();
+              const pastSessions = sessions.filter(cls => {
+                const endsAt = new Date(cls.endsAt);
+                return cls.status === "cancelled" || cls.status === "completed" || endsAt <= now;
+              });
+
+              if (pastSessions.length === 0) {
+                return null;
+              }
+
+              return (
+                <div className="flex flex-col gap-4 opacity-75">
+                  {pastSessions.slice(0, 10).map((cls) => {
+                    const startsAt = new Date(cls.startsAt);
+                    const endsAt = new Date(cls.endsAt);
+                    const isCancelled = cls.status === "cancelled";
+                    const durationMins = Math.round((endsAt.getTime() - startsAt.getTime()) / (1000 * 60));
+
+                    return (
+                      <div key={cls.id} className="bg-stone-50/50 border border-stone-150/60 rounded-2xl p-5 hover:bg-stone-50 hover:border-stone-200 transition-colors">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                          <div className="space-y-2 flex-1">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="text-[10px] font-bold px-2 py-0.5 bg-stone-100 text-stone-500 rounded-md uppercase tracking-wider">
+                                {cls.batchName}
+                              </span>
+                              {isCancelled ? (
+                                <span className="px-2 py-0.5 text-[10px] font-bold rounded-md bg-rose-50 text-rose-500 border border-rose-100 uppercase tracking-wider">
+                                  Cancelled
+                                </span>
+                              ) : (
+                                <span className="px-2 py-0.5 text-[10px] font-bold rounded-md bg-emerald-50 text-emerald-600 border border-emerald-100 uppercase tracking-wider">
+                                  Completed
+                                </span>
+                              )}
+                            </div>
+
+                            <div>
+                              <h4 className="font-serif font-bold text-base text-stone-700">{cls.title}</h4>
+                              <p className="text-xs text-stone-500">Topic: <span className="text-stone-600 font-medium">{cls.topicTitle}</span></p>
+                            </div>
+
+                            <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-stone-400">
+                              <span className="flex items-center gap-1">
+                                <CalendarIcon className="w-3.5 h-3.5" />
+                                {startsAt.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                              </span>
+                              <span>•</span>
+                              <span className="flex items-center gap-1">
+                                <Clock className="w-3.5 h-3.5" />
+                                {startsAt.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })} ({durationMins}m)
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="shrink-0">
+                            <span className="inline-flex items-center gap-1 px-3 py-1 bg-stone-100 text-stone-400 rounded-lg text-xs font-semibold">
+                              {isCancelled ? "Cancelled" : "✓ Finished"}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                  {pastSessions.length > 10 && (
+                    <p className="text-center text-xs text-stone-400 font-medium italic pt-2">
+                      Showing latest 10 finished sessions.
+                    </p>
+                  )}
+                </div>
+              );
+            })()}
+          </div>
+
         </div>
 
         {/* Schedule Sidepanel Form */}

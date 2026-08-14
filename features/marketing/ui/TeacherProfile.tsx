@@ -3,7 +3,7 @@ import { H2, H3, Body } from './Typography';
 import { Button } from './Button';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ANCHORS } from '@/constants/navigation';
+
 
 export function TeacherProfile() {
   return (

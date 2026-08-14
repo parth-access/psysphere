@@ -3,7 +3,7 @@ import { H1, Body } from './Typography';
 import { Button } from './Button';
 import Image from 'next/image';
 import Link from 'next/link';
-import { NAVIGATION, ANCHORS } from '@/constants/navigation';
+import { NAVIGATION } from '@/constants/navigation';
 
 export function Hero() {
   return (
@@ -12,7 +12,7 @@ export function Hero() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-8 items-center">
           <div className="max-w-2xl animate-slide-up" style={{ animationDelay: '100ms' }}>
             <span className="inline-block py-1 px-3 rounded-full bg-brand-primary/10 text-brand-primary text-xs font-bold tracking-widest uppercase mb-6">
-              Class 11 & 12 • Learn Psychology
+              Class 11 & Class 12 • Learn Psychology
             </span>
             <H1 className="mb-6">
               Master Psychology.<br />
@@ -20,14 +20,14 @@ export function Hero() {
               Crack CUET-UG.
             </H1>
             <Body className="mb-10 text-lg md:text-xl">
-              Personalized Psychology coaching for Classes XI & XII.<br />
+              Personalized Psychology coaching for Class 11 & Class 12.<br />
               Small batches. Weekly tests. Expert mentorship.
             </Body>
             <div className="flex flex-col sm:flex-row gap-4">
               <Button href={NAVIGATION.bookDemo} className="!px-8 !py-4 !text-base">
                 Book Free Demo
               </Button>
-              <Button href={ANCHORS.pricing} variant="secondary" className="!px-8 !py-4 !text-base">
+              <Button href={NAVIGATION.pricing} variant="secondary" className="!px-8 !py-4 !text-base">
                 View Fee Plans
               </Button>
             </div>

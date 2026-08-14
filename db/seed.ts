@@ -17,14 +17,14 @@ async function main() {
     id: "10000000-0000-0000-0000-000000000001",
     role: "teacher",
     fullName: "Dravina Gupta",
-    email: "dravina@psysphere.com"
+    email: "dravina@saarthilife.com"
   }).returning();
 
   const [t2] = await db.insert(profiles).values({
     id: "10000000-0000-0000-0000-000000000002",
     role: "teacher",
     fullName: "Dr. Sharma",
-    email: "sharma@psysphere.com"
+    email: "sharma@saarthilife.com"
   }).returning();
 
   // 3. Add Admissions (Leads)

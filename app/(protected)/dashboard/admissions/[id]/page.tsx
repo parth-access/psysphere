@@ -14,6 +14,7 @@ import {
   markDemoCompletedAction
 } from "../actions";
 import Link from "next/link";
+import { SubmitButton } from "@/features/shared/ui/SubmitButton";
 
 import { enforcePageRole } from "@/server/authorization/requireRole";
 import { ROLES } from "@/server/authorization/roles";
@@ -114,33 +115,33 @@ export default async function AdmissionDetailsPage({ params }: { params: Promise
         <div className="flex items-center gap-3 flex-wrap">
           {admission.status !== "REJECTED" && admission.status !== "ENROLLED" && (
             <form action={rejectAdmissionAction.bind(null, admissionId)}>
-              <button type="submit" className="px-4 py-2 border border-gray-200 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 cursor-pointer">
+              <SubmitButton type="submit" className="px-4 py-2 border border-gray-200 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 cursor-pointer">
                 Reject
-              </button>
+              </SubmitButton>
             </form>
           )}
           
           {(admission.status === "LEAD" || admission.status === "DEMO_BOOKED") && (
             <form action={approveAdmissionAction.bind(null, admissionId)}>
-              <button type="submit" className="px-4 py-2 border border-blue-200 text-blue-700 bg-blue-50 rounded-xl text-sm font-medium hover:bg-blue-100 cursor-pointer">
+              <SubmitButton type="submit" className="px-4 py-2 border border-blue-200 text-blue-700 bg-blue-50 rounded-xl text-sm font-medium hover:bg-blue-100 cursor-pointer">
                 Approve Demo
-              </button>
+              </SubmitButton>
             </form>
           )}
 
           {admission.status === "DEMO_SCHEDULED" && (
             <form action={markDemoCompletedAction.bind(null, admissionId)}>
-              <button type="submit" className="px-4 py-2 border border-purple-200 text-purple-700 bg-purple-50 rounded-xl text-sm font-medium hover:bg-purple-100 cursor-pointer">
+              <SubmitButton type="submit" className="px-4 py-2 border border-purple-200 text-purple-700 bg-purple-50 rounded-xl text-sm font-medium hover:bg-purple-100 cursor-pointer">
                 Mark Demo Completed
-              </button>
+              </SubmitButton>
             </form>
           )}
           
           {admission.status === "DEMO_COMPLETED" && (
             <form action={convertAdmissionAction.bind(null, admissionId)}>
-              <button type="submit" className="px-4 py-2 bg-emerald-600 text-white rounded-xl text-sm font-medium hover:bg-emerald-700 cursor-pointer">
+              <SubmitButton type="submit" className="px-4 py-2 bg-emerald-600 text-white rounded-xl text-sm font-medium hover:bg-emerald-700 cursor-pointer">
                 Convert to Student
-              </button>
+              </SubmitButton>
             </form>
           )}
         </div>
@@ -238,9 +239,9 @@ export default async function AdmissionDetailsPage({ params }: { params: Promise
                   </div>
                   
                   <div className="pt-2 flex justify-end">
-                    <button type="submit" className="px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-medium hover:bg-gray-800 cursor-pointer">
+                    <SubmitButton type="submit" className="px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-medium hover:bg-gray-800 cursor-pointer">
                       Update Schedule
-                    </button>
+                    </SubmitButton>
                   </div>
                 </div>
               </form>
@@ -306,9 +307,9 @@ export default async function AdmissionDetailsPage({ params }: { params: Promise
                 defaultValue={admission.notes || "Student is highly interested. Highlight key teaching strategies during demo."}
               />
               <div className="flex justify-end">
-                <button type="submit" className="px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-medium hover:bg-gray-800 cursor-pointer">
+                <SubmitButton type="submit" className="px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-medium hover:bg-gray-800 cursor-pointer">
                   Save Note
-                </button>
+                </SubmitButton>
               </div>
             </form>
           </DashboardCard>

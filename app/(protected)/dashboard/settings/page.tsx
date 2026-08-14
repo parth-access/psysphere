@@ -1,3 +1,4 @@
+import { SubmitButton } from "@/features/shared/ui/SubmitButton";
 import { PageHeader } from "@/features/dashboard/ui/PageHeader";
 import { DashboardCard } from "@/features/dashboard/ui/DashboardCard";
 import { SectionHeader } from "@/features/dashboard/ui/SectionHeader";
@@ -113,12 +114,12 @@ export default async function SettingsPage({ searchParams }: PageProps) {
                           <span>Connected as: <strong className="font-bold">{googleConnection.email}</strong></span>
                         </div>
                         <form action={disconnectGoogleAction} className="pt-1">
-                          <button
+                          <SubmitButton
                             type="submit"
                             className="text-xs font-semibold text-red-600 hover:text-red-700 hover:underline cursor-pointer transition-colors block"
                           >
                             Disconnect Google Calendar
-                          </button>
+                          </SubmitButton>
                         </form>
                       </div>
                     ) : (
@@ -164,7 +165,7 @@ export default async function SettingsPage({ searchParams }: PageProps) {
               <div className="pt-4 flex justify-end">
                 <button className="bg-brand-primary text-white px-6 py-2 rounded-xl text-sm font-medium hover:bg-brand-primary-hover transition-colors">
                   Save Defaults
-                </button>
+              </button>
               </div>
             </div>
           </DashboardCard>

@@ -7,7 +7,7 @@ const features = [
   { icon: Brain, title: 'Concept-Based Learning', desc: 'No rote memorization. We build a deep understanding of psychological principles.' },
   { icon: CheckCircle, title: 'Weekly Tests', desc: 'Regular assessments to track progress and identify areas for improvement.' },
   { icon: BookOpen, title: 'Study Material', desc: 'Premium, curated notes and practice booklets designed for board exams.' },
-  { icon: Target, title: 'CUET Preparation', desc: 'Integrated coaching for CUET-UG alongside your Class 11 and 12 syllabus.' },
+  { icon: Target, title: 'CUET Preparation', desc: 'Integrated coaching for CUET-UG alongside your Class 11 and Class 12 syllabus.' },
   { icon: FileText, title: 'Parent Support', desc: 'Transparent tracking and regular updates on your child\'s academic progress.' },
 ];
 
@@ -16,7 +16,7 @@ export function WhyUs() {
     <section className="py-24 bg-brand-canvas" id="about">
       <Container>
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <H2 className="mb-6">Why Choose PsySphere?</H2>
+          <H2 className="mb-6">Why Choose Saarthi Classes?</H2>
           <Body>
             We don&apos;t just teach psychology; we prepare students for academic excellence
             and real-world application through a structured, supportive environment.

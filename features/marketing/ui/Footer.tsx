@@ -10,17 +10,17 @@ export function Footer() {
           {/* Column 1 - Brand info */}
           <div>
             <Link href={NAVIGATION.home} className="inline-block mb-6">
-              <span className="font-serif text-2xl font-bold tracking-tight text-white">PsySphere</span>
+              <span className="font-serif text-2xl font-bold tracking-tight text-white">Saarthi Classes</span>
             </Link>
             <p className="text-white/75 text-sm max-w-sm mb-6 leading-relaxed">
-              PsySphere helps Class 11 & 12 Psychology students build concepts, score well in boards, and prepare confidently for CUET.
+              Saarthi Classes helps Class 11 & Class 12 Psychology students build concepts, score well in boards, and prepare confidently for CUET.
             </p>
             <div className="flex items-center gap-4">
               <a 
-                href="mailto:psysphereclasses@gmail.com?subject=Inquiry%20about%20PsySphere" 
+                href="mailto:classes@saarthilife.com?subject=Inquiry%20about%20Saarthi%20Classes" 
                 className="text-white/70 hover:text-white transition-colors text-sm font-medium flex items-center gap-2"
               >
-                <span>Email: psysphereclasses@gmail.com</span>
+                <span>Email: classes@saarthilife.com</span>
               </a>
             </div>
           </div>
@@ -59,7 +59,7 @@ export function Footer() {
         </div>
         
         <div className="border-t border-white/10 mt-16 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-white/50 text-xs">
-          <p>© 2026 PsySphere. All rights reserved.</p>
+          <p>© 2026 Saarthi Classes. All rights reserved.</p>
           <p>Made with ❤️ for Psychology Students</p>
         </div>
       </Container>

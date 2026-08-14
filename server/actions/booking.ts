@@ -41,7 +41,7 @@ export async function submitBooking(input: BookingInput) {
       console.error("⚠️ Failed to send applicant demo request confirmation email:", err);
     }
 
-    // 2. Send Lead Notification to PsySphere Admin Email
+    // 2. Send Lead Notification to Saarthi Classes Admin Email
     try {
       await emailService.sendNewLeadInternal({
         admissionId: bookingId,

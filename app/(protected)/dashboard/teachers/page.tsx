@@ -1,6 +1,9 @@
+import { SubmitButton } from "@/features/shared/ui/SubmitButton";
 import { PageHeader } from "@/features/dashboard/ui/PageHeader";
 import { DashboardCard } from "@/features/dashboard/ui/DashboardCard";
 import { DataTable } from "@/features/dashboard/ui/DataTable";
+import { EmptyState } from "@/features/dashboard/ui/EmptyState";
+import { Inbox } from "lucide-react";
 import { teacherRepository } from "@/src/domains/users/repository";
 import { Plus, UserCheck } from "lucide-react";
 import { createTeacherAction } from "./actions";
@@ -42,7 +45,7 @@ export default async function TeachersPage() {
           </h2>
 
           <DashboardCard>
-            <DataTable data={teachersData} columns={columns} />
+            <DataTable emptyState={<EmptyState icon={<Inbox />} title="No teachers found" description="Invite a teacher using the form to start assigning classes." />} data={teachersData} columns={columns} />
           </DashboardCard>
         </div>
 
@@ -73,13 +76,13 @@ export default async function TeachersPage() {
               </div>
 
               <div className="pt-2">
-                <button 
+                <SubmitButton 
                   type="submit" 
                   className="w-full flex items-center justify-center gap-2 bg-brand-primary text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-brand-primary-hover transition-colors cursor-pointer"
                 >
                   <Plus className="w-4 h-4" />
                   Invite Faculty
-                </button>
+                </SubmitButton>
               </div>
             </form>
           </DashboardCard>

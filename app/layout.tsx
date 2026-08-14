@@ -15,8 +15,21 @@ const playfairDisplay = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: 'PsySphere — Premium Psychology Coaching Platform',
-  description: 'Academic workspace built specifically for Class 11 and Class 12 Psychology coaching institutes.',
+  title: 'Saarthi Classes — Premium Psychology Coaching Platform',
+  description: 'Academic workspace built specifically for Class 11 and Class 12 Psychology coaching.',
+  openGraph: {
+    title: 'Saarthi Classes — Premium Psychology Coaching Platform',
+    description: 'Master Psychology. Ace Boards. Crack CUET-UG. Concept-based learning with Dravina Gupta.',
+    url: 'https://classes.saarthilife.com',
+    siteName: 'Saarthi Classes',
+    locale: 'en_IN',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Saarthi Classes — Premium Psychology Coaching Platform',
+    description: 'Master Psychology. Ace Boards. Crack CUET-UG. Concept-based learning with Dravina Gupta.',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

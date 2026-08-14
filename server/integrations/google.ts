@@ -78,10 +78,10 @@ export async function exchangeCode(code: string) {
       throw new GoogleIntegrationError("Could not retrieve user email from Google.");
     }
 
-    const expectedAccount = process.env.GOOGLE_CALENDAR_ACCOUNT || "psysphereclasses@gmail.com";
+    const expectedAccount = process.env.GOOGLE_CALENDAR_ACCOUNT || "classes@saarthilife.com";
     if (email.toLowerCase() !== expectedAccount.toLowerCase()) {
       throw new GoogleIntegrationError(
-        `Unauthorized Google Account: This PsySphere installation is strictly locked to "${expectedAccount}". Access denied for "${email}".`
+        `Unauthorized Google Account: This Saarthi Classes installation is strictly locked to "${expectedAccount}". Access denied for "${email}".`
       );
     }
 
@@ -117,7 +117,7 @@ export async function exchangeCode(code: string) {
  * Accurately models the integration as a singleton institutional connection.
  */
 export async function getConnectedClient() {
-  const expectedEmail = process.env.GOOGLE_CALENDAR_ACCOUNT || "psysphereclasses@gmail.com";
+  const expectedEmail = process.env.GOOGLE_CALENDAR_ACCOUNT || "classes@saarthilife.com";
   const [creds] = await db
     .select()
     .from(googleCredentials)
@@ -204,7 +204,7 @@ export async function createCalendarEvent(params: {
     },
     extendedProperties: {
       private: {
-        psysphereSessionId: params.sessionId,
+        saarthiSessionId: params.sessionId,
       },
     },
     conferenceData: {
@@ -259,7 +259,7 @@ export async function createCalendarEvent(params: {
 }
 
 /**
- * Searches Google Calendar for an existing event matching the given PsySphere session ID.
+ * Searches Google Calendar for an existing event matching the given Saarthi Classes session ID.
  */
 export async function findCalendarEventBySessionId(sessionId: string) {
   const connection = await getConnectedClient();
@@ -271,7 +271,7 @@ export async function findCalendarEventBySessionId(sessionId: string) {
   try {
     const response = await calendar.events.list({
       calendarId: "primary",
-      privateExtendedProperty: [`psysphereSessionId=${sessionId}`],
+      privateExtendedProperty: [`saarthiSessionId=${sessionId}`],
       singleEvents: true,
     });
 
@@ -330,7 +330,7 @@ export async function deleteCalendarEvent(eventId: string) {
  * Handles failures gracefully without exposing credentials.
  */
 export async function disconnectGoogle() {
-  const expectedEmail = process.env.GOOGLE_CALENDAR_ACCOUNT || "psysphereclasses@gmail.com";
+  const expectedEmail = process.env.GOOGLE_CALENDAR_ACCOUNT || "classes@saarthilife.com";
   const [creds] = await db
     .select()
     .from(googleCredentials)

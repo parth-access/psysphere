@@ -21,10 +21,10 @@ export default function DashboardError({
     <div className="min-h-screen flex items-center justify-center bg-brand-cream/30">
       <div className="max-w-md p-8 bg-white border border-brand-stone-soft rounded-lg shadow-sm text-center">
         <h2 className="text-xl font-serif font-semibold text-brand-charcoal mb-4">
-          Access Denied
+          {error.message?.toLowerCase().includes("permission") || error.message?.toLowerCase().includes("role") ? "Access Denied" : "Action Failed"}
         </h2>
         <p className="text-sm text-brand-charcoal-muted mb-6">
-          {error.message || "You don't have permission to access this area."}
+          {error.message || "An unexpected error occurred while processing your request."}
         </p>
         <div className="flex justify-center gap-4">
           <Button onClick={() => router.push('/dashboard')}>

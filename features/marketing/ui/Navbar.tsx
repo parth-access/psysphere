@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Container } from './Container';
 import { Button } from './Button';
-import { NAVIGATION, ANCHORS } from '@/constants/navigation';
+import { NAVIGATION } from '@/constants/navigation';
 import { Menu, X } from 'lucide-react';
 
 export function Navbar() {
@@ -23,14 +23,15 @@ export function Navbar() {
 
   // Close mobile menu when route changes
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsOpen(false);
   }, [pathname]);
 
   const navLinks = [
-    { label: 'Courses', href: isHome ? ANCHORS.courses : NAVIGATION.courses },
-    { label: 'Pricing', href: isHome ? ANCHORS.pricing : NAVIGATION.pricing },
-    { label: 'About', href: isHome ? ANCHORS.about : NAVIGATION.about },
-    { label: 'Contact', href: isHome ? ANCHORS.contact : NAVIGATION.contact },
+    { label: 'Courses', href: NAVIGATION.courses },
+    { label: 'Pricing', href: NAVIGATION.pricing },
+    { label: 'About', href: NAVIGATION.about },
+    { label: 'Contact', href: NAVIGATION.contact },
   ];
 
   return (
@@ -39,7 +40,7 @@ export function Navbar() {
         <Container>
           <div className="flex items-center justify-between">
             <Link href={NAVIGATION.home} className="flex items-center space-x-2 relative z-50">
-              <span className="font-serif text-2xl font-bold tracking-tight text-brand-text">PsySphere</span>
+              <span className="font-serif text-2xl font-bold tracking-tight text-brand-text">Saarthi Classes</span>
             </Link>
             
             {/* Desktop Navigation */}

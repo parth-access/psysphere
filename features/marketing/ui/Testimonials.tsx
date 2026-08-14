@@ -3,7 +3,8 @@ import { H2, Body } from './Typography';
 import { Button } from './Button';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ANCHORS } from '@/constants/navigation';
+import { NAVIGATION } from '@/constants/navigation';
+
 
 const testimonials = [
   {
@@ -28,7 +29,7 @@ const testimonials = [
 
 export function Testimonials() {
   return (
-    <section className="py-24 bg-brand-canvas border-b border-brand-border">
+    <section className="py-24 bg-brand-canvas border-b border-brand-border" id="testimonials">
       <Container>
         <div className="text-center max-w-2xl mx-auto mb-16">
           <H2 className="mb-6">Student Success</H2>
@@ -58,7 +59,7 @@ export function Testimonials() {
           ))}
         </div>
         <div className="mt-16 text-center">
-          <Button href={ANCHORS.testimonials} variant="secondary">
+          <Button href={NAVIGATION.about} variant="secondary">
             Read More Reviews
           </Button>
         </div>

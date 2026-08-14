@@ -52,7 +52,7 @@ function PricingContent() {
                   : 'text-brand-text-muted hover:text-brand-text hover:bg-white/50'
               }`}
             >
-              Class XI
+              Class 11
             </button>
             <button
               onClick={() => setActiveClass('class12')}
@@ -62,7 +62,7 @@ function PricingContent() {
                   : 'text-brand-text-muted hover:text-brand-text hover:bg-white/50'
               }`}
             >
-              Class XII
+              Class 12
             </button>
           </div>
           

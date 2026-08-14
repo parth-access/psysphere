@@ -76,7 +76,7 @@ export class EmailService {
   /**
    * General-purpose HTML email sender.
    *
-   * All PsySphere transactional emails ultimately pass through
+   * All Saarthi Classes transactional emails ultimately pass through
    * this method.
    *
    * Delivery attempts are logged to email_deliveries.
@@ -227,7 +227,7 @@ export class EmailService {
     const html = getDemoApprovedTemplate(payload);
 
     const subject =
-      "Welcome to PsySphere | Your Demo Class is Confirmed";
+      "Welcome to Saarthi Classes | Your Demo Class is Confirmed";
 
     return this.sendHtmlEmail(
       to,
@@ -254,7 +254,7 @@ export class EmailService {
     const html = getStudentInvitationTemplate(payload);
 
     const subject =
-      "Welcome to PsySphere | Setup Your Account";
+      "Welcome to Saarthi Classes | Setup Your Account";
 
     return this.sendHtmlEmail(
       to,
@@ -281,7 +281,7 @@ export class EmailService {
     const html = getPasswordSetupTemplate(payload);
 
     const subject =
-      "PsySphere | Create Your Password";
+      "Saarthi Classes | Create Your Password";
 
     return this.sendHtmlEmail(
       to,
@@ -308,7 +308,7 @@ export class EmailService {
     const html = getWelcomeStudentTemplate(payload);
 
     const subject =
-      "Welcome to PsySphere Core Student Portal";
+      "Welcome to Saarthi Classes Core Student Portal";
 
     return this.sendHtmlEmail(
       to,
@@ -335,7 +335,7 @@ export class EmailService {
     const html = getDemoRequestReceivedTemplate(payload);
 
     const subject =
-      "Demo Class Request Received | PsySphere";
+      "Demo Class Request Received | Saarthi Classes";
 
     return this.sendHtmlEmail(
       to,
@@ -364,7 +364,7 @@ export class EmailService {
 
     const adminEmail =
       process.env.EMAIL_REPLY_TO ||
-      "psysphereclasses@gmail.com";
+      "classes@saarthilife.com";
 
     return this.sendHtmlEmail(
       adminEmail,
@@ -395,8 +395,8 @@ export class EmailService {
     );
 
     const subject = isRescheduled
-      ? "Your Live Demo has been Rescheduled! | PsySphere"
-      : "Your Live Demo is Scheduled! | PsySphere";
+      ? "Your Live Demo has been Rescheduled! | Saarthi Classes"
+      : "Your Live Demo is Scheduled! | Saarthi Classes";
 
     return this.sendHtmlEmail(
       to,
@@ -425,7 +425,7 @@ export class EmailService {
     const html = getDemoRejectedTemplate(payload);
 
     const subject =
-      "Demo Request Update | PsySphere";
+      "Demo Request Update | Saarthi Classes";
 
     return this.sendHtmlEmail(
       to,
@@ -452,7 +452,7 @@ export class EmailService {
     const html = getTeacherActivationTemplate(payload);
 
     const subject =
-      "Welcome to PsySphere Faculty | Activate Your Account";
+      "Welcome to Saarthi Classes Faculty | Activate Your Account";
 
     return this.sendHtmlEmail(
       to,
@@ -479,7 +479,7 @@ export class EmailService {
     const html = getPostDemoConversionTemplate(payload);
 
     const subject =
-      "How Was Your PsySphere Demo? Continue Your Journey With Us 💜";
+      "How Was Your Saarthi Classes Demo? Continue Your Journey With Us 💜";
 
     return this.sendHtmlEmail(
       to,

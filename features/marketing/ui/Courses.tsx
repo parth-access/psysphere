@@ -2,7 +2,7 @@ import { Container } from './Container';
 import { H2, Body } from './Typography';
 import { ArrowRight, Check } from 'lucide-react';
 import Link from 'next/link';
-import { ANCHORS } from '@/constants/navigation';
+
 
 const courses = [
   {
@@ -45,7 +45,7 @@ export function Courses() {
     <section className="py-24 bg-white border-b border-brand-border" id="courses">
       <Container>
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <H2 className="mb-6">Academic Programs</H2>
+          <H2 className="mb-6">Academic Courses</H2>
           <Body>
             Structured curriculum designed to maximize retention, conceptual clarity,
             and exam performance.

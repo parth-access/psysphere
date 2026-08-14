@@ -145,8 +145,8 @@ export function BookingForm() {
                 {...register("classLevel")}
                 className="w-full px-4 py-3 rounded-xl border border-brand-border bg-white focus:outline-none focus:ring-2 focus:ring-brand-text/10 transition-shadow"
               >
-                <option value="class11">Class XI</option>
-                <option value="class12">Class XII</option>
+                <option value="class11">Class 11</option>
+                <option value="class12">Class 12</option>
               </select>
             </div>
             <div>
@@ -230,7 +230,7 @@ export function BookingForm() {
           <div className="space-y-4 mb-8">
             <div className="flex justify-between items-center border-b border-white/10 pb-4">
               <span className="text-white/70">Class</span>
-              <span className="font-semibold">{selectedClass === 'class11' ? 'Class XI' : 'Class XII'}</span>
+              <span className="font-semibold">{selectedClass === 'class11' ? 'Class 11' : 'Class 12'}</span>
             </div>
             <div className="flex justify-between items-center border-b border-white/10 pb-4">
               <span className="text-white/70">Package</span>

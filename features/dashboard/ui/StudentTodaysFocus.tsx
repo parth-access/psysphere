@@ -140,7 +140,7 @@ export function StudentTodaysFocus({
       });
     }
 
-    const saved = localStorage.getItem("psysphere_student_focus_tasks");
+    const saved = localStorage.getItem("saarthi_student_focus_tasks") || localStorage.getItem("psysphere_student_focus_tasks");
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
@@ -156,7 +156,7 @@ export function StudentTodaysFocus({
   // Save to local storage on change
   const saveTasks = (newTasks: Task[]) => {
     setTasks(newTasks);
-    localStorage.setItem("psysphere_student_focus_tasks", JSON.stringify(newTasks));
+    localStorage.setItem("saarthi_student_focus_tasks", JSON.stringify(newTasks));
   };
 
   const handleToggle = (id: string) => {

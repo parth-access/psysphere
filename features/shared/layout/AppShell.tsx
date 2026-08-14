@@ -151,10 +151,10 @@ export const AppShell = ({
         <div className="h-16 flex items-center px-6 border-b border-brand-stone-soft/60">
           <div className="flex items-center space-x-3">
             <div className="w-8 h-8 bg-brand-charcoal flex items-center justify-center text-white font-serif italic text-lg rounded-xs">
-              P
+              S
             </div>
             <span className="font-serif text-xl font-semibold tracking-tight text-brand-charcoal">
-              PsySphere
+              Saarthi Classes
             </span>
           </div>
         </div>
@@ -258,7 +258,7 @@ export const AppShell = ({
 
             {/* Breadcrumb component matching design precisely */}
             <div className="hidden sm:flex items-center space-x-2 text-[13px] font-sans text-brand-charcoal-muted">
-              <span>PsySphere</span>
+              <span>Saarthi Classes</span>
               <span className="opacity-40">/</span>
               <span className="hover:text-brand-charcoal cursor-pointer capitalize text-brand-sage font-medium">{userRole} Workspace</span>
               <span className="opacity-40">/</span>
@@ -375,10 +375,10 @@ export const AppShell = ({
               <div className="h-16 flex items-center justify-between px-5 border-b border-brand-stone-soft/60 shrink-0">
                 <div className="flex items-center space-x-3">
                   <div className="w-8 h-8 bg-brand-charcoal flex items-center justify-center text-white font-serif italic text-lg rounded-xs">
-                    P
+                    S
                   </div>
                   <span className="font-serif text-lg font-semibold tracking-tight text-brand-charcoal">
-                    PsySphere
+                    Saarthi Classes
                   </span>
                 </div>
                 <button

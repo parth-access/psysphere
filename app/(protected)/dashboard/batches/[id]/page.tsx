@@ -8,6 +8,7 @@ import { studentProfiles } from "@/db/schema/core/studentProfiles";
 import { profiles } from "@/db/schema/core/profiles";
 import { eq, and } from "drizzle-orm";
 import Link from "next/link";
+import { SubmitButton } from "@/features/shared/ui/SubmitButton";
 import { ArrowLeft, User, Mail, Calendar, GraduationCap, Users, Plus, Trash2, CalendarClock } from "lucide-react";
 import { enforcePageRole } from "@/server/authorization/requireRole";
 import { ROLES } from "@/server/authorization/roles";
@@ -206,13 +207,13 @@ export default async function BatchDetailsPage({ params }: PageProps) {
                             <form action={removeStudentFromBatchAction} className="inline-block">
                               <input type="hidden" name="enrollmentId" value={student.enrollmentId} />
                               <input type="hidden" name="batchId" value={batchId} />
-                              <button 
+                              <SubmitButton 
                                 type="submit" 
                                 className="text-xs inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-red-50 text-red-600 hover:bg-red-100 border border-red-200/50 rounded-lg font-semibold transition-colors cursor-pointer"
                               >
                                 <Trash2 className="w-3.5 h-3.5" />
                                 Unenroll
-                              </button>
+                              </SubmitButton>
                             </form>
                           </td>
                         </tr>
@@ -254,13 +255,13 @@ export default async function BatchDetailsPage({ params }: PageProps) {
                   </select>
                 </div>
 
-                <button 
+                <SubmitButton 
                   type="submit" 
                   className="w-full flex items-center justify-center gap-2 bg-brand-primary text-white py-2 rounded-xl text-sm font-semibold hover:bg-brand-primary-hover transition-colors cursor-pointer"
                 >
                   <Plus className="w-4 h-4" />
                   Enroll into Cohort
-                </button>
+                </SubmitButton>
               </form>
             )}
           </DashboardCard>
@@ -284,13 +285,13 @@ export default async function BatchDetailsPage({ params }: PageProps) {
                 </select>
               </div>
 
-              <button 
+              <SubmitButton 
                 type="submit" 
                 className="w-full flex items-center justify-center gap-2 bg-white text-gray-700 hover:text-gray-900 py-2 border border-gray-200 hover:border-gray-300 rounded-xl text-sm font-semibold transition-colors cursor-pointer shadow-3xs"
               >
                 <GraduationCap className="w-4 h-4 text-gray-400" />
                 Update Assigned Instructor
-              </button>
+              </SubmitButton>
             </form>
           </DashboardCard>
 

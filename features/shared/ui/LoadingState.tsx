@@ -16,7 +16,7 @@ export const LoadingState = ({ mode = 'skeleton', rows = 3, className, id, ...pr
         {...props}
       >
         <Loader className="h-6 w-6 animate-spin text-brand-accent/70" />
-        <span className="text-xs font-sans font-light tracking-wide">Syncing PsySphere workspace...</span>
+        <span className="text-xs font-sans font-light tracking-wide">Syncing Saarthi Classes workspace...</span>
       </div>
     );
   }

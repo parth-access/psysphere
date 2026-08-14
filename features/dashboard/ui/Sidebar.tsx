@@ -32,7 +32,7 @@ export function Sidebar({ userProfile }: { userProfile?: { fullName: string; rol
   return (
     <div className="w-64 h-screen bg-[#FDFBF7] border-r border-gray-200 flex flex-col fixed left-0 top-0 pt-6 pb-6">
       <div className="px-6 mb-8">
-        <h1 className="text-xl font-serif font-bold text-gray-900 tracking-tight">PsySphere</h1>
+        <h1 className="text-xl font-serif font-bold text-gray-900 tracking-tight">Saarthi Classes</h1>
         <p className="text-xs text-gray-500 mt-1 uppercase tracking-wider font-medium">OS Dashboard</p>
       </div>
 

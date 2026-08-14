@@ -22,7 +22,7 @@ export function TodaysFocus() {
 
   // Load from local storage on mount
   useEffect(() => {
-    const saved = localStorage.getItem("psysphere_teacher_focus");
+    const saved = localStorage.getItem("saarthi_teacher_focus") || localStorage.getItem("psysphere_teacher_focus");
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
@@ -39,7 +39,7 @@ export function TodaysFocus() {
   // Save to local storage on change
   const saveTasks = (newTasks: Task[]) => {
     setTasks(newTasks);
-    localStorage.setItem("psysphere_teacher_focus", JSON.stringify(newTasks));
+    localStorage.setItem("saarthi_teacher_focus", JSON.stringify(newTasks));
   };
 
   const handleToggle = (id: string) => {

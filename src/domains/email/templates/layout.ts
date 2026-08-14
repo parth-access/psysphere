@@ -173,14 +173,14 @@ export function renderBaseEmailLayout(title: string, contentHtml: string): strin
       <div class="wrapper">
         <div class="container">
           <div class="header">
-            <div class="logo-box">P</div>
-            <div class="brand-name">PsySphere</div>
+            <div class="logo-box">S</div>
+            <div class="brand-name">Saarthi Classes</div>
           </div>
           <div class="body-content">
             ${contentHtml}
           </div>
           <div class="footer">
-            <p style="margin-bottom: 8px; font-size: 12px; color: #6B7280;">© 2026 PsySphere Technologies. All rights reserved.</p>
+            <p style="margin-bottom: 8px; font-size: 12px; color: #6B7280;">© 2026 Saarthi Classes. All rights reserved.</p>
             <p style="margin: 0; font-size: 11px; color: #9CA3AF;">This is an administrative email regarding your academic enrollment. You cannot unsubscribe from system notifications.</p>
           </div>
         </div>

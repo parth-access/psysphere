@@ -8,7 +8,7 @@ export default function DirectJoinPage() {
       <div className="border-b border-[#E8E5E0] bg-white py-6 shadow-sm">
         <div className="max-w-4xl mx-auto px-6 flex items-center justify-between">
           <Link href="/" className="font-serif font-bold text-xl text-purple-950 tracking-wider">
-            PsySphere
+            Saarthi Classes
           </Link>
           <Link href="/contact" className="text-xs text-purple-700 font-semibold hover:underline">
             Contact Admissions
@@ -23,9 +23,9 @@ export default function DirectJoinPage() {
             <Sparkles className="w-8 h-8" />
           </div>
 
-          <h1 className="text-3xl font-serif font-bold text-gray-900 mb-3">Cohorts are Selective</h1>
+          <h1 className="text-3xl font-serif font-bold text-gray-900 mb-3">Batches are Selective</h1>
           <p className="text-gray-600 text-sm mb-8 leading-relaxed max-w-md mx-auto">
-            At PsySphere, we limit our Class 11 & 12 psychology cohorts to ensure high-engagement whiteboard mentorship and individualized grade progress trackers. Direct online registration is disabled.
+            At Saarthi Classes, we limit our Class 11 & Class 12 Psychology batches to ensure high-engagement whiteboard mentorship and individualized grade progress trackers. Direct online registration is disabled.
           </p>
 
           <div className="p-5 bg-purple-50/50 border border-purple-100 rounded-lg text-left mb-8 space-y-4">
@@ -47,7 +47,7 @@ export default function DirectJoinPage() {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href="/"
+              href="/book-demo"
               className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#7C3AED] hover:bg-[#6D28D9] text-white font-semibold text-sm rounded-lg shadow-sm transition-colors"
             >
               <span>Request a Demo Class</span>
@@ -65,7 +65,7 @@ export default function DirectJoinPage() {
 
       {/* Small footer */}
       <div className="text-center text-xs text-gray-400 max-w-md mx-auto px-6">
-        Admissions inquiries: <span className="font-medium text-gray-500">psysphereclasses@gmail.com</span>
+        Admissions inquiries: <span className="font-medium text-gray-500">classes@saarthilife.com</span>
       </div>
     </div>
   );

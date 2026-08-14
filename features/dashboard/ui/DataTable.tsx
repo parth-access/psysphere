@@ -12,9 +12,10 @@ interface DataTableProps<T> {
   data: T[];
   columns: Column<T>[];
   className?: string;
+  emptyState?: ReactNode;
 }
 
-export function DataTable<T>({ data, columns, className }: DataTableProps<T>) {
+export function DataTable<T>({ data, columns, className, emptyState }: DataTableProps<T>) {
   return (
     <div className={cn("w-full overflow-x-auto", className)}>
       <table className="w-full text-sm text-left">
@@ -40,7 +41,7 @@ export function DataTable<T>({ data, columns, className }: DataTableProps<T>) {
           {data.length === 0 && (
             <tr>
               <td colSpan={columns.length} className="px-6 py-12 text-center text-gray-500">
-                No data available
+                {emptyState || "No data available."}
               </td>
             </tr>
           )}

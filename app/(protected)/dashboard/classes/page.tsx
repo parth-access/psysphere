@@ -1,3 +1,4 @@
+import { SubmitButton } from "@/features/shared/ui/SubmitButton";
 import { PageHeader } from "@/features/dashboard/ui/PageHeader";
 import { DashboardCard } from "@/features/dashboard/ui/DashboardCard";
 import { StatusBadge } from "@/features/dashboard/ui/StatusBadge";
@@ -471,13 +472,13 @@ export default async function ClassesPage() {
                       </button>
                     </div>
                   ) : (
-                    <button 
+                    <SubmitButton 
                       type="submit" 
                       className="w-full flex items-center justify-center gap-2 bg-brand-primary text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-brand-primary-hover transition-colors cursor-pointer"
                     >
                       <Plus className="w-4 h-4" />
                       Schedule Lecture
-                    </button>
+                    </SubmitButton>
                   )}
                 </div>
               </form>

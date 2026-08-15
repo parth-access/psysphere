@@ -2,9 +2,12 @@ export const dynamic = "force-dynamic";
 import { PageHeader } from "@/features/dashboard/ui/PageHeader";
 import { DashboardCard } from "@/features/dashboard/ui/DashboardCard";
 import { DataTable } from "@/features/dashboard/ui/DataTable";
+import { EmptyState } from "@/features/dashboard/ui/EmptyState";
+import { Inbox } from "lucide-react";
 import { StatusBadge } from "@/features/dashboard/ui/StatusBadge";
 import { admissionRepository } from "@/src/domains/admissions/repository";
 import Link from "next/link";
+import { SubmitButton } from "@/features/shared/ui/SubmitButton";
 import { approveAdmissionAction, rejectAdmissionAction, convertAdmissionAction } from "./actions";
 import { enforcePageRole } from "@/server/authorization/requireRole";
 import { ROLES } from "@/server/authorization/roles";
@@ -33,13 +36,13 @@ export default async function AdmissionsPage() {
         <div className="flex items-center gap-3 text-sm">
           <Link href={`/dashboard/admissions/${item.id}`} className="text-brand-primary hover:text-brand-primary-hover font-medium">View</Link>
           <form action={approveAdmissionAction.bind(null, item.id)} className="inline">
-            <button type="submit" className="text-emerald-600 hover:text-emerald-700 font-medium cursor-pointer">Approve</button>
+            <SubmitButton type="submit" className="text-emerald-600 hover:text-emerald-700 font-medium cursor-pointer">Approve</SubmitButton>
           </form>
           <form action={rejectAdmissionAction.bind(null, item.id)} className="inline">
-            <button type="submit" className="text-red-600 hover:text-red-700 font-medium cursor-pointer">Reject</button>
+            <SubmitButton type="submit" className="text-red-600 hover:text-red-700 font-medium cursor-pointer">Reject</SubmitButton>
           </form>
           <form action={convertAdmissionAction.bind(null, item.id)} className="inline">
-            <button type="submit" className="text-blue-600 hover:text-blue-700 font-medium cursor-pointer">Convert</button>
+            <SubmitButton type="submit" className="text-blue-600 hover:text-blue-700 font-medium cursor-pointer">Convert</SubmitButton>
           </form>
         </div>
       )
@@ -54,7 +57,7 @@ export default async function AdmissionsPage() {
       />
 
       <DashboardCard>
-        <DataTable data={admissionsData} columns={columns} />
+        <DataTable emptyState={<EmptyState icon={<Inbox />} title="No admission requests" description="New student booking requests will appear here for your review." />} data={admissionsData} columns={columns} />
       </DashboardCard>
     </div>
   );

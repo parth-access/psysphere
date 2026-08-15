@@ -165,7 +165,7 @@ export default async function SettingsPage({ searchParams }: PageProps) {
               <div className="pt-4 flex justify-end">
                 <button className="bg-brand-primary text-white px-6 py-2 rounded-xl text-sm font-medium hover:bg-brand-primary-hover transition-colors">
                   Save Defaults
-              </button>
+                </button>
               </div>
             </div>
           </DashboardCard>

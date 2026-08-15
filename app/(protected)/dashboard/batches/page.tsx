@@ -10,6 +10,7 @@ import { createBatchAction } from "./actions";
 import { enforcePageRole } from "@/server/authorization/requireRole";
 import { ROLES } from "@/server/authorization/roles";
 import Link from "next/link";
+import { SubmitButton } from "@/features/shared/ui/SubmitButton";
 
 export const dynamic = "force-dynamic";
 
@@ -190,13 +191,13 @@ export default async function BatchesPage() {
                 </div>
 
                 <div className="pt-2">
-                  <button 
+                  <SubmitButton 
                     type="submit" 
                     className="w-full flex items-center justify-center gap-2 bg-brand-primary text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-brand-primary-hover transition-colors cursor-pointer"
                   >
                     <Plus className="w-4 h-4" />
                     Create Cohort
-                  </button>
+                  </SubmitButton>
                 </div>
               </form>
             )}

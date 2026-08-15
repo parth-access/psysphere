@@ -2,6 +2,8 @@ export const dynamic = "force-dynamic";
 import { PageHeader } from "@/features/dashboard/ui/PageHeader";
 import { DashboardCard } from "@/features/dashboard/ui/DashboardCard";
 import { DataTable } from "@/features/dashboard/ui/DataTable";
+import { EmptyState } from "@/features/dashboard/ui/EmptyState";
+import { Inbox } from "lucide-react";
 import { StatusBadge } from "@/features/dashboard/ui/StatusBadge";
 import { studentRepository } from "@/src/domains/users/repository";
 import Link from "next/link";
@@ -35,7 +37,7 @@ export default async function StudentsPage() {
       />
 
       <DashboardCard>
-        <DataTable data={studentsData} columns={columns} />
+        <DataTable emptyState={<EmptyState icon={<Inbox />} title="No enrolled students" description="Students will appear here once their admission is confirmed and they complete onboarding." />} data={studentsData} columns={columns} />
       </DashboardCard>
     </div>
   );

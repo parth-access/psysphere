@@ -1,4 +1,4 @@
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 import { EMAIL_DEFAULTS } from "./constants";
 import { db } from "@/db";
 import { emailDeliveries } from "@/db/schema";
@@ -31,41 +31,27 @@ import {
 } from "./templates";
 
 /* ============================================================
- * SMTP Transport
+ * Resend Client
  * ============================================================ */
 
-let transporter: nodemailer.Transporter | null = null;
+let resendClient: Resend | null = null;
 
-function getTransporter(): nodemailer.Transporter | null {
-  if (transporter) {
-    return transporter;
+function getResendClient(): Resend | null {
+  if (resendClient) {
+    return resendClient;
   }
 
-  const host = process.env.SMTP_HOST;
-  const port = Number(process.env.SMTP_PORT || 465);
-  const secure = process.env.SMTP_SECURE === "true";
-  const user = process.env.SMTP_USER;
-  const pass = process.env.SMTP_PASS;
+  const apiKey = process.env.RESEND_API_KEY;
 
-  if (!host || !user || !pass) {
+  if (!apiKey) {
     console.error(
-      "❌ [EmailService] SMTP configuration is missing. Email delivery is disabled."
+      "❌ [EmailService] RESEND_API_KEY is missing. Email delivery is disabled."
     );
-
     return null;
   }
 
-  transporter = nodemailer.createTransport({
-    host,
-    port,
-    secure,
-    auth: {
-      user,
-      pass,
-    },
-  });
-
-  return transporter;
+  resendClient = new Resend(apiKey);
+  return resendClient;
 }
 
 /* ============================================================
@@ -92,19 +78,19 @@ export class EmailService {
       relatedEntityId?: string;
     }
   ): Promise<SendEmailResponse> {
-    const smtp = getTransporter();
+    const resend = getResendClient();
 
     const type = options?.type || "unknown";
     const relatedEntityType = options?.relatedEntityType || null;
     const relatedEntityId = options?.relatedEntityId || null;
 
     /* ========================================================
-     * SMTP unavailable
+     * Resend unavailable
      * ======================================================== */
 
-    if (!smtp) {
+    if (!resend) {
       console.warn(
-        `[EmailService] Unsent - SMTP is not configured. Target: ${to}, Subject: ${subject}`
+        `[EmailService] Unsent - Resend API key is not configured. Target: ${to}, Subject: ${subject}`
       );
 
       try {
@@ -112,10 +98,10 @@ export class EmailService {
           type,
           recipient: to,
           subject,
-          provider: "smtp",
+          provider: "resend",
           status: "failed",
           errorMessage:
-            "Email service is not configured (missing SMTP configuration)",
+            "Email service is not configured (missing RESEND_API_KEY)",
           relatedEntityType,
           relatedEntityId,
         });
@@ -137,16 +123,20 @@ export class EmailService {
      * ======================================================== */
 
     try {
-      const result = await smtp.sendMail({
+      const { data, error } = await resend.emails.send({
         from,
-        to,
+        to: [to],
         subject,
         html: htmlContent,
         replyTo: EMAIL_DEFAULTS.REPLY_TO,
       });
 
+      if (error) {
+        throw new Error(error.message);
+      }
+
       console.log(
-        `✅ [EmailService] Successfully sent email to ${to} (ID: ${result.messageId})`
+        `✅ [EmailService] Successfully sent email to ${to} (ID: ${data?.id})`
       );
 
       /* ======================================================
@@ -158,8 +148,8 @@ export class EmailService {
           type,
           recipient: to,
           subject,
-          provider: "smtp",
-          providerMessageId: result.messageId || null,
+          provider: "resend",
+          providerMessageId: data?.id || null,
           status: "success",
           relatedEntityType,
           relatedEntityId,
@@ -174,12 +164,12 @@ export class EmailService {
       return {
         success: true,
         data: {
-          id: result.messageId,
+          id: data?.id || "unknown",
         },
       };
     } catch (error: unknown) {
       /* ======================================================
-       * SMTP failure
+       * Resend failure
        * ====================================================== */
 
       const errMsg =
@@ -195,7 +185,7 @@ export class EmailService {
           type,
           recipient: to,
           subject,
-          provider: "smtp",
+          provider: "resend",
           status: "failed",
           errorMessage: errMsg,
           relatedEntityType,
@@ -203,7 +193,7 @@ export class EmailService {
         });
       } catch (dbErr) {
         console.error(
-          "❌ [EmailService] Failed to log SMTP failure:",
+          "❌ [EmailService] Failed to log Resend failure:",
           dbErr
         );
       }
@@ -364,7 +354,7 @@ export class EmailService {
 
     const adminEmail =
       process.env.EMAIL_REPLY_TO ||
-      "classes@saarthilife.com";
+      "hello@classes.saarthilife.com";
 
     return this.sendHtmlEmail(
       adminEmail,

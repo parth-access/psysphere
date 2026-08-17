@@ -57,7 +57,7 @@ export default function DirectJoinPage() {
               href="/contact"
               className="inline-flex items-center justify-center gap-1 px-6 py-3 border border-[#E8E5E0] hover:bg-gray-50 text-gray-700 font-semibold text-sm rounded-lg transition-colors"
             >
-              <span>Inquire via Email</span>
+              <span>Contact Admissions</span>
             </Link>
           </div>
         </div>
@@ -65,7 +65,7 @@ export default function DirectJoinPage() {
 
       {/* Small footer */}
       <div className="text-center text-xs text-gray-400 max-w-md mx-auto px-6">
-        Admissions inquiries: <span className="font-medium text-gray-500">classes@saarthilife.com</span>
+        Admissions inquiries: <Link href="/contact" className="font-medium text-gray-500 hover:underline">Contact Form</Link>
       </div>
     </div>
   );

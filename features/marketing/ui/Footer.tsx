@@ -16,12 +16,12 @@ export function Footer() {
               Saarthi Classes helps Class 11 & Class 12 Psychology students build concepts, score well in boards, and prepare confidently for CUET.
             </p>
             <div className="flex items-center gap-4">
-              <a 
-                href="mailto:classes@saarthilife.com?subject=Inquiry%20about%20Saarthi%20Classes" 
+              <Link 
+                href="/contact" 
                 className="text-white/70 hover:text-white transition-colors text-sm font-medium flex items-center gap-2"
               >
-                <span>Email: classes@saarthilife.com</span>
-              </a>
+                <span>Contact Us</span>
+              </Link>
             </div>
           </div>
           

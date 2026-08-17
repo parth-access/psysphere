@@ -2,6 +2,7 @@ import { Navbar } from '@/features/marketing/ui/Navbar';
 import { Footer } from '@/features/marketing/ui/Footer';
 import { Container } from '@/features/marketing/ui/Container';
 import { H1, H2, Body } from '@/features/marketing/ui/Typography';
+import Link from 'next/link';
 
 export default function PrivacyPolicyPage() {
   return (
@@ -26,14 +27,14 @@ export default function PrivacyPolicyPage() {
             <div>
               <h3 className="font-serif text-lg font-semibold text-brand-text mb-3">1. Introduction</h3>
               <p>
-                At PsySphere, we respect your privacy and are committed to protecting any personal data we collect. This Privacy Policy outlines how we collect, use, process, and protect your information when you enroll in our coaching programs, access our portal, or visit our marketing website.
+                At Saarthi Classes, we respect your privacy and are committed to protecting any personal data we collect. This Privacy Policy outlines how we collect, use, process, and protect your information when you enroll in our coaching programs, access our portal, or visit our marketing website.
               </p>
             </div>
 
             <div>
               <h3 className="font-serif text-lg font-semibold text-brand-text mb-3">2. Accounts & Onboarding</h3>
               <p>
-                When you register for a student or teacher account with PsySphere, we collect registration details including your full name, email address, school grade, parent/guardian contact info, and study preferences. This data is strictly used to provision your personalized learning dashboard, assign batches, and communicate important classroom updates.
+                When you register for a student or teacher account with Saarthi Classes, we collect registration details including your full name, email address, school grade, parent/guardian contact info, and study preferences. This data is strictly used to provision your personalized learning dashboard, assign batches, and communicate important classroom updates.
               </p>
             </div>
 
@@ -75,7 +76,7 @@ export default function PrivacyPolicyPage() {
             <div>
               <h3 className="font-serif text-lg font-semibold text-brand-text mb-3">8. Contact & Compliance</h3>
               <p>
-                If you have questions about how we treat your data, or if you would like to request file access, rectification, or complete erasure of your personal records from our databases, please contact us directly at <span className="font-semibold text-brand-primary">psysphereclasses@gmail.com</span>.
+                If you have questions about how we treat your data, or if you would like to request file access, rectification, or complete erasure of your personal records from our databases, please contact us directly through our <Link href="/contact" className="font-semibold text-brand-primary hover:underline">Contact Form</Link>.
               </p>
             </div>
           </div>

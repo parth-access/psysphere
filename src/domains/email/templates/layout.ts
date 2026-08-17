@@ -85,6 +85,18 @@ export function renderBaseEmailLayout(title: string, contentHtml: string): strin
           color: #6B7280;
           line-height: 1.6;
         }
+        .automated-notice {
+          margin-top: 24px;
+          padding-top: 24px;
+          border-top: 1px solid #E8E5E0;
+          font-size: 13px;
+          color: #4B5563;
+        }
+        .automated-notice a {
+          color: #1F2937;
+          font-weight: 600;
+          text-decoration: underline;
+        }
         h1, h2, h3 {
           font-family: Georgia, serif;
           color: #1F2937;
@@ -180,6 +192,11 @@ export function renderBaseEmailLayout(title: string, contentHtml: string): strin
             ${contentHtml}
           </div>
           <div class="footer">
+            <div class="automated-notice">
+              <p style="margin-bottom: 8px;">This is an automated email from Saarthi Classes. This inbox is not monitored for replies.</p>
+              <p style="margin: 0;">Need help or have a question? Please use our <a href="https://classes.saarthilife.com/contact">Contact Form</a>.</p>
+            </div>
+            <div class="divider"></div>
             <p style="margin-bottom: 8px; font-size: 12px; color: #6B7280;">© 2026 Saarthi Classes. All rights reserved.</p>
             <p style="margin: 0; font-size: 11px; color: #9CA3AF;">This is an administrative email regarding your academic enrollment. You cannot unsubscribe from system notifications.</p>
           </div>

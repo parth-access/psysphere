@@ -2,6 +2,7 @@ import { Navbar } from '@/features/marketing/ui/Navbar';
 import { Footer } from '@/features/marketing/ui/Footer';
 import { Container } from '@/features/marketing/ui/Container';
 import { H1, H2, Body } from '@/features/marketing/ui/Typography';
+import Link from 'next/link';
 
 export default function RefundPolicyPage() {
   return (
@@ -28,7 +29,7 @@ export default function RefundPolicyPage() {
             <div>
               <h3 className="font-serif text-lg font-semibold text-brand-text mb-3">1. Transparency &amp; Demos First</h3>
               <p>
-                We believe that every student deserves a learning environment that matches their pace. To guarantee transparency, PsySphere provides a completely free, complimentary demo class with Dravina Gupta prior to any tuition payment. This ensures that you can experience our conceptual and compassionate teaching firsthand before making any financial commitment.
+                We believe that every student deserves a learning environment that matches their pace. To guarantee transparency, Saarthi Classes provides a completely free, complimentary demo class with Dravina Gupta prior to any tuition payment. This ensures that you can experience our conceptual and compassionate teaching firsthand before making any financial commitment.
               </p>
             </div>
 
@@ -57,7 +58,7 @@ export default function RefundPolicyPage() {
             <div>
               <h3 className="font-serif text-lg font-semibold text-brand-text mb-3">4. Processing Requests</h3>
               <p>
-                To request a refund, please send a simple, direct email to <span className="font-semibold text-brand-primary">psysphereclasses@gmail.com</span> with your full name, registered batch name, date of enrollment, and billing receipt. 
+                To request a refund, please send a simple, direct message through our <Link href="/contact" className="font-semibold text-brand-primary hover:underline">Contact Form</Link> with your full name, registered batch name, date of enrollment, and billing receipt. 
               </p>
               <p className="mt-2">
                 Our team handles these requests with utmost empathy and respect. Once approved, the refund will be credited back to your original payment mode within <span className="font-semibold text-brand-text">5 to 7 business days</span>.

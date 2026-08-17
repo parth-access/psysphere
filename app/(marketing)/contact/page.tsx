@@ -26,11 +26,11 @@ export default function ContactPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-12 gap-12 items-start">
               {/* Left Column - Welcoming Context */}
-              <div className="md:col-span-7 space-y-8">
+              <div className="md:col-span-6 space-y-8">
                 <div className="bg-white p-8 rounded-[32px] border border-brand-border shadow-sm space-y-6">
                   <h2 className="font-serif text-2xl font-semibold text-brand-text">How We Can Help You</h2>
                   <p className="font-sans text-brand-text-muted text-sm leading-relaxed">
-                    At PsySphere, learning is a collaborative and compassionate journey. We invite parents and students to ask any questions—whether big or small—regarding the curriculum or high-school preparation.
+                    At Saarthi Classes, learning is a collaborative and compassionate journey. We invite parents and students to ask any questions—whether big or small—regarding the curriculum or high-school preparation.
                   </p>
                   
                   <div className="space-y-6 pt-2">
@@ -60,7 +60,7 @@ export default function ContactPage() {
                       </div>
                       <div>
                         <h3 className="font-serif font-semibold text-brand-text text-sm">Expected Response Time</h3>
-                        <p className="text-xs text-brand-text-muted leading-relaxed">We respond to every query, enrollment request, or general question within 12 to 24 hours.</p>
+                        <p className="text-xs text-brand-text-muted leading-relaxed">We aim to respond to every query or general question submitted via our form within 12 to 24 hours.</p>
                       </div>
                     </div>
                   </div>
@@ -68,38 +68,51 @@ export default function ContactPage() {
 
                 <div className="p-6 bg-brand-primary/5 rounded-2xl border border-brand-primary/10">
                   <p className="text-xs text-brand-text leading-relaxed font-sans italic text-center">
-                    &quot;Education should feel supportive. Feel free to reach out to schedule a visual demo or discuss study strategies for your child.&quot; — Dravina Gupta
+                    &quot;Education should feel supportive. Feel free to reach out via the form to schedule a visual demo or discuss study strategies for your child.&quot; — Dravina Gupta
                   </p>
                 </div>
               </div>
 
               {/* Right Column - Actions & Direct Info */}
-              <div className="md:col-span-5 bg-white p-8 rounded-[32px] border border-brand-border shadow-sm space-y-8">
-                <div>
-                  <h2 className="font-serif text-xl font-semibold text-brand-text mb-4">Direct Action</h2>
-                  <div className="flex flex-col gap-4">
-                    <Button href="/book-demo" variant="primary" className="w-full flex items-center justify-center gap-2">
-                      <Calendar className="h-4 w-4" /> Book a Free Demo Class
-                    </Button>
+              <div className="md:col-span-6 space-y-6">
+                <div className="bg-white p-8 rounded-[32px] border border-brand-border shadow-sm">
+                  <h2 className="font-serif text-xl font-semibold text-brand-text mb-2">Send an Enquiry</h2>
+                  <p className="text-sm text-brand-text-muted mb-6">Please fill out the form below and our admissions team will get back to you shortly.</p>
+                  
+                  <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-semibold text-brand-text">First Name</label>
+                        <input type="text" className="w-full px-3 py-2 border border-brand-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20" placeholder="John" />
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-semibold text-brand-text">Last Name</label>
+                        <input type="text" className="w-full px-3 py-2 border border-brand-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20" placeholder="Doe" />
+                      </div>
+                    </div>
                     
-                    <Button href="mailto:psysphereclasses@gmail.com?subject=Inquiry%20about%20PsySphere" variant="secondary" className="w-full flex items-center justify-center gap-2">
-                      <Mail className="h-4 w-4" /> Email Dravina Gupta
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-semibold text-brand-text">Email Address</label>
+                      <input type="email" className="w-full px-3 py-2 border border-brand-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20" placeholder="john@example.com" />
+                    </div>
+                    
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-semibold text-brand-text">Your Message</label>
+                      <textarea rows={4} className="w-full px-3 py-2 border border-brand-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 resize-none" placeholder="How can we help you?"></textarea>
+                    </div>
+                    
+                    <Button type="submit" variant="primary" className="w-full flex items-center justify-center gap-2 mt-2">
+                      <MessageSquare className="h-4 w-4" /> Send Message
                     </Button>
-                  </div>
+                  </form>
                 </div>
-
-                <div className="border-t border-brand-border pt-6 space-y-4">
-                  <h3 className="font-serif text-sm font-semibold text-brand-text uppercase tracking-wider">Contact Information</h3>
-                  <div>
-                    <span className="block text-xs text-brand-text-muted uppercase tracking-wider font-semibold mb-1">Direct Email</span>
-                    <a href="mailto:psysphereclasses@gmail.com?subject=Inquiry%20about%20PsySphere" className="font-serif font-semibold text-brand-primary hover:underline text-base">
-                      psysphereclasses@gmail.com
-                    </a>
-                  </div>
-                  <div>
-                    <span className="block text-xs text-brand-text-muted uppercase tracking-wider font-semibold mb-1">Timings</span>
-                    <span className="text-xs font-sans text-brand-text font-medium">Monday to Saturday • 10:00 AM to 7:00 PM (IST)</span>
-                  </div>
+                
+                <div className="bg-white p-8 rounded-[32px] border border-brand-border shadow-sm space-y-4">
+                  <h2 className="font-serif text-xl font-semibold text-brand-text mb-2">Prefer a Demo?</h2>
+                  <p className="text-sm text-brand-text-muted mb-4">Book a free session to experience our teaching methodology firsthand.</p>
+                  <Button href="/book-demo" variant="secondary" className="w-full flex items-center justify-center gap-2">
+                    <Calendar className="h-4 w-4" /> Book a Free Demo Class
+                  </Button>
                 </div>
               </div>
             </div>

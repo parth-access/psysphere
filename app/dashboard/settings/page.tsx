@@ -64,7 +64,7 @@ export default async function SettingsPage({ searchParams }: PageProps) {
                 <label className="text-sm font-medium text-gray-900">Institute Name</label>
                 <input 
                   type="text" 
-                  defaultValue="PsySphere" 
+                  defaultValue="Saarthi Classes" 
                   className="w-full px-4 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
                 />
               </div>
@@ -72,7 +72,7 @@ export default async function SettingsPage({ searchParams }: PageProps) {
                 <label className="text-sm font-medium text-gray-900">Contact Email</label>
                 <input 
                   type="email" 
-                  defaultValue="contact@psysphere.com" 
+                  defaultValue="contact@classes.saarthilife.com" 
                   className="w-full px-4 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
                 />
               </div>
@@ -103,7 +103,7 @@ export default async function SettingsPage({ searchParams }: PageProps) {
                 <div className="flex-1 space-y-1">
                   <h4 className="text-sm font-semibold text-gray-900">Automatic Live Lectures scheduling</h4>
                   <p className="text-xs text-gray-600 leading-relaxed">
-                    Automatically create calendar events in your centralized institutional Google account (<strong>psysphereclasses@gmail.com</strong>) and dynamically attach interactive Google Meet video-conferencing access for student/educator dashboard joins.
+                    Automatically create calendar events in your centralized institutional Google account (<strong>hello@classes.saarthilife.com</strong>) and dynamically attach interactive Google Meet video-conferencing access for student/educator dashboard joins.
                   </p>
                   
                   <div className="pt-4">

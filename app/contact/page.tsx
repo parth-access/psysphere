@@ -79,7 +79,7 @@ export default function ContactPage() {
                   <h2 className="font-serif text-xl font-semibold text-brand-text mb-2">Send an Enquiry</h2>
                   <p className="text-sm text-brand-text-muted mb-6">Please fill out the form below and our admissions team will get back to you shortly.</p>
                   
-                  <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+                  <form className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-1.5">
                         <label className="text-xs font-semibold text-brand-text">First Name</label>

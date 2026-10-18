@@ -3,14 +3,16 @@ import { cn } from "@/lib/utils";
 interface StatCardProps {
   label: string;
   value: string | number;
+  hint?: string;
   className?: string;
 }
 
-export function StatCard({ label, value, className }: StatCardProps) {
+export function StatCard({ label, value, hint, className }: StatCardProps) {
   return (
-    <div className={cn("bg-white p-6 rounded-2xl border border-gray-100 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)]", className)}>
-      <p className="text-sm font-medium text-gray-500 mb-2">{label}</p>
-      <h4 className="text-3xl font-serif font-bold text-gray-900">{value}</h4>
+    <div className={cn("rounded-2xl border border-line bg-surface p-5", className)}>
+      <p className="text-sm text-ink-500">{label}</p>
+      <p className="mt-1 font-serif text-[32px] font-semibold leading-none text-ink-900 tabular-nums">{value}</p>
+      {hint && <p className="mt-2 text-sm text-ink-500">{hint}</p>}
     </div>
   );
 }

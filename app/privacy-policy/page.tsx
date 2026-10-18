@@ -23,7 +23,7 @@ export default function PrivacyPolicyPage() {
 
       <section className="py-20 bg-brand-canvas flex-1">
         <Container>
-          <div className="max-w-3xl mx-auto bg-white p-10 md:p-12 rounded-[32px] border border-brand-border shadow-sm space-y-8 text-sm text-brand-text leading-relaxed">
+          <div className="max-w-3xl mx-auto bg-white p-10 md:p-12 rounded-2xl border border-brand-border space-y-8 text-sm text-brand-text leading-relaxed">
             <div>
               <h3 className="font-serif text-lg font-semibold text-brand-text mb-3">1. Introduction</h3>
               <p>

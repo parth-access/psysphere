@@ -1,7 +1,18 @@
 import { ReactNode } from 'react';
 import Link from 'next/link';
 
-type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost';
+type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'accent';
+
+const base =
+  'inline-flex min-h-12 items-center justify-center gap-2 rounded-xl px-6 font-sans text-[15px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink-700/40 focus-visible:ring-offset-2 focus-visible:ring-offset-paper disabled:pointer-events-none disabled:opacity-50';
+
+const variants: Record<ButtonVariant, string> = {
+  primary: 'bg-ink-900 text-paper hover:bg-ink-700',
+  accent: 'bg-marigold-500 text-ink-900 hover:bg-marigold-100',
+  secondary: 'border border-line bg-surface text-ink-900 hover:bg-paper-deep',
+  outline: 'border border-ink-900 text-ink-900 hover:bg-ink-100',
+  ghost: 'text-ink-700 hover:bg-ink-100',
+};
 
 export function Button({
   children,
@@ -22,29 +33,18 @@ export function Button({
   target?: string;
   rel?: string;
   disabled?: boolean;
-  type?: "button" | "submit" | "reset";
+  type?: 'button' | 'submit' | 'reset';
 }) {
-  const baseStyles = "inline-flex items-center justify-center font-sans font-medium transition-all duration-200 rounded-2xl px-6 py-3.5";
-  
-  const variants = {
-    primary: "bg-brand-primary text-white hover:bg-brand-primary-hover shadow-[0_4px_14px_0_rgba(109,91,208,0.2)] hover:shadow-[0_6px_20px_rgba(109,91,208,0.25)] hover:-translate-y-0.5 disabled:opacity-50 disabled:pointer-events-none disabled:hover:translate-y-0 disabled:shadow-none",
-    secondary: "bg-white text-brand-text hover:bg-gray-50 shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-brand-border hover:-translate-y-0.5 disabled:opacity-50 disabled:pointer-events-none disabled:hover:translate-y-0 disabled:shadow-none",
-    outline: "bg-transparent text-brand-text border-2 border-brand-primary hover:bg-brand-primary/5 disabled:opacity-50 disabled:pointer-events-none disabled:hover:translate-y-0 disabled:shadow-none",
-    ghost: "bg-transparent text-brand-text-muted hover:text-brand-text hover:bg-brand-surface disabled:opacity-50 disabled:pointer-events-none disabled:hover:translate-y-0 disabled:shadow-none",
-  };
-
-  const combinedClassName = `${baseStyles} ${variants[variant]} ${className}`;
-
+  const cls = `${base} ${variants[variant]} ${className}`;
   if (href) {
     return (
-      <Link href={href} target={target} rel={rel} className={combinedClassName}>
+      <Link href={href} target={target} rel={rel} className={cls}>
         {children}
       </Link>
     );
   }
-
   return (
-    <button type={type} onClick={onClick} disabled={disabled} className={combinedClassName}>
+    <button type={type} onClick={onClick} disabled={disabled} className={cls}>
       {children}
     </button>
   );

@@ -13,15 +13,15 @@ interface ActionCardProps {
 export function ActionCard({ icon, title, onClick, href, className }: ActionCardProps) {
   const content = (
     <>
-      <div className="w-12 h-12 rounded-full bg-brand-surface flex items-center justify-center text-brand-primary">
+      <div className="w-11 h-11 rounded-xl bg-ink-100 flex items-center justify-center text-ink-900">
         {icon}
       </div>
-      <span className="text-sm font-medium text-gray-900">{title}</span>
+      <span className="text-sm font-medium text-ink-900">{title}</span>
     </>
   );
 
   const cardClasses = cn(
-    "flex flex-col items-center justify-center gap-3 p-6 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all w-full text-center cursor-pointer",
+    "flex flex-col items-start justify-between gap-4 p-5 min-h-28 bg-surface rounded-2xl border border-line hover:border-ink-300 transition-colors w-full text-left cursor-pointer",
     className
   );
 

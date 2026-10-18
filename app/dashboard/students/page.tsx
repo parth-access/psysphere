@@ -15,10 +15,10 @@ export default async function StudentsPage() {
   const studentsData = await studentRepository.findAllStudents();
 
   const columns = [
-    { header: "Student Name", accessorKey: "fullName" as const, className: "font-medium text-gray-900" },
-    { header: "Email", accessorKey: "email" as const, className: "text-gray-500" },
-    { header: "Admission No.", accessorKey: "admissionNumber" as const, className: "text-gray-500 font-mono text-xs" },
-    { header: "Enrollment Date", accessorKey: "enrollmentDate" as const, className: "text-gray-500 hidden sm:table-cell" },
+    { header: "Student Name", accessorKey: "fullName" as const, className: "font-medium text-ink-900" },
+    { header: "Email", accessorKey: "email" as const, className: "text-ink-500" },
+    { header: "Admission No.", accessorKey: "admissionNumber" as const, className: "text-ink-500 font-mono text-xs" },
+    { header: "Enrollment Date", accessorKey: "enrollmentDate" as const, className: "text-ink-500 hidden sm:table-cell" },
     {
       header: "Actions",
       cell: (item: any) => (

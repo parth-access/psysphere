@@ -10,7 +10,7 @@ export const Card = ({ children, className, id, ...props }: CardProps) => {
     <div
       id={id}
       className={cn(
-        'bg-white border border-brand-stone-soft rounded-xs shadow-[0_2px_4px_rgba(0,0,0,0.01)] transition-all duration-300',
+        'bg-white border border-brand-stone-soft rounded-xl transition-all duration-300',
         className
       )}
       {...props}

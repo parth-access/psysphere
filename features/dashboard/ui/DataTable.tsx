@@ -19,7 +19,7 @@ export function DataTable<T>({ data, columns, className, emptyState }: DataTable
   return (
     <div className={cn("w-full overflow-x-auto", className)}>
       <table className="w-full text-sm text-left">
-        <thead className="text-xs text-gray-500 uppercase bg-gray-50/50 border-b border-gray-100">
+        <thead className="text-xs text-ink-500 uppercase bg-paper/50 border-b border-line">
           <tr>
             {columns.map((col, i) => (
               <th key={i} className={cn("px-6 py-4 font-medium tracking-wider", col.className)}>
@@ -28,9 +28,9 @@ export function DataTable<T>({ data, columns, className, emptyState }: DataTable
             ))}
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-50">
+        <tbody className="divide-y divide-line">
           {data.map((row, i) => (
-            <tr key={i} className="hover:bg-gray-50/50 transition-colors">
+            <tr key={i} className="hover:bg-paper/50 transition-colors">
               {columns.map((col, j) => (
                 <td key={j} className={cn("px-6 py-4", col.className)}>
                   {col.cell ? col.cell(row) : (col.accessorKey ? String(row[col.accessorKey]) : null)}
@@ -40,7 +40,7 @@ export function DataTable<T>({ data, columns, className, emptyState }: DataTable
           ))}
           {data.length === 0 && (
             <tr>
-              <td colSpan={columns.length} className="px-6 py-12 text-center text-gray-500">
+              <td colSpan={columns.length} className="px-6 py-12 text-center text-ink-500">
                 {emptyState || "No data available."}
               </td>
             </tr>

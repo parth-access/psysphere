@@ -17,12 +17,12 @@ export default async function TeachersPage() {
   const teachersData = await teacherRepository.findAllTeachers();
 
   const columns = [
-    { header: "Teacher Name", accessorKey: "fullName" as const, className: "font-medium text-gray-900" },
-    { header: "Email", accessorKey: "email" as const, className: "text-gray-500" },
+    { header: "Teacher Name", accessorKey: "fullName" as const, className: "font-medium text-ink-900" },
+    { header: "Email", accessorKey: "email" as const, className: "text-ink-500" },
     {
       header: "Status",
       cell: (item: any) => (
-        <span className="text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100 px-2 py-0.5 rounded-full">
+        <span className="text-xs font-semibold bg-sage-100 text-sage-600 border border-sage-100 px-2 py-0.5 rounded-full">
           {item.isActive ? "Active" : "Inactive"}
         </span>
       )
@@ -39,7 +39,7 @@ export default async function TeachersPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main List Column */}
         <div className="lg:col-span-2 space-y-6">
-          <h2 className="text-lg font-serif font-semibold text-gray-900 flex items-center gap-2">
+          <h2 className="text-lg font-serif font-semibold text-ink-900 flex items-center gap-2">
             <UserCheck className="w-5 h-5 text-brand-primary" />
             Active Faculty ({teachersData.length})
           </h2>
@@ -54,24 +54,24 @@ export default async function TeachersPage() {
           <DashboardCard title="Invite New Teacher">
             <form action={createTeacherAction} className="space-y-4">
               <div>
-                <label className="text-xs font-semibold text-gray-700 uppercase tracking-wider block mb-1">Full Name</label>
+                <label className="text-xs font-semibold text-ink-700 uppercase tracking-wider block mb-1">Full Name</label>
                 <input 
                   type="text" 
                   name="fullName" 
                   required 
                   placeholder="e.g. Dravina Gupta" 
-                  className="w-full px-4 py-2 border border-gray-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
+                  className="w-full px-4 py-2 border border-line rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-gray-700 uppercase tracking-wider block mb-1">Registered Email</label>
+                <label className="text-xs font-semibold text-ink-700 uppercase tracking-wider block mb-1">Registered Email</label>
                 <input 
                   type="email" 
                   name="email" 
                   required 
                   placeholder="e.g. dravina@psysphere.com" 
-                  className="w-full px-4 py-2 border border-gray-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
+                  className="w-full px-4 py-2 border border-line rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
                 />
               </div>
 

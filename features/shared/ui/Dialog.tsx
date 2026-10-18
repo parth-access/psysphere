@@ -47,7 +47,7 @@ export const Dialog = ({ isOpen, onClose, title, description, children, id }: Di
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 15 }}
             transition={{ type: 'spring', duration: 0.4 }}
-            className="relative z-10 w-full max-w-lg overflow-hidden rounded-xs border border-brand-stone-soft bg-white p-6 shadow-xl"
+            className="relative z-10 w-full max-w-lg overflow-hidden rounded-xl border border-brand-stone-soft bg-white p-6 "
           >
             {/* Close Button */}
             <button

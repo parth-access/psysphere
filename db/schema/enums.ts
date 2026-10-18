@@ -63,17 +63,22 @@ export const priorityEnum = pgEnum("priority", [
   "high",
 ]);
 
+
 /* ============================================================
- * Admissions
+ * Workshops & joining
  * ============================================================ */
-export const admissionStatusEnum = pgEnum("admission_status", [
-  "LEAD",
-  "DEMO_BOOKED",
-  "DEMO_APPROVED",
-  "DEMO_SCHEDULED",
-  "DEMO_COMPLETED",
-  "ENROLLED",
-  "REJECTED",
-  "INACTIVE",
-  "ALUMNI"
+export const batchJoinModeEnum = pgEnum("batch_join_mode", [
+  "approval", // student requests, admin approves, then student pays
+  "open", // student pays immediately
 ]);
+
+export const joinRequestStatusEnum = pgEnum("join_request_status", [
+  "pending", // waiting for admin approval
+  "approved", // approved, waiting for payment
+  "paid", // payment verified, account being provisioned
+  "enrolled", // account created and enrolled in batch
+  "declined",
+  "cancelled",
+]);
+
+export const courseTrackEnum = pgEnum("course_track", ["standard", "cuet"]);

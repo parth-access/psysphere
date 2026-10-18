@@ -2,7 +2,8 @@ import { cn } from "@/lib/utils";
 
 type StatusType = 
   | "pending" | "approved" | "completed" | "cancelled" | "active" | "warning" | "scheduled" | "upcoming"
-  | "LEAD" | "DEMO_BOOKED" | "DEMO_APPROVED" | "DEMO_SCHEDULED" | "DEMO_COMPLETED" | "ENROLLED" | "REJECTED" | "ACTIVE" | "INACTIVE" | "ALUMNI";
+  | "paid" | "enrolled" | "declined"
+  | "ENROLLED" | "ACTIVE" | "INACTIVE" | "ALUMNI";
 
 interface StatusBadgeProps {
   status: StatusType | string;
@@ -13,50 +14,42 @@ export function StatusBadge({ status, className }: StatusBadgeProps) {
   const normalizedStatus = status as StatusType;
   
   const styles: Partial<Record<StatusType, string>> = {
-    pending: "bg-amber-50 text-amber-700 border-amber-200",
-    approved: "bg-emerald-50 text-emerald-700 border-emerald-200",
-    completed: "bg-emerald-50 text-emerald-700 border-emerald-200",
-    cancelled: "bg-red-50 text-red-700 border-red-200",
-    active: "bg-emerald-50 text-emerald-700 border-emerald-200",
-    warning: "bg-amber-50 text-amber-700 border-amber-200",
-    scheduled: "bg-blue-50 text-blue-700 border-blue-200",
-    upcoming: "bg-blue-50 text-blue-700 border-blue-200",
-    
-    LEAD: "bg-gray-50 text-gray-700 border-gray-200",
-    DEMO_BOOKED: "bg-amber-50 text-amber-700 border-amber-200",
-    DEMO_APPROVED: "bg-blue-50 text-blue-700 border-blue-200",
-    DEMO_SCHEDULED: "bg-indigo-50 text-indigo-700 border-indigo-200",
-    DEMO_COMPLETED: "bg-purple-50 text-purple-700 border-purple-200",
-    ENROLLED: "bg-emerald-50 text-emerald-700 border-emerald-200",
-    REJECTED: "bg-red-50 text-red-700 border-red-200",
-    ACTIVE: "bg-emerald-50 text-emerald-700 border-emerald-200",
-    INACTIVE: "bg-gray-50 text-gray-700 border-gray-200",
-    ALUMNI: "bg-blue-50 text-blue-700 border-blue-200",
+    pending: "bg-marigold-100 text-marigold-700 border-marigold-100",
+    approved: "bg-sage-100 text-sage-600 border-sage-100",
+    completed: "bg-sage-100 text-sage-600 border-sage-100",
+    cancelled: "bg-rose-100 text-rose-600 border-rose-100",
+    active: "bg-sage-100 text-sage-600 border-sage-100",
+    warning: "bg-marigold-100 text-marigold-700 border-marigold-100",
+    scheduled: "bg-ink-100 text-ink-700 border-ink-100",
+    upcoming: "bg-ink-100 text-ink-700 border-ink-100",
+    paid: "bg-ink-100 text-ink-700 border-ink-100",
+    enrolled: "bg-sage-100 text-sage-600 border-sage-100",
+    declined: "bg-rose-100 text-rose-600 border-rose-100",
+    ENROLLED: "bg-sage-100 text-sage-600 border-sage-100",
+    ACTIVE: "bg-sage-100 text-sage-600 border-sage-100",
+    INACTIVE: "bg-paper text-ink-700 border-line",
+    ALUMNI: "bg-ink-100 text-ink-700 border-ink-100",
   };
 
   const labels: Partial<Record<StatusType, string>> = {
     pending: "Pending",
-    approved: "Approved",
+    approved: "Awaiting payment",
     completed: "Completed",
     cancelled: "Cancelled",
     active: "Active",
     warning: "Warning",
     scheduled: "Scheduled",
     upcoming: "Upcoming",
-    
-    LEAD: "Lead",
-    DEMO_BOOKED: "Demo Booked",
-    DEMO_APPROVED: "Demo Approved",
-    DEMO_SCHEDULED: "Demo Scheduled",
-    DEMO_COMPLETED: "Demo Completed",
+    paid: "Paid",
+    enrolled: "Enrolled",
+    declined: "Declined",
     ENROLLED: "Enrolled",
-    REJECTED: "Rejected",
     ACTIVE: "Active",
     INACTIVE: "Inactive",
     ALUMNI: "Alumni",
   };
 
-  const currentStyle = styles[normalizedStatus] || "bg-gray-50 text-gray-700 border-gray-200";
+  const currentStyle = styles[normalizedStatus] || "bg-paper text-ink-700 border-line";
   const currentLabel = labels[normalizedStatus] || status;
 
   return (

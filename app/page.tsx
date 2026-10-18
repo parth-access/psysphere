@@ -6,20 +6,27 @@ import { Courses } from '@/features/marketing/ui/Courses';
 import { Pricing } from '@/features/marketing/ui/Pricing';
 import { TeacherProfile } from '@/features/marketing/ui/TeacherProfile';
 import { Testimonials } from '@/features/marketing/ui/Testimonials';
+import { ClosingCta } from '@/features/marketing/ui/ClosingCta';
 import { Footer } from '@/features/marketing/ui/Footer';
 
-export default function MarketingPage() {
+// Refresh every 5 minutes so the "next workshop" card stays current.
+export const revalidate = 300;
+
+export default function HomePage() {
   return (
-    <main className="min-h-screen bg-brand-canvas flex flex-col">
+    <div className="flex min-h-screen flex-col bg-paper">
       <Navbar />
-      <Hero />
-      <TrustSection />
-      <WhyUs />
-      <Courses />
-      <Pricing />
-      <TeacherProfile />
-      <Testimonials />
+      <main id="main">
+        <Hero />
+        <TrustSection />
+        <WhyUs />
+        <Pricing />
+        <Courses />
+        <TeacherProfile />
+        <Testimonials />
+        <ClosingCta />
+      </main>
       <Footer />
-    </main>
+    </div>
   );
 }

@@ -4,5 +4,6 @@ export const NAVIGATION = {
   pricing: '/pricing',
   about: '/about',
   contact: '/contact',
-  bookDemo: '/book-demo',
+  workshops: '/workshops',
+  join: '/join',
 };

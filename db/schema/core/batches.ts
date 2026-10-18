@@ -1,10 +1,11 @@
-import { classLevelEnum } from "../enums";
+import { classLevelEnum, batchJoinModeEnum } from "../enums";
 import {
   pgTable,
   uuid,
   text,
   boolean,
   index,
+  integer,
 } from "drizzle-orm/pg-core";
 
 import { timestamps, auditColumns } from "../common";
@@ -30,6 +31,19 @@ export const batches = pgTable(
 
     isActive: boolean("is_active")
       .default(true)
+      .notNull(),
+
+    /** Max active students. Null means unlimited. */
+    capacity: integer("capacity"),
+
+    /** Whether new students can request/join this batch from the website. */
+    acceptingStudents: boolean("accepting_students")
+      .default(true)
+      .notNull(),
+
+    /** "approval": admin approves each request. "open": pay and join instantly. */
+    joinMode: batchJoinModeEnum("join_mode")
+      .default("approval")
       .notNull(),
 
     ...timestamps,

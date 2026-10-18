@@ -1,68 +1,71 @@
-import { Container } from './Container';
 import Link from 'next/link';
-import { NAVIGATION } from '@/constants/navigation';
+import { Container } from './Container';
+import { Logo } from './Logo';
+
+const columns = [
+  {
+    title: 'Courses',
+    links: [
+      { label: 'Class 11', href: '/courses/class-11' },
+      { label: 'Class 12', href: '/courses/class-12' },
+      { label: 'CUET-UG', href: '/courses/cuet-ug' },
+      { label: 'Boards + CUET', href: '/courses/boards-cuet' },
+    ],
+  },
+  {
+    title: 'Saarthi Classes',
+    links: [
+      { label: 'Free workshops', href: '/workshops' },
+      { label: 'Join a batch', href: '/join' },
+      { label: 'About Dravina', href: '/about' },
+      { label: 'Contact', href: '/contact' },
+      { label: 'Student log in', href: '/sign-in' },
+    ],
+  },
+  {
+    title: 'Policies',
+    links: [
+      { label: 'Privacy', href: '/privacy-policy' },
+      { label: 'Terms', href: '/terms' },
+      { label: 'Refunds', href: '/refund-policy' },
+    ],
+  },
+];
 
 export function Footer() {
   return (
-    <footer className="bg-brand-charcoal text-white py-16">
-      <Container>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
-          {/* Column 1 - Brand info */}
-          <div>
-            <Link href={NAVIGATION.home} className="inline-block mb-6">
-              <span className="font-serif text-2xl font-bold tracking-tight text-white">Saarthi Classes</span>
-            </Link>
-            <p className="text-white/75 text-sm max-w-sm mb-6 leading-relaxed">
-              Saarthi Classes helps Class 11 & Class 12 Psychology students build concepts, score well in boards, and prepare confidently for CUET.
-            </p>
-            <div className="flex items-center gap-4">
-              <Link 
-                href="/contact" 
-                className="text-white/70 hover:text-white transition-colors text-sm font-medium flex items-center gap-2"
-              >
-                <span>Contact Us</span>
-              </Link>
-            </div>
-          </div>
-          
-          {/* Column 2 - Courses */}
-          <div>
-            <h4 className="font-semibold text-base mb-6 tracking-wide text-white/90 uppercase text-xs">Courses</h4>
-            <ul className="space-y-4 text-sm">
-              <li><Link href="/courses/class-11" className="text-white/70 hover:text-white transition-colors">Class 11</Link></li>
-              <li><Link href="/courses/class-12" className="text-white/70 hover:text-white transition-colors">Class 12</Link></li>
-              <li><Link href="/courses/cuet-ug" className="text-white/70 hover:text-white transition-colors">CUET UG</Link></li>
-              <li><Link href="/courses/boards-cuet" className="text-white/70 hover:text-white transition-colors">Boards + CUET</Link></li>
-            </ul>
-          </div>
-
-          {/* Column 3 - Company */}
-          <div>
-            <h4 className="font-semibold text-base mb-6 tracking-wide text-white/90 uppercase text-xs">Company</h4>
-            <ul className="space-y-4 text-sm">
-              <li><Link href="/about" className="text-white/70 hover:text-white transition-colors">About</Link></li>
-              <li><Link href="/contact" className="text-white/70 hover:text-white transition-colors">Contact</Link></li>
-              <li><Link href="/book-demo" className="text-white/70 hover:text-white transition-colors">Book Demo</Link></li>
-              <li><Link href="/sign-in" className="text-white/70 hover:text-white transition-colors">Sign In</Link></li>
-            </ul>
-          </div>
-          
-          {/* Column 4 - Legal */}
-          <div>
-            <h4 className="font-semibold text-base mb-6 tracking-wide text-white/90 uppercase text-xs">Legal</h4>
-            <ul className="space-y-4 text-sm">
-              <li><Link href="/privacy-policy" className="text-white/70 hover:text-white transition-colors">Privacy Policy</Link></li>
-              <li><Link href="/terms" className="text-white/70 hover:text-white transition-colors">Terms & Conditions</Link></li>
-              <li><Link href="/refund-policy" className="text-white/70 hover:text-white transition-colors">Refund Policy</Link></li>
-            </ul>
-          </div>
+    <footer className="bg-ink-900 text-ink-300">
+      <Container className="grid gap-12 py-16 md:grid-cols-[1.4fr_repeat(3,1fr)]">
+        <div className="flex flex-col gap-4">
+          <Link href="/" aria-label="Saarthi Classes home">
+            <Logo tone="paper" />
+          </Link>
+          <p className="max-w-xs text-[15px] leading-relaxed">
+            Psychology for Class 11, Class 12 and CUET-UG, taught live in small batches by Dravina Gupta. Part of{' '}
+            <a href="https://www.saarthilife.com" className="text-paper underline underline-offset-4">Saarthi</a>.
+          </p>
         </div>
-        
-        <div className="border-t border-white/10 mt-16 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-white/50 text-xs">
-          <p>© 2026 Saarthi Classes. All rights reserved.</p>
-          <p>Made with ❤️ for Psychology Students</p>
-        </div>
+        {columns.map((c) => (
+          <nav key={c.title} aria-label={c.title}>
+            <h2 className="mb-4 text-[13px] font-semibold uppercase tracking-[0.12em] text-marigold-500">{c.title}</h2>
+            <ul className="flex flex-col gap-3 text-[15px]">
+              {c.links.map((l) => (
+                <li key={l.href}>
+                  <Link href={l.href} className="hover:text-paper">
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        ))}
       </Container>
+      <div className="border-t border-ink-700">
+        <Container className="flex flex-wrap justify-between gap-2 py-6 text-[13px]">
+          <p>© {new Date().getFullYear()} Saarthi Classes</p>
+          <p>classes.saarthilife.com</p>
+        </Container>
+      </div>
     </footer>
   );
 }

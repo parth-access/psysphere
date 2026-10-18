@@ -80,7 +80,7 @@ export default async function ClassesPage() {
           
           {/* Subsection 1: Active & Upcoming Lectures */}
           <div className="space-y-4">
-            <h2 className="text-sm font-semibold text-stone-500 uppercase tracking-wider flex items-center justify-between">
+            <h2 className="text-sm font-semibold text-ink-500 uppercase tracking-wider flex items-center justify-between">
               <span className="flex items-center gap-2">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-primary opacity-75"></span>
@@ -88,7 +88,7 @@ export default async function ClassesPage() {
                 </span>
                 Active &amp; Upcoming Lectures
               </span>
-              <span className="text-xs bg-stone-100 text-stone-600 px-2 py-0.5 rounded-full font-bold">
+              <span className="text-xs bg-paper-deep text-ink-700 px-2 py-0.5 rounded-full font-bold">
                 {sessions.filter(cls => cls.status !== "cancelled" && cls.status !== "completed" && new Date(cls.endsAt) > new Date()).length}
               </span>
             </h2>
@@ -102,10 +102,10 @@ export default async function ClassesPage() {
 
               if (activeSessions.length === 0) {
                 return (
-                  <div className="text-center py-10 px-4 bg-white border border-stone-150 rounded-2xl text-stone-500 shadow-3xs">
-                    <BookOpen className="w-10 h-10 text-stone-300 mx-auto mb-2.5" />
-                    <p className="text-sm font-semibold text-stone-800">No active or upcoming classes</p>
-                    <p className="text-xs text-stone-500 mt-1">
+                  <div className="text-center py-10 px-4 bg-white border border-line rounded-2xl text-ink-500">
+                    <BookOpen className="w-10 h-10 text-ink-300 mx-auto mb-2.5" />
+                    <p className="text-sm font-semibold text-ink-900">No active or upcoming classes</p>
+                    <p className="text-xs text-ink-500 mt-1">
                       {profile.role === "admin" 
                         ? "Create a session for an active cohort using the schedule panel."
                         : "No lectures on your immediate horizon. Feel free to plan one!"
@@ -139,7 +139,7 @@ export default async function ClassesPage() {
               return (
                 <div className="space-y-6">
                   {/* FEATURED NEXT CLASS BLOCK */}
-                  <div className="relative overflow-hidden bg-radial from-stone-50 to-white border-2 border-brand-primary/20 rounded-3xl p-6 shadow-sm transition-all hover:shadow-md">
+                  <div className="relative overflow-hidden bg-radial from-stone-50 to-white border-2 border-brand-primary/20 rounded-2xl p-6 transition-all ">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-brand-surface/30 rounded-full blur-2xl -z-10" />
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                       <div className="space-y-3 flex-1">
@@ -150,21 +150,21 @@ export default async function ClassesPage() {
                           <span className={cn(
                             "px-2.5 py-1 text-[9px] font-bold rounded-md border uppercase tracking-wider",
                             isLive 
-                              ? "bg-rose-50 text-rose-700 border-rose-200 animate-pulse" 
-                              : "bg-amber-50 text-amber-700 border-amber-200"
+                              ? "bg-rose-50 text-rose-600 border-rose-200 animate-pulse" 
+                              : "bg-marigold-100 text-marigold-700 border-marigold-100"
                           )}>
                             {featuredCountdownText}
                           </span>
-                          <span className="text-[10px] font-bold px-2 py-0.5 bg-stone-100 text-stone-600 rounded-md uppercase tracking-wider">
+                          <span className="text-[10px] font-bold px-2 py-0.5 bg-paper-deep text-ink-700 rounded-md uppercase tracking-wider">
                             {featuredNextSession.batchName}
                           </span>
                         </div>
 
                         <div>
-                          <h3 className="font-serif font-bold text-xl text-stone-900 leading-snug">{featuredNextSession.title}</h3>
-                          <p className="text-xs text-stone-600 mt-1 flex items-center gap-1.5">
-                            <span className="text-stone-400">Topic:</span>
-                            <span className="font-semibold text-stone-700">{featuredNextSession.topicTitle}</span>
+                          <h3 className="font-serif font-bold text-xl text-ink-900 leading-snug">{featuredNextSession.title}</h3>
+                          <p className="text-xs text-ink-700 mt-1 flex items-center gap-1.5">
+                            <span className="text-ink-500">Topic:</span>
+                            <span className="font-semibold text-ink-700">{featuredNextSession.topicTitle}</span>
                           </p>
                         </div>
                       </div>
@@ -174,7 +174,7 @@ export default async function ClassesPage() {
                           href={featuredNextSession.meetingUrl} 
                           target="_blank" 
                           rel="noopener noreferrer"
-                          className="w-full md:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-brand-primary text-white hover:bg-brand-primary-hover rounded-xl text-xs font-bold transition-all shadow-md hover:shadow-lg cursor-pointer transform hover:scale-102"
+                          className="w-full md:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-brand-primary text-white hover:bg-brand-primary-hover rounded-xl text-xs font-bold transition-all hover:shadow-lg cursor-pointer transform hover:scale-102"
                         >
                           <Video className="w-4 h-4" />
                           Join Lecture
@@ -187,7 +187,7 @@ export default async function ClassesPage() {
                   {/* REMAINING CLASSES LIST */}
                   {remainingSessions.length > 0 && (
                     <div className="space-y-3">
-                      <span className="block text-[10px] font-bold text-stone-400 uppercase tracking-wider px-1">Other Scheduled Sessions</span>
+                      <span className="block text-[10px] font-bold text-ink-500 uppercase tracking-wider px-1">Other Scheduled Sessions</span>
                       <div className="flex flex-col gap-4">
                         {remainingSessions.map((cls) => {
                           const clsStartsAt = new Date(cls.startsAt);
@@ -195,12 +195,12 @@ export default async function ClassesPage() {
                           const clsDiffMs = clsStartsAt.getTime() - now.getTime();
                           const clsDiffMins = Math.ceil(clsDiffMs / (1000 * 60));
 
-                          let badgeStyle = "bg-stone-50 text-stone-600 border-stone-200";
+                          let badgeStyle = "bg-paper text-ink-700 border-line";
                           let contextualStatus = "Upcoming";
 
                           if (clsDiffMins > 0 && clsDiffMins <= 15) {
                             contextualStatus = "Starts Soon";
-                            badgeStyle = "bg-amber-50 text-amber-700 border-amber-200 font-semibold";
+                            badgeStyle = "bg-marigold-100 text-marigold-700 border-marigold-100 font-semibold";
                           }
 
                           const clsDurationMins = Math.round((clsEndsAt.getTime() - clsStartsAt.getTime()) / (1000 * 60));
@@ -210,7 +210,7 @@ export default async function ClassesPage() {
                               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 gap-6">
                                 <div className="flex-1 space-y-2.5">
                                   <div className="flex items-center gap-2 flex-wrap">
-                                    <span className="text-[10px] font-bold px-2 py-0.5 bg-stone-100 text-stone-600 rounded-md uppercase tracking-wider">
+                                    <span className="text-[10px] font-bold px-2 py-0.5 bg-paper-deep text-ink-700 rounded-md uppercase tracking-wider">
                                       {cls.batchName}
                                     </span>
                                     <span className={cn("px-2 py-0.5 text-[9px] font-bold rounded-md border uppercase tracking-wider", badgeStyle)}>
@@ -219,17 +219,17 @@ export default async function ClassesPage() {
                                   </div>
                                   
                                   <div>
-                                    <h4 className="font-serif font-bold text-base text-stone-850 leading-snug">{cls.title}</h4>
-                                    <p className="text-xs text-stone-500 mt-0.5">Topic: <strong className="font-semibold text-stone-600">{cls.topicTitle}</strong></p>
+                                    <h4 className="font-serif font-bold text-base text-ink-900 leading-snug">{cls.title}</h4>
+                                    <p className="text-xs text-ink-500 mt-0.5">Topic: <strong className="font-semibold text-ink-700">{cls.topicTitle}</strong></p>
                                   </div>
 
-                                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-stone-400 pt-1 border-t border-stone-50">
+                                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-ink-500 pt-1 border-t border-line">
                                     <span className="flex items-center gap-1">
-                                      <CalendarIcon className="w-3.5 h-3.5 text-stone-400" />
+                                      <CalendarIcon className="w-3.5 h-3.5 text-ink-500" />
                                       {clsStartsAt.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
                                     </span>
                                     <span className="flex items-center gap-1">
-                                      <Clock className="w-3.5 h-3.5 text-stone-400" />
+                                      <Clock className="w-3.5 h-3.5 text-ink-500" />
                                       {clsStartsAt.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })} ({clsDurationMins}m)
                                     </span>
                                   </div>
@@ -240,7 +240,7 @@ export default async function ClassesPage() {
                                     href={cls.meetingUrl} 
                                     target="_blank" 
                                     rel="noopener noreferrer"
-                                    className="w-full sm:w-auto px-4 py-2 bg-stone-50 text-stone-700 hover:bg-stone-100 border border-stone-200/60 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 whitespace-nowrap cursor-pointer"
+                                    className="w-full sm:w-auto px-4 py-2 bg-paper text-ink-700 hover:bg-paper-deep border border-line/60 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 whitespace-nowrap cursor-pointer"
                                   >
                                     <Video className="w-3.5 h-3.5" />
                                     Join Call
@@ -261,9 +261,9 @@ export default async function ClassesPage() {
 
           {/* Subsection 2: Past Lectures */}
           <div className="space-y-4 pt-4">
-            <h2 className="text-sm font-semibold text-stone-400 uppercase tracking-wider flex items-center justify-between border-t border-stone-100 pt-6">
+            <h2 className="text-sm font-semibold text-ink-500 uppercase tracking-wider flex items-center justify-between border-t border-line pt-6">
               <span>Past Lectures</span>
-              <span className="text-xs bg-stone-50 text-stone-400 px-2 py-0.5 rounded-full">
+              <span className="text-xs bg-paper text-ink-500 px-2 py-0.5 rounded-full">
                 {sessions.filter(cls => cls.status === "cancelled" || cls.status === "completed" || new Date(cls.endsAt) <= new Date()).length}
               </span>
             </h2>
@@ -288,30 +288,30 @@ export default async function ClassesPage() {
                     const durationMins = Math.round((endsAt.getTime() - startsAt.getTime()) / (1000 * 60));
 
                     return (
-                      <div key={cls.id} className="bg-stone-50/50 border border-stone-150/60 rounded-2xl p-5 hover:bg-stone-50 hover:border-stone-200 transition-colors">
+                      <div key={cls.id} className="bg-paper/50 border border-line/60 rounded-2xl p-5 hover:bg-paper hover:border-line transition-colors">
                         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                           <div className="space-y-2 flex-1">
                             <div className="flex items-center gap-2 flex-wrap">
-                              <span className="text-[10px] font-bold px-2 py-0.5 bg-stone-100 text-stone-500 rounded-md uppercase tracking-wider">
+                              <span className="text-[10px] font-bold px-2 py-0.5 bg-paper-deep text-ink-500 rounded-md uppercase tracking-wider">
                                 {cls.batchName}
                               </span>
                               {isCancelled ? (
-                                <span className="px-2 py-0.5 text-[10px] font-bold rounded-md bg-rose-50 text-rose-500 border border-rose-100 uppercase tracking-wider">
+                                <span className="px-2 py-0.5 text-[10px] font-bold rounded-md bg-rose-50 text-rose-600 border border-rose-100 uppercase tracking-wider">
                                   Cancelled
                                 </span>
                               ) : (
-                                <span className="px-2 py-0.5 text-[10px] font-bold rounded-md bg-emerald-50 text-emerald-600 border border-emerald-100 uppercase tracking-wider">
+                                <span className="px-2 py-0.5 text-[10px] font-bold rounded-md bg-sage-100 text-sage-600 border border-sage-100 uppercase tracking-wider">
                                   Completed
                                 </span>
                               )}
                             </div>
 
                             <div>
-                              <h4 className="font-serif font-bold text-base text-stone-700">{cls.title}</h4>
-                              <p className="text-xs text-stone-500">Topic: <span className="text-stone-600 font-medium">{cls.topicTitle}</span></p>
+                              <h4 className="font-serif font-bold text-base text-ink-700">{cls.title}</h4>
+                              <p className="text-xs text-ink-500">Topic: <span className="text-ink-700 font-medium">{cls.topicTitle}</span></p>
                             </div>
 
-                            <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-stone-400">
+                            <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-ink-500">
                               <span className="flex items-center gap-1">
                                 <CalendarIcon className="w-3.5 h-3.5" />
                                 {startsAt.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
@@ -325,7 +325,7 @@ export default async function ClassesPage() {
                           </div>
 
                           <div className="shrink-0">
-                            <span className="inline-flex items-center gap-1 px-3 py-1 bg-stone-100 text-stone-400 rounded-lg text-xs font-semibold">
+                            <span className="inline-flex items-center gap-1 px-3 py-1 bg-paper-deep text-ink-500 rounded-lg text-xs font-semibold">
                               {isCancelled ? "Cancelled" : "✓ Finished"}
                             </span>
                           </div>
@@ -334,7 +334,7 @@ export default async function ClassesPage() {
                     );
                   })}
                   {pastSessions.length > 10 && (
-                    <p className="text-center text-xs text-stone-400 font-medium italic pt-2">
+                    <p className="text-center text-xs text-ink-500 font-medium italic pt-2">
                       Showing latest 10 finished sessions.
                     </p>
                   )}
@@ -349,8 +349,8 @@ export default async function ClassesPage() {
         <div className="space-y-6">
           <DashboardCard title="Schedule Lecture">
             {batchesList.length === 0 ? (
-              <div className="text-center py-6 text-sm text-gray-500 p-2">
-                <p className="font-medium text-amber-600 bg-amber-50 border border-amber-100 p-4 rounded-xl">
+              <div className="text-center py-6 text-sm text-ink-500 p-2">
+                <p className="font-medium text-marigold-700 bg-marigold-100 border border-marigold-100 p-4 rounded-xl">
                   {profile.role === "admin"
                     ? "Please create an active batch cohort and assign an instructor before scheduling any live lectures."
                     : "You are not currently assigned to any active batch cohorts. Please contact the administrator to assign you to a batch."
@@ -360,11 +360,11 @@ export default async function ClassesPage() {
             ) : (
               <form action={createClassSessionAction} className="space-y-4">
                 <div>
-                  <label className="text-xs font-semibold text-gray-700 uppercase tracking-wider block mb-1">Target Batch Cohort</label>
+                  <label className="text-xs font-semibold text-ink-700 uppercase tracking-wider block mb-1">Target Batch Cohort</label>
                   <select 
                     name="batchId" 
                     required 
-                    className="w-full px-4 py-2 border border-gray-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
+                    className="w-full px-4 py-2 border border-line rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
                   >
                     {batchesList.map((batch) => (
                       <option key={batch.id} value={batch.id}>{batch.name}</option>
@@ -373,66 +373,66 @@ export default async function ClassesPage() {
                 </div>
 
                 <div>
-                  <label className="text-xs font-semibold text-gray-700 uppercase tracking-wider block mb-1">Class/Lecture Title</label>
+                  <label className="text-xs font-semibold text-ink-700 uppercase tracking-wider block mb-1">Class/Lecture Title</label>
                   <input 
                     type="text" 
                     name="title" 
                     required 
                     placeholder="e.g. Cognitive Psychology Intro" 
-                    className="w-full px-4 py-2 border border-gray-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
+                    className="w-full px-4 py-2 border border-line rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-semibold text-gray-700 uppercase tracking-wider block mb-1">Lesson Topic</label>
+                  <label className="text-xs font-semibold text-ink-700 uppercase tracking-wider block mb-1">Lesson Topic</label>
                   <input 
                     type="text" 
                     name="topicTitle" 
                     required 
                     placeholder="e.g. Memory structures and processing" 
-                    className="w-full px-4 py-2 border border-gray-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
+                    className="w-full px-4 py-2 border border-line rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
                   />
                 </div>
 
                 {/* Meet integration alert badge */}
-                <div className="bg-[#FAF8F5] border border-gray-100 p-4 rounded-xl space-y-1.5">
+                <div className="bg-paper border border-line p-4 rounded-xl space-y-1.5">
                   <div className="flex items-center gap-2 text-xs font-semibold text-brand-primary">
                     <Video className="w-4 h-4 shrink-0" />
                     <span>Google Meet Video-Conference</span>
                   </div>
-                  <p className="text-[11px] text-gray-600 leading-relaxed">
+                  <p className="text-[11px] text-ink-700 leading-relaxed">
                     A secure Google Calendar event and unique Google Meet conference room link will be automatically generated and synced upon lecture scheduling.
                   </p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="text-xs font-semibold text-gray-700 uppercase tracking-wider block mb-1">Date</label>
+                    <label className="text-xs font-semibold text-ink-700 uppercase tracking-wider block mb-1">Date</label>
                     <input 
                       type="date" 
                       name="date" 
                       required 
                       defaultValue={new Date().toISOString().split('T')[0]}
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none"
+                      className="w-full px-3 py-2 border border-line rounded-lg text-sm bg-white focus:outline-none"
                     />
                   </div>
                   <div>
-                    <label className="text-xs font-semibold text-gray-700 uppercase tracking-wider block mb-1">Starts At</label>
+                    <label className="text-xs font-semibold text-ink-700 uppercase tracking-wider block mb-1">Starts At</label>
                     <input 
                       type="time" 
                       name="time" 
                       required 
                       defaultValue="18:00"
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none"
+                      className="w-full px-3 py-2 border border-line rounded-lg text-sm bg-white focus:outline-none"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-xs font-semibold text-gray-700 uppercase tracking-wider block mb-1">Duration (Minutes)</label>
+                  <label className="text-xs font-semibold text-ink-700 uppercase tracking-wider block mb-1">Duration (Minutes)</label>
                   <select 
                     name="duration" 
-                    className="w-full px-4 py-2 border border-gray-200 rounded-xl text-sm bg-white focus:outline-none"
+                    className="w-full px-4 py-2 border border-line rounded-xl text-sm bg-white focus:outline-none"
                   >
                     <option value="60">60 Minutes</option>
                     <option value="45">45 Minutes</option>
@@ -444,13 +444,13 @@ export default async function ClassesPage() {
                 <div className="pt-2">
                   {!googleConnection ? (
                     <div className="space-y-3">
-                      <div className="p-3.5 bg-amber-50 border border-amber-100 rounded-xl text-xs text-amber-800 font-medium leading-relaxed flex items-start gap-2">
-                        <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                      <div className="p-3.5 bg-marigold-100 border border-marigold-100 rounded-xl text-xs text-marigold-700 font-medium leading-relaxed flex items-start gap-2">
+                        <AlertTriangle className="w-4 h-4 text-marigold-700 shrink-0 mt-0.5" />
                         <div>
                           {profile.role === "admin" ? (
                             <>
                               <strong>Google integration is not connected.</strong> Please connect and authorize the system Google account first in the{" "}
-                              <a href="/dashboard/settings" className="underline hover:text-amber-900 font-bold">
+                              <a href="/dashboard/settings" className="underline hover:text-marigold-700 font-bold">
                                 Settings page
                               </a>{" "}
                               before scheduling live lectures.
@@ -465,9 +465,9 @@ export default async function ClassesPage() {
                       <button 
                         type="button" 
                         disabled
-                        className="w-full flex items-center justify-center gap-2 bg-gray-100 text-gray-400 py-2.5 rounded-xl text-sm font-semibold cursor-not-allowed"
+                        className="w-full flex items-center justify-center gap-2 bg-paper-deep text-ink-500 py-2.5 rounded-xl text-sm font-semibold cursor-not-allowed"
                       >
-                        <Plus className="w-4 h-4 text-gray-300" />
+                        <Plus className="w-4 h-4 text-ink-300" />
                         Schedule Lecture (Offline)
                       </button>
                     </div>

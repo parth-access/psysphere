@@ -13,6 +13,7 @@ import { ArrowLeft, User, Mail, Calendar, GraduationCap, Users, Plus, Trash2, Ca
 import { enforcePageRole } from "@/server/authorization/requireRole";
 import { ROLES } from "@/server/authorization/roles";
 import { enrollStudentAction, updateBatchTeacherAction, removeStudentFromBatchAction } from "./actions";
+import { updateBatchJoiningAction } from "../actions";
 
 export const dynamic = "force-dynamic";
 
@@ -36,6 +37,9 @@ export default async function BatchDetailsPage({ params }: PageProps) {
       isActive: batches.isActive,
       teacherId: batches.teacherId,
       teacherName: profiles.fullName,
+      capacity: batches.capacity,
+      joinMode: batches.joinMode,
+      acceptingStudents: batches.acceptingStudents,
     })
     .from(batches)
     .leftJoin(profiles, eq(batches.teacherId, profiles.id))
@@ -46,9 +50,9 @@ export default async function BatchDetailsPage({ params }: PageProps) {
 
   if (!batch) {
     return (
-      <div className="p-8 text-center text-gray-500 max-w-xl mx-auto mt-12 bg-white rounded-2xl border border-gray-100 shadow-sm space-y-4">
-        <h2 className="text-xl font-bold font-serif text-gray-900">Cohort Batch Not Found</h2>
-        <p className="text-sm text-gray-500">The coaching batch with the specified ID does not exist in the platform database.</p>
+      <div className="p-8 text-center text-ink-500 max-w-xl mx-auto mt-12 bg-white rounded-2xl border border-line space-y-4">
+        <h2 className="text-xl font-bold font-serif text-ink-900">Cohort Batch Not Found</h2>
+        <p className="text-sm text-ink-500">The coaching batch with the specified ID does not exist in the platform database.</p>
         <Link 
           href="/dashboard/batches" 
           className="inline-flex items-center gap-2 px-4 py-2 bg-brand-primary text-white rounded-xl text-sm font-semibold hover:bg-brand-primary-hover transition-colors"
@@ -104,7 +108,7 @@ export default async function BatchDetailsPage({ params }: PageProps) {
       <div className="flex flex-col gap-2">
         <Link 
           href="/dashboard/batches" 
-          className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900 font-medium transition-colors w-fit"
+          className="inline-flex items-center gap-1.5 text-sm text-ink-500 hover:text-ink-900 font-medium transition-colors w-fit"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Batches list
@@ -112,10 +116,10 @@ export default async function BatchDetailsPage({ params }: PageProps) {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mt-2">
           <div>
             <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-serif font-bold text-gray-900 tracking-tight">{batch.name}</h1>
+              <h1 className="text-2xl font-serif font-bold text-ink-900 tracking-tight">{batch.name}</h1>
               <StatusBadge status={batch.isActive ? "active" : "inactive"} />
             </div>
-            <p className="text-sm text-gray-500 font-mono mt-1">Batch ID: {batch.id}</p>
+            <p className="text-sm text-ink-500 font-mono mt-1">Batch ID: {batch.id}</p>
           </div>
         </div>
       </div>
@@ -130,32 +134,32 @@ export default async function BatchDetailsPage({ params }: PageProps) {
           <DashboardCard title="Cohort Details">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 p-1">
               <div>
-                <p className="text-xs text-gray-500 font-semibold uppercase tracking-wider mb-1">Class Level</p>
+                <p className="text-xs text-ink-500 font-semibold uppercase tracking-wider mb-1">Class Level</p>
                 <span className="inline-block px-2.5 py-0.5 bg-brand-surface border border-brand-primary/10 text-brand-primary text-xs font-semibold rounded-full uppercase">
                   {batch.classLevel.replace(/_/g, ' ')}
                 </span>
               </div>
 
               <div>
-                <p className="text-xs text-gray-500 font-semibold uppercase tracking-wider mb-1">Weekly Schedule</p>
-                <div className="flex items-center gap-2 text-sm font-medium text-gray-900">
-                  <CalendarClock className="w-4 h-4 text-gray-400" />
+                <p className="text-xs text-ink-500 font-semibold uppercase tracking-wider mb-1">Weekly Schedule</p>
+                <div className="flex items-center gap-2 text-sm font-medium text-ink-900">
+                  <CalendarClock className="w-4 h-4 text-ink-500" />
                   <span>{batch.schedule || "No schedule set yet"}</span>
                 </div>
               </div>
 
               <div>
-                <p className="text-xs text-gray-500 font-semibold uppercase tracking-wider mb-1">Academic Cohort Year</p>
-                <div className="flex items-center gap-2 text-sm font-medium text-gray-900">
-                  <Calendar className="w-4 h-4 text-gray-400" />
+                <p className="text-xs text-ink-500 font-semibold uppercase tracking-wider mb-1">Academic Cohort Year</p>
+                <div className="flex items-center gap-2 text-sm font-medium text-ink-900">
+                  <Calendar className="w-4 h-4 text-ink-500" />
                   <span>{batch.academicYear}</span>
                 </div>
               </div>
 
               <div>
-                <p className="text-xs text-gray-500 font-semibold uppercase tracking-wider mb-1">Assigned Instructor</p>
-                <div className="flex items-center gap-2 text-sm font-medium text-gray-900">
-                  <GraduationCap className="w-4 h-4 text-gray-400" />
+                <p className="text-xs text-ink-500 font-semibold uppercase tracking-wider mb-1">Assigned Instructor</p>
+                <div className="flex items-center gap-2 text-sm font-medium text-ink-900">
+                  <GraduationCap className="w-4 h-4 text-ink-500" />
                   <span>{batch.teacherName || "No instructor assigned"}</span>
                 </div>
               </div>
@@ -165,23 +169,23 @@ export default async function BatchDetailsPage({ params }: PageProps) {
           {/* Enrolled Students list */}
           <DashboardCard title={`Enrolled Students (${enrolledStudents.length})`}>
             {enrolledStudents.length === 0 ? (
-              <div className="text-center py-12 text-gray-500">
-                <Users className="w-8 h-8 text-gray-300 mx-auto mb-3" />
+              <div className="text-center py-12 text-ink-500">
+                <Users className="w-8 h-8 text-ink-300 mx-auto mb-3" />
                 <p className="text-sm font-medium">No students enrolled in this batch yet.</p>
-                <p className="text-xs text-gray-400 mt-1">Enroll an existing active student using the panel on the right.</p>
+                <p className="text-xs text-ink-500 mt-1">Enroll an existing active student using the panel on the right.</p>
               </div>
             ) : (
               <div className="overflow-x-auto -mx-6">
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="border-b border-gray-100 bg-gray-50/50">
-                      <th className="py-3 px-6 text-xs font-bold text-gray-500 uppercase tracking-wider">Student Name</th>
-                      <th className="py-3 px-6 text-xs font-bold text-gray-500 uppercase tracking-wider">Admission No.</th>
-                      <th className="py-3 px-6 text-xs font-bold text-gray-500 uppercase tracking-wider">Enrollment Date</th>
-                      <th className="py-3 px-6 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Actions</th>
+                    <tr className="border-b border-line bg-paper/50">
+                      <th className="py-3 px-6 text-xs font-bold text-ink-500 uppercase tracking-wider">Student Name</th>
+                      <th className="py-3 px-6 text-xs font-bold text-ink-500 uppercase tracking-wider">Admission No.</th>
+                      <th className="py-3 px-6 text-xs font-bold text-ink-500 uppercase tracking-wider">Enrollment Date</th>
+                      <th className="py-3 px-6 text-xs font-bold text-ink-500 uppercase tracking-wider text-right">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-100">
+                  <tbody className="divide-y divide-line">
                     {enrolledStudents.map((student) => {
                       const formattedDate = new Date(student.enrolledAt).toLocaleDateString("en-GB", {
                         day: "numeric",
@@ -190,17 +194,17 @@ export default async function BatchDetailsPage({ params }: PageProps) {
                       });
 
                       return (
-                        <tr key={student.profileId} className="hover:bg-gray-50/30 transition-colors">
+                        <tr key={student.profileId} className="hover:bg-paper/30 transition-colors">
                           <td className="py-4 px-6">
                             <div>
-                              <p className="text-sm font-semibold text-gray-900">{student.fullName}</p>
-                              <p className="text-xs text-gray-400">{student.email}</p>
+                              <p className="text-sm font-semibold text-ink-900">{student.fullName}</p>
+                              <p className="text-xs text-ink-500">{student.email}</p>
                             </div>
                           </td>
-                          <td className="py-4 px-6 text-sm font-mono text-gray-600">
+                          <td className="py-4 px-6 text-sm font-mono text-ink-700">
                             {student.admissionNumber || "Pending"}
                           </td>
-                          <td className="py-4 px-6 text-sm text-gray-600">
+                          <td className="py-4 px-6 text-sm text-ink-700">
                             {formattedDate}
                           </td>
                           <td className="py-4 px-6 text-right">
@@ -209,7 +213,7 @@ export default async function BatchDetailsPage({ params }: PageProps) {
                               <input type="hidden" name="batchId" value={batchId} />
                               <SubmitButton 
                                 type="submit" 
-                                className="text-xs inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-red-50 text-red-600 hover:bg-red-100 border border-red-200/50 rounded-lg font-semibold transition-colors cursor-pointer"
+                                className="text-xs inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-rose-100 text-rose-600 hover:bg-rose-100 border border-rose-100/50 rounded-lg font-semibold transition-colors cursor-pointer"
                               >
                                 <Trash2 className="w-3.5 h-3.5" />
                                 Unenroll
@@ -233,18 +237,18 @@ export default async function BatchDetailsPage({ params }: PageProps) {
           {/* Enroll Student Tool */}
           <DashboardCard title="Enroll a Student">
             {availableStudents.length === 0 ? (
-              <p className="text-xs text-gray-500 leading-relaxed p-1">
-                All active PsySphere students are already enrolled in this cohort batch. No other available students were found.
+              <p className="text-xs text-ink-500 leading-relaxed p-1">
+                All active Saarthi Classes students are already enrolled in this cohort batch. No other available students were found.
               </p>
             ) : (
               <form action={enrollStudentAction} className="space-y-4">
                 <input type="hidden" name="batchId" value={batchId} />
                 <div>
-                  <label className="text-xs font-semibold text-gray-700 uppercase tracking-wider block mb-1.5">Select Student</label>
+                  <label className="text-xs font-semibold text-ink-700 uppercase tracking-wider block mb-1.5">Select Student</label>
                   <select 
                     name="studentProfileId" 
                     required 
-                    className="w-full px-4 py-2 border border-gray-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
+                    className="w-full px-4 py-2 border border-line rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
                   >
                     <option value="">Choose an active student...</option>
                     {availableStudents.map((st) => (
@@ -266,17 +270,39 @@ export default async function BatchDetailsPage({ params }: PageProps) {
             )}
           </DashboardCard>
 
+          <DashboardCard title="Joining from the website">
+            <form action={updateBatchJoiningAction} className="space-y-4">
+              <input type="hidden" name="batchId" value={batchId} />
+              <label className="flex items-center gap-3 text-sm font-medium text-ink-900">
+                <input type="checkbox" name="acceptingStudents" defaultChecked={batch.acceptingStudents} className="h-4 w-4 accent-ink-900" />
+                Show this batch on the Join page
+              </label>
+              <div>
+                <label htmlFor="joinMode" className="text-xs font-semibold text-ink-700 uppercase tracking-wider block mb-1">How students join</label>
+                <select id="joinMode" name="joinMode" defaultValue={batch.joinMode} className="w-full px-4 py-2 border border-line rounded-xl text-sm bg-white">
+                  <option value="approval">Request to join (you approve, then they pay)</option>
+                  <option value="open">Open (they pay and join instantly)</option>
+                </select>
+              </div>
+              <div>
+                <label htmlFor="capacity" className="text-xs font-semibold text-ink-700 uppercase tracking-wider block mb-1">Seats</label>
+                <input id="capacity" type="number" min={1} name="capacity" defaultValue={batch.capacity ?? ""} placeholder="No limit" className="w-full px-4 py-2 border border-line rounded-xl text-sm bg-white" />
+              </div>
+              <SubmitButton type="submit" className="w-full">Save joining settings</SubmitButton>
+            </form>
+          </DashboardCard>
+
           {/* Change Teacher Assignment Tool */}
           <DashboardCard title="Reassign Teacher">
             <form action={updateBatchTeacherAction} className="space-y-4">
               <input type="hidden" name="batchId" value={batchId} />
               <div>
-                <label className="text-xs font-semibold text-gray-700 uppercase tracking-wider block mb-1.5">Choose Instructor</label>
+                <label className="text-xs font-semibold text-ink-700 uppercase tracking-wider block mb-1.5">Choose Instructor</label>
                 <select 
                   name="teacherId" 
                   required 
                   defaultValue={batch.teacherId || ""}
-                  className="w-full px-4 py-2 border border-gray-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
+                  className="w-full px-4 py-2 border border-line rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
                 >
                   <option value="">Select an active instructor...</option>
                   {activeTeachers.map((tc) => (
@@ -287,9 +313,9 @@ export default async function BatchDetailsPage({ params }: PageProps) {
 
               <SubmitButton 
                 type="submit" 
-                className="w-full flex items-center justify-center gap-2 bg-white text-gray-700 hover:text-gray-900 py-2 border border-gray-200 hover:border-gray-300 rounded-xl text-sm font-semibold transition-colors cursor-pointer shadow-3xs"
+                className="w-full flex items-center justify-center gap-2 bg-white text-ink-700 hover:text-ink-900 py-2 border border-line hover:border-line rounded-xl text-sm font-semibold transition-colors cursor-pointer"
               >
-                <GraduationCap className="w-4 h-4 text-gray-400" />
+                <GraduationCap className="w-4 h-4 text-ink-500" />
                 Update Assigned Instructor
               </SubmitButton>
             </form>

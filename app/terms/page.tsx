@@ -22,11 +22,11 @@ export default function TermsAndConditionsPage() {
 
       <section className="py-20 bg-brand-canvas flex-1">
         <Container>
-          <div className="max-w-3xl mx-auto bg-white p-10 md:p-12 rounded-[32px] border border-brand-border shadow-sm space-y-8 text-sm text-brand-text leading-relaxed">
+          <div className="max-w-3xl mx-auto bg-white p-10 md:p-12 rounded-2xl border border-brand-border space-y-8 text-sm text-brand-text leading-relaxed">
             <div>
               <h3 className="font-serif text-lg font-semibold text-brand-text mb-3">1. Use of Service</h3>
               <p>
-                By enrolling in any of PsySphere&apos;s educational programs or accessing our student dashboard, you agree to comply with and be bound by these Terms &amp; Conditions. These terms apply to all students, parents, and visitors who access our website or classroom services.
+                By enrolling in any of Saarthi Classes&apos; educational programs or accessing our student dashboard, you agree to comply with and be bound by these Terms &amp; Conditions. These terms apply to all students, parents, and visitors who access our website or classroom services.
               </p>
             </div>
 
@@ -40,7 +40,7 @@ export default function TermsAndConditionsPage() {
             <div>
               <h3 className="font-serif text-lg font-semibold text-brand-text mb-3">3. Intellectual Property</h3>
               <p>
-                All study materials, curated booklets, templates, assignment worksheets, videos, tests, and mock solutions provided by PsySphere are the exclusive intellectual property of Dravina Gupta and Saarthi. No part of these resources may be copied, recorded, distributed, or resold to any third party without explicit prior written consent.
+                All study materials, curated booklets, templates, assignment worksheets, videos, tests, and mock solutions provided by Saarthi Classes are the exclusive intellectual property of Dravina Gupta and Saarthi. No part of these resources may be copied, recorded, distributed, or resold to any third party without explicit prior written consent.
               </p>
             </div>
 
@@ -61,7 +61,7 @@ export default function TermsAndConditionsPage() {
             <div>
               <h3 className="font-serif text-lg font-semibold text-brand-text mb-3">6. Limitation of Liability</h3>
               <p>
-                While PsySphere strives to provide premium, highly conceptual educational support, we make no guarantees regarding specific standardized exam score outcomes or university admission decisions, as final performance rests ultimately with the student&apos;s individual effort.
+                While Saarthi Classes strives to provide premium, highly conceptual educational support, we make no guarantees regarding specific standardized exam score outcomes or university admission decisions, as final performance rests ultimately with the student&apos;s individual effort.
               </p>
             </div>
 

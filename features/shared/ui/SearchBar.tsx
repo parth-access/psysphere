@@ -26,14 +26,14 @@ export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
           type="text"
           onChange={handleInputChange}
           className={cn(
-            'block w-full pl-9 pr-12 py-1.5 text-sm h-9 bg-white border border-brand-stone-soft rounded-xs focus:outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent/35 transition-all text-brand-charcoal placeholder:text-brand-charcoal-muted/40 font-sans',
+            'block w-full pl-9 pr-12 py-1.5 text-sm h-9 bg-white border border-brand-stone-soft rounded-xl focus:outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent/35 transition-all text-brand-charcoal placeholder:text-brand-charcoal-muted/40 font-sans',
             className
           )}
           {...props}
         />
         {shortcut && (
           <div className="absolute inset-y-0 right-0 pr-2.5 flex items-center pointer-events-none">
-            <kbd className="hidden sm:inline-flex h-5 select-none items-center gap-0.5 rounded-xs border border-brand-stone-soft bg-brand-cream/85 px-1.5 font-mono text-[10px] font-medium text-brand-charcoal-muted/60">
+            <kbd className="hidden sm:inline-flex h-5 select-none items-center gap-0.5 rounded-xl border border-brand-stone-soft bg-brand-cream/85 px-1.5 font-mono text-[10px] font-medium text-brand-charcoal-muted/60">
               {shortcut}
             </kbd>
           </div>

@@ -36,7 +36,7 @@ export function ContactForm() {
   if (status === 'success') {
     return (
       <div className="p-8 text-center bg-brand-canvas rounded-2xl border border-brand-border space-y-4">
-        <div className="h-12 w-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
+        <div className="h-12 w-12 rounded-full bg-sage-100 text-sage-600 flex items-center justify-center mx-auto">
           <CheckCircle2 className="h-6 w-6" />
         </div>
         <h3 className="font-serif text-xl font-semibold text-brand-text">Message Received</h3>
@@ -63,7 +63,7 @@ export function ContactForm() {
   return (
     <form className="space-y-4" onSubmit={handleSubmit}>
       {status === 'error' && errorMessage && (
-        <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
+        <div className="p-3 rounded-xl bg-rose-100 border border-rose-100 text-rose-600 text-xs flex items-center gap-2">
           <AlertCircle className="h-4 w-4 shrink-0" />
           <span>{errorMessage}</span>
         </div>
@@ -72,7 +72,7 @@ export function ContactForm() {
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1.5">
           <label htmlFor="contact-first-name" className="text-xs font-semibold text-brand-text">
-            First Name <span className="text-red-500">*</span>
+            First Name <span className="text-rose-600">*</span>
           </label>
           <input
             id="contact-first-name"
@@ -101,7 +101,7 @@ export function ContactForm() {
 
       <div className="space-y-1.5">
         <label htmlFor="contact-email" className="text-xs font-semibold text-brand-text">
-          Email Address <span className="text-red-500">*</span>
+          Email Address <span className="text-rose-600">*</span>
         </label>
         <input
           id="contact-email"
@@ -116,7 +116,7 @@ export function ContactForm() {
 
       <div className="space-y-1.5">
         <label htmlFor="contact-message" className="text-xs font-semibold text-brand-text">
-          Your Message <span className="text-red-500">*</span>
+          Your Message <span className="text-rose-600">*</span>
         </label>
         <textarea
           id="contact-message"

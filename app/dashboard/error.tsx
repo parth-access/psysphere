@@ -19,7 +19,7 @@ export default function DashboardError({
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-brand-cream/30">
-      <div className="max-w-md p-8 bg-white border border-brand-stone-soft rounded-lg shadow-sm text-center">
+      <div className="max-w-md p-8 bg-white border border-brand-stone-soft rounded-lg text-center">
         <h2 className="text-xl font-serif font-semibold text-brand-charcoal mb-4">
           {error.message?.toLowerCase().includes("permission") || error.message?.toLowerCase().includes("role") ? "Access Denied" : "Action Failed"}
         </h2>

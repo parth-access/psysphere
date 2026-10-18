@@ -58,8 +58,8 @@ export default function CuetUgCoursePage() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button href="/book-demo" className="!px-8 !py-4">
-                Book Free Demo
+              <Button href="/workshops" className="!px-8 !py-4">
+                Join a Free Workshop
               </Button>
               <Button href="/contact" variant="secondary" className="!px-8 !py-4">
                 Contact Teacher
@@ -225,8 +225,8 @@ export default function CuetUgCoursePage() {
               Book a complimentary demo session with Dravina Gupta and see how we make competitive preparation simple and high-scoring.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button href="/book-demo" className="!px-8">
-                Book Free Demo
+              <Button href="/workshops" className="!px-8">
+                Join a Free Workshop
               </Button>
               <Button href="/contact" variant="secondary" className="!px-8 border-white/20 text-white hover:bg-white/10">
                 Contact Now

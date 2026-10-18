@@ -47,3 +47,14 @@ export async function getCurrentUser() {
 export async function getCurrentProfile() {
   return getProfile();
 }
+
+/** Sends a password reset email. Always reports success so emails can't be probed. */
+export async function forgotPasswordAction(_prev: { sent?: boolean; error?: string } | null, formData: FormData) {
+  const email = String(formData.get("email") || "").trim().toLowerCase();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { error: "Enter a valid email address" };
+  const supabase = await createClient();
+  const base = (process.env.APP_URL || "http://localhost:3000").replace(/\/$/, "");
+  const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${base}/reset-password` });
+  if (error) console.error("[forgot password]", error.message);
+  return { sent: true };
+}

@@ -19,14 +19,14 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           id={id}
           type={type}
           className={cn(
-            'flex h-9 w-full rounded-xs border border-brand-stone-soft bg-white px-3 py-1 text-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-brand-charcoal-muted/40 focus-visible:outline-none focus-visible:border-brand-accent focus-visible:ring-1 focus-visible:ring-brand-accent/35 disabled:cursor-not-allowed disabled:opacity-50 text-brand-charcoal',
-            error && 'border-red-500 focus-visible:ring-red-500/35 focus-visible:border-red-500',
+            'flex h-9 w-full rounded-xl border border-brand-stone-soft bg-white px-3 py-1 text-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-brand-charcoal-muted/40 focus-visible:outline-none focus-visible:border-brand-accent focus-visible:ring-1 focus-visible:ring-brand-accent/35 disabled:cursor-not-allowed disabled:opacity-50 text-brand-charcoal',
+            error && 'border-rose-100 focus-visible:ring-red-500/35 focus-visible:border-rose-100',
             className
           )}
           ref={ref}
           {...props}
         />
-        {error && <span className="text-[11px] text-red-500 font-sans">{error}</span>}
+        {error && <span className="text-[11px] text-rose-600 font-sans">{error}</span>}
       </div>
     );
   }
@@ -50,14 +50,14 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         <textarea
           id={id}
           className={cn(
-            'flex min-h-[80px] w-full rounded-xs border border-brand-stone-soft bg-white px-3 py-2 text-sm transition-colors placeholder:text-brand-charcoal-muted/40 focus-visible:outline-none focus-visible:border-brand-accent focus-visible:ring-1 focus-visible:ring-brand-accent/35 disabled:cursor-not-allowed disabled:opacity-50 text-brand-charcoal resize-none',
-            error && 'border-red-500 focus-visible:ring-red-500/35 focus-visible:border-red-500',
+            'flex min-h-[80px] w-full rounded-xl border border-brand-stone-soft bg-white px-3 py-2 text-sm transition-colors placeholder:text-brand-charcoal-muted/40 focus-visible:outline-none focus-visible:border-brand-accent focus-visible:ring-1 focus-visible:ring-brand-accent/35 disabled:cursor-not-allowed disabled:opacity-50 text-brand-charcoal resize-none',
+            error && 'border-rose-100 focus-visible:ring-red-500/35 focus-visible:border-rose-100',
             className
           )}
           ref={ref}
           {...props}
         />
-        {error && <span className="text-[11px] text-red-500 font-sans">{error}</span>}
+        {error && <span className="text-[11px] text-rose-600 font-sans">{error}</span>}
       </div>
     );
   }
@@ -82,8 +82,8 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
         <select
           id={id}
           className={cn(
-            'flex h-9 w-full rounded-xs border border-brand-stone-soft bg-white px-3 py-1.5 text-sm transition-colors focus-visible:outline-none focus-visible:border-brand-accent focus-visible:ring-1 focus-visible:ring-brand-accent/35 disabled:cursor-not-allowed disabled:opacity-50 text-brand-charcoal cursor-pointer',
-            error && 'border-red-500 focus-visible:ring-red-500/35 focus-visible:border-red-500',
+            'flex h-9 w-full rounded-xl border border-brand-stone-soft bg-white px-3 py-1.5 text-sm transition-colors focus-visible:outline-none focus-visible:border-brand-accent focus-visible:ring-1 focus-visible:ring-brand-accent/35 disabled:cursor-not-allowed disabled:opacity-50 text-brand-charcoal cursor-pointer',
+            error && 'border-rose-100 focus-visible:ring-red-500/35 focus-visible:border-rose-100',
             className
           )}
           ref={ref}
@@ -95,7 +95,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
             </option>
           ))}
         </select>
-        {error && <span className="text-[11px] text-red-500 font-sans">{error}</span>}
+        {error && <span className="text-[11px] text-rose-600 font-sans">{error}</span>}
       </div>
     );
   }

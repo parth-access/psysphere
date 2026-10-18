@@ -1,5 +1,4 @@
 import { db } from "./index";
-import { admissions } from "./schema/core/admissions";
 import { profiles } from "./schema/core/profiles";
 import { studentProfiles } from "./schema/core/studentProfiles";
 import { eq } from "drizzle-orm";
@@ -8,7 +7,6 @@ async function main() {
   console.log("Seeding database...");
 
   // 1. Clear existing
-  await db.delete(admissions);
   await db.delete(studentProfiles);
   await db.delete(profiles);
 
@@ -27,40 +25,6 @@ async function main() {
     email: "sharma@saarthilife.com"
   }).returning();
 
-  // 3. Add Admissions (Leads)
-  await db.insert(admissions).values([
-    {
-      studentName: "Rohan Sharma",
-      parentName: "Rajeev Sharma",
-      email: "rohan@example.com",
-      phone: "+91 9876543210",
-      class: "Class 12",
-      program: "Standard",
-      status: "LEAD",
-    },
-    {
-      studentName: "Ananya Gupta",
-      parentName: "Meera Gupta",
-      email: "ananya@example.com",
-      phone: "+91 9876543211",
-      class: "Class 11",
-      program: "CUET Prep",
-      status: "DEMO_APPROVED",
-      assignedTeacher: "Dravina Gupta",
-      demoDate: "2026-07-15",
-    },
-    {
-      studentName: "Vikram Singh",
-      parentName: "Anita Singh",
-      email: "vikram@example.com",
-      phone: "+91 9876543212",
-      class: "Class 12",
-      program: "Standard",
-      status: "DEMO_COMPLETED",
-      assignedTeacher: "Dr. Sharma",
-      demoDate: "2026-07-10",
-    }
-  ]);
 
   // 4. Add Students
   const [s1] = await db.insert(profiles).values({

@@ -27,7 +27,7 @@ export default function ContactPage() {
             <div className="grid grid-cols-1 md:grid-cols-12 gap-12 items-start">
               {/* Left Column - Welcoming Context */}
               <div className="md:col-span-6 space-y-8">
-                <div className="bg-white p-8 rounded-[32px] border border-brand-border shadow-sm space-y-6">
+                <div className="bg-white p-8 rounded-2xl border border-brand-border space-y-6">
                   <h2 className="font-serif text-2xl font-semibold text-brand-text">How We Can Help You</h2>
                   <p className="font-sans text-brand-text-muted text-sm leading-relaxed">
                     At Saarthi Classes, learning is a collaborative and compassionate journey. We invite parents and students to ask any questions—whether big or small—regarding the curriculum or high-school preparation.
@@ -68,14 +68,14 @@ export default function ContactPage() {
 
                 <div className="p-6 bg-brand-primary/5 rounded-2xl border border-brand-primary/10">
                   <p className="text-xs text-brand-text leading-relaxed font-sans italic text-center">
-                    &quot;Education should feel supportive. Feel free to reach out via the form to schedule a visual demo or discuss study strategies for your child.&quot; — Dravina Gupta
+                    &quot;Education should feel supportive. Feel free to reach out via the form to ask about our next free workshop or discuss study strategies for your child.&quot; — Dravina Gupta
                   </p>
                 </div>
               </div>
 
               {/* Right Column - Actions & Direct Info */}
               <div className="md:col-span-6 space-y-6">
-                <div className="bg-white p-8 rounded-[32px] border border-brand-border shadow-sm">
+                <div className="bg-white p-8 rounded-2xl border border-brand-border ">
                   <h2 className="font-serif text-xl font-semibold text-brand-text mb-2">Send an Enquiry</h2>
                   <p className="text-sm text-brand-text-muted mb-6">Please fill out the form below and our admissions team will get back to you shortly.</p>
                   
@@ -107,11 +107,11 @@ export default function ContactPage() {
                   </form>
                 </div>
                 
-                <div className="bg-white p-8 rounded-[32px] border border-brand-border shadow-sm space-y-4">
-                  <h2 className="font-serif text-xl font-semibold text-brand-text mb-2">Prefer a Demo?</h2>
-                  <p className="text-sm text-brand-text-muted mb-4">Book a free session to experience our teaching methodology firsthand.</p>
-                  <Button href="/book-demo" variant="secondary" className="w-full flex items-center justify-center gap-2">
-                    <Calendar className="h-4 w-4" /> Book a Free Demo Class
+                <div className="bg-white p-8 rounded-2xl border border-brand-border space-y-4">
+                  <h2 className="font-serif text-xl font-semibold text-brand-text mb-2">Prefer to try a class first?</h2>
+                  <p className="text-sm text-brand-text-muted mb-4">Our free workshops let you experience the teaching before you join.</p>
+                  <Button href="/workshops" variant="secondary" className="w-full flex items-center justify-center gap-2">
+                    <Calendar className="h-4 w-4" /> Join a Free Workshop
                   </Button>
                 </div>
               </div>

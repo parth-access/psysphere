@@ -1,97 +1,47 @@
-import { Container } from './Container';
-import { H2, Body } from './Typography';
-import { ArrowRight, Check } from 'lucide-react';
 import Link from 'next/link';
-
+import { ArrowRight } from 'lucide-react';
+import { Container } from './Container';
+import { H2, Body, Eyebrow } from './Typography';
 
 const courses = [
-  {
-    id: 'class-11',
-    title: 'Class 11',
-    description: 'Build a strong foundation in Psychology. Perfect for students starting their journey.',
-    features: ['NCERT Coverage', 'Concept Building', 'Regular Assessments'],
-    pricingQuery: '?class=class11&package=standard',
-    route: '/courses/class-11',
-  },
-  {
-    id: 'class-12',
-    title: 'Class 12',
-    description: 'Intensive board preparation with strategic study blueprints.',
-    features: ['Board Focus', 'Answer Writing', 'Mock Exams'],
-    highlight: true,
-    pricingQuery: '?class=class12&package=standard',
-    route: '/courses/class-12',
-  },
-  {
-    id: 'cuet-ug',
-    title: 'CUET-UG Crash',
-    description: 'Targeted preparation for India\'s top psychology colleges.',
-    features: ['MCQ Strategy', 'Time Management', 'University Guidance'],
-    pricingQuery: '?class=class12&package=cuet',
-    route: '/courses/cuet-ug',
-  },
-  {
-    id: 'integrated',
-    title: 'Board + CUET',
-    description: 'The ultimate dual-preparation strategy for ambitious students.',
-    features: ['Syllabus Mapping', 'Dual Mock Tests', 'Priority Support'],
-    pricingQuery: '?class=class12&package=cuet',
-    route: '/courses/boards-cuet',
-  },
+  { title: 'Class 11', description: 'Build foundations: full NCERT coverage, one concept at a time.', points: ['NCERT coverage', 'Concept building', 'Regular tests'], route: '/courses/class-11' },
+  { title: 'Class 12', description: 'Board focus: answer-writing practice and full mock exams.', points: ['Board focus', 'Answer writing', 'Mock exams'], route: '/courses/class-12' },
+  { title: 'CUET-UG', description: 'MCQ strategy, timing and guidance on psychology colleges.', points: ['MCQ strategy', 'Time management', 'College guidance'], route: '/courses/cuet-ug' },
+  { title: 'Boards + CUET', description: 'One combined track that prepares you for both exams.', points: ['Syllabus mapping', 'Dual mock tests', 'Priority support'], route: '/courses/boards-cuet', featured: true },
 ];
 
 export function Courses() {
   return (
-    <section className="py-24 bg-white border-b border-brand-border" id="courses">
+    <section id="courses" className="py-20 sm:py-24">
       <Container>
-        <div className="text-center max-w-2xl mx-auto mb-16">
-          <H2 className="mb-6">Academic Courses</H2>
-          <Body>
-            Structured curriculum designed to maximize retention, conceptual clarity,
-            and exam performance.
-          </Body>
+        <div className="mb-10 max-w-xl">
+          <Eyebrow className="mb-3">Courses</Eyebrow>
+          <H2 className="mb-3">Choose your course</H2>
+          <Body>All courses follow the CBSE psychology syllabus and are taught live by Dravina.</Body>
         </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {courses.map((course, i) => (
-            <div 
-              key={course.id} 
-              className={`p-8 rounded-3xl border flex flex-col h-full transition-all duration-300 hover:-translate-y-1 ${
-                course.highlight 
-                  ? 'bg-brand-primary text-white border-brand-primary shadow-xl shadow-brand-primary/20' 
-                  : 'bg-brand-canvas border-brand-border hover:shadow-lg'
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {courses.map((c) => (
+            <Link
+              key={c.route}
+              href={c.route}
+              className={`group flex flex-col gap-4 rounded-2xl p-7 transition-colors ${
+                c.featured ? 'bg-ink-900 text-paper hover:bg-ink-700' : 'border border-line bg-surface hover:border-ink-300'
               }`}
             >
-              <h3 className={`font-serif text-2xl font-semibold mb-3 ${course.highlight ? 'text-white' : 'text-brand-text'}`}>
-                {course.title}
-              </h3>
-              <p className={`font-sans text-sm mb-8 leading-relaxed ${course.highlight ? 'text-white/80' : 'text-brand-text-muted'}`}>
-                {course.description}
-              </p>
-              
-              <div className="mt-auto space-y-4 mb-8">
-                {course.features.map((feature, j) => (
-                  <div key={j} className="flex items-start gap-3">
-                    <Check className={`h-5 w-5 shrink-0 ${course.highlight ? 'text-white' : 'text-brand-primary'}`} />
-                    <span className={`font-sans text-sm font-medium ${course.highlight ? 'text-white/90' : 'text-brand-text'}`}>
-                      {feature}
-                    </span>
-                  </div>
+              <h3 className="font-serif text-2xl font-semibold">{c.title}</h3>
+              <p className={`text-[15px] leading-relaxed ${c.featured ? 'text-ink-300' : 'text-ink-500'}`}>{c.description}</p>
+              <ul className={`flex flex-col gap-1.5 text-[15px] ${c.featured ? 'text-paper' : 'text-ink-900'}`}>
+                {c.points.map((p) => (
+                  <li key={p} className="flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 rounded-full bg-marigold-500" aria-hidden="true" />
+                    {p}
+                  </li>
                 ))}
-              </div>
-              
-              <Link 
-                href={course.route}
-                className={`inline-flex items-center justify-between w-full p-4 rounded-2xl font-medium text-sm transition-colors ${
-                  course.highlight
-                    ? 'bg-white text-brand-primary hover:bg-brand-canvas'
-                    : 'bg-white text-brand-text border border-brand-border hover:border-brand-primary hover:text-brand-primary'
-                }`}
-              >
-                View Details
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
+              </ul>
+              <span className="mt-auto inline-flex items-center gap-1.5 pt-2 text-[15px] font-semibold">
+                View course <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+              </span>
+            </Link>
           ))}
         </div>
       </Container>

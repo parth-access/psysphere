@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { createClient } from "@/src/domains/auth/client";
+import { Logo } from "@/features/marketing/ui/Logo";
 import { useRouter } from "next/navigation";
 import {
   KeyRound,
@@ -62,7 +63,7 @@ export default function ResetPasswordPage() {
         // If we have no recovery parameters, reject access immediately to prevent direct navigation access
         if (!hasRecoveryParams) {
           if (mounted) {
-            setError("This password setup link is invalid or has expired. Please request a new invitation from the PsySphere administrator.");
+            setError("This password setup link is invalid or has expired. Please request a new invitation from the Saarthi Classes administrator.");
             setRecoveryVerified(false);
             setCheckingSession(false);
           }
@@ -309,61 +310,59 @@ export default function ResetPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7] flex flex-col justify-center py-12 sm:px-6 lg:px-8 font-sans">
+    <div className="min-h-screen bg-paper flex flex-col justify-center py-12 sm:px-6 lg:px-8 font-sans">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
-          <div className="w-12 h-12 bg-brand-charcoal flex items-center justify-center text-white font-serif italic text-2xl rounded-xs">
-            P
-          </div>
+          <Logo />
         </div>
 
-        <h2 className="mt-6 text-center text-3xl font-serif font-bold text-gray-900 tracking-tight">
+        <h2 className="mt-6 text-center text-3xl font-serif font-bold text-ink-900 tracking-tight">
           Secure Your Account
         </h2>
 
-        <p className="mt-2 text-center text-sm text-gray-500">
+        <p className="mt-2 text-center text-sm text-ink-500">
           Set your new access password to complete setup
         </p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 border border-[#E7E0D8] rounded-xs sm:px-10">
+        <div className="bg-surface py-8 px-6 border border-line rounded-xl sm:px-10">
           {checkingSession ? (
             <div className="py-8 flex flex-col items-center justify-center space-y-4">
-              <Loader2 className="w-8 h-8 text-brand-charcoal animate-spin" />
+              <Loader2 className="w-8 h-8 text-ink-900 animate-spin" />
 
-              <p className="text-sm text-gray-500 font-medium">
+              <p className="text-sm text-ink-500 font-medium">
                 Verifying your secure invitation link...
               </p>
             </div>
           ) : success ? (
-            <div className="rounded-xs bg-green-50 p-6 border border-green-200 text-center space-y-3">
+            <div className="rounded-xl bg-sage-100 p-6 border border-sage-100 text-center space-y-3">
               <div className="flex justify-center">
-                <CheckCircle className="h-10 w-10 text-green-600" />
+                <CheckCircle className="h-10 w-10 text-sage-600" />
               </div>
 
-              <h3 className="text-md font-serif font-semibold text-green-900">
+              <h3 className="text-md font-serif font-semibold text-sage-600">
                 Password Set Successfully
               </h3>
 
-              <p className="text-xs text-green-800">
+              <p className="text-xs text-sage-600">
                 Your credentials have been updated. Redirecting
                 you to the sign-in portal...
               </p>
             </div>
           ) : !recoveryVerified ? (
-            <div className="rounded-xs bg-red-50 p-6 border border-red-200 space-y-3">
+            <div className="rounded-xl bg-rose-100 p-6 border border-rose-100 space-y-3">
               <div className="flex justify-center">
-                <AlertCircle className="h-10 w-10 text-red-600" />
+                <AlertCircle className="h-10 w-10 text-rose-600" />
               </div>
 
-              <h3 className="text-center text-md font-serif font-semibold text-red-900">
+              <h3 className="text-center text-md font-serif font-semibold text-rose-600">
                 Invalid or Expired Link
               </h3>
 
-              <p className="text-center text-xs text-red-800">
+              <p className="text-center text-xs text-rose-600">
                 {error ||
-                  "This password setup link is invalid or has expired. Please request a new invitation from the PsySphere administrator."}
+                  "This password setup link is invalid or has expired. Please request a new invitation from the Saarthi Classes administrator."}
               </p>
             </div>
           ) : (
@@ -372,17 +371,17 @@ export default function ResetPasswordPage() {
               className="space-y-6"
             >
               {error && (
-                <div className="rounded-xs bg-red-50 p-4 border border-red-200">
+                <div className="rounded-xl bg-rose-100 p-4 border border-rose-100">
                   <div className="flex">
                     <div className="flex-shrink-0">
                       <AlertCircle
-                        className="h-5 w-5 text-red-600"
+                        className="h-5 w-5 text-rose-600"
                         aria-hidden="true"
                       />
                     </div>
 
                     <div className="ml-3">
-                      <p className="text-xs font-medium text-red-800">
+                      <p className="text-xs font-medium text-rose-600">
                         {error}
                       </p>
                     </div>
@@ -393,14 +392,14 @@ export default function ResetPasswordPage() {
               <div>
                 <label
                   htmlFor="password"
-                  className="block text-xs font-semibold text-gray-700 uppercase tracking-wider"
+                  className="block text-xs font-semibold text-ink-700 uppercase tracking-wider"
                 >
                   New Password
                 </label>
 
-                <div className="mt-1 relative rounded-xs shadow-3xs">
+                <div className="mt-1 relative rounded-xl">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <KeyRound className="h-4 w-4 text-gray-400" />
+                    <KeyRound className="h-4 w-4 text-ink-500" />
                   </div>
 
                   <input
@@ -415,7 +414,7 @@ export default function ResetPasswordPage() {
                     onChange={(e) =>
                       setPassword(e.target.value)
                     }
-                    className="block w-full pl-10 pr-3 py-2.5 text-sm bg-white border border-[#E7E0D8] rounded-xs text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-brand-charcoal focus:border-brand-charcoal disabled:opacity-50"
+                    className="block w-full min-h-12 pl-10 pr-3 text-[16px] bg-surface border border-line rounded-xl text-ink-900 placeholder:text-ink-500/70 focus:outline-none focus:ring-2 focus:ring-ink-700/30 focus:border-ink-700 disabled:opacity-50"
                     placeholder="Min 8 characters"
                   />
                 </div>
@@ -424,14 +423,14 @@ export default function ResetPasswordPage() {
               <div>
                 <label
                   htmlFor="confirmPassword"
-                  className="block text-xs font-semibold text-gray-700 uppercase tracking-wider"
+                  className="block text-xs font-semibold text-ink-700 uppercase tracking-wider"
                 >
                   Confirm Password
                 </label>
 
-                <div className="mt-1 relative rounded-xs shadow-3xs">
+                <div className="mt-1 relative rounded-xl">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <KeyRound className="h-4 w-4 text-gray-400" />
+                    <KeyRound className="h-4 w-4 text-ink-500" />
                   </div>
 
                   <input
@@ -446,7 +445,7 @@ export default function ResetPasswordPage() {
                     onChange={(e) =>
                       setConfirmPassword(e.target.value)
                     }
-                    className="block w-full pl-10 pr-3 py-2.5 text-sm bg-white border border-[#E7E0D8] rounded-xs text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-brand-charcoal focus:border-brand-charcoal disabled:opacity-50"
+                    className="block w-full min-h-12 pl-10 pr-3 text-[16px] bg-surface border border-line rounded-xl text-ink-900 placeholder:text-ink-500/70 focus:outline-none focus:ring-2 focus:ring-ink-700/30 focus:border-ink-700 disabled:opacity-50"
                     placeholder="Repeat password"
                   />
                 </div>
@@ -456,7 +455,7 @@ export default function ResetPasswordPage() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full flex justify-center items-center gap-2 px-4 py-2.5 border border-transparent rounded-xs shadow-xs text-sm font-semibold text-white bg-brand-charcoal hover:bg-brand-charcoal/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-charcoal disabled:opacity-50 transition-colors cursor-pointer"
+                  className="w-full min-h-12 flex justify-center items-center gap-2 px-4 rounded-xl font-semibold text-paper bg-ink-900 hover:bg-ink-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-700/40 disabled:opacity-60 transition-colors cursor-pointer"
                 >
                   {isLoading ? (
                     <>

@@ -1,30 +1,46 @@
 @import "tailwindcss";
 @theme {
-  --font-serif: var(--font-serif), "Playfair Display", Georgia, serif;
-  --font-sans: var(--font-sans), "Inter", sans-serif;
-  
-  /* Premium Calming Editorial Color Palette */
-  --color-brand-canvas: #F8F5F2;
+  --font-serif: var(--font-serif), "Fraunces", Georgia, serif;
+  --font-sans: var(--font-sans), "Hanken Grotesk", system-ui, sans-serif;
+
+  /* Direction A: Ink & Marigold */
+  --color-ink-900: #1C2541;
+  --color-ink-700: #2E3A5F;
+  --color-ink-500: #5B6478;
+  --color-ink-300: #C9CEDB;
+  --color-ink-100: #E6E9F2;
+  --color-paper: #FAF6EF;
+  --color-paper-deep: #F1ECE3;
+  --color-surface: #FFFFFF;
+  --color-line: #E7E1D6;
+  --color-marigold-100: #FBEBD3;
+  --color-marigold-500: #E3962B; /* fills only, never text on light */
+  --color-marigold-700: #A2611A; /* accent text */
+  --color-sage-100: #E3EDE6;
+  --color-sage-600: #4F7A63;
+  --color-rose-100: #F6E1DF;
+  --color-rose-600: #B9473F;
+
+  /* Older names, now pointing at the new palette */
+  --color-brand-canvas: #FAF6EF;
   --color-brand-surface: #FFFFFF;
-  --color-brand-primary: #6D5BD0;
-  --color-brand-primary-hover: #5B49C6;
-  --color-brand-accent: #C9A227;
-  --color-brand-text: #1F2937;
-  --color-brand-text-muted: #6B7280;
-  --color-brand-border: #E8E5E0;
-  --color-brand-success: #3BA55D;
-  --color-brand-danger: #D14343;
-  
-  /* Legacy mapping just in case */
-  --color-brand-ivory: #F8F5F2;
-  --color-brand-beige: #E8E5E0;
+  --color-brand-primary: #1C2541;
+  --color-brand-primary-hover: #2E3A5F;
+  --color-brand-accent: #E3962B;
+  --color-brand-text: #1C2541;
+  --color-brand-text-muted: #5B6478;
+  --color-brand-border: #E7E1D6;
+  --color-brand-success: #4F7A63;
+  --color-brand-danger: #B9473F;
+  --color-brand-ivory: #FAF6EF;
+  --color-brand-beige: #E7E1D6;
   --color-brand-cream: #FFFFFF;
-  --color-brand-stone-soft: #E8E5E0;
-  --color-brand-charcoal: #1F2937;
-  --color-brand-charcoal-muted: #6B7280;
-  --color-brand-sage: #6D5BD0;
-  --color-brand-sage-light: #F8F5F2;
-  
+  --color-brand-stone-soft: #E7E1D6;
+  --color-brand-charcoal: #1C2541;
+  --color-brand-charcoal-muted: #5B6478;
+  --color-brand-sage: #1C2541;
+  --color-brand-sage-light: #FAF6EF;
+
   /* Standard utilities mapped for styling */
   --animate-fade-in: fade-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   --animate-slide-up: slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;

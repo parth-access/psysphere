@@ -17,9 +17,9 @@ export default function AboutPage() {
             <div className="inline-block py-1 px-3 rounded-full bg-brand-primary/10 text-brand-primary text-xs font-bold tracking-widest uppercase mb-6">
               Our Story
             </div>
-            <H1 className="mb-6">About PsySphere</H1>
+            <H1 className="mb-6">About Saarthi Classes</H1>
             <p className="font-sans text-xl text-brand-text leading-relaxed">
-              We believe psychology is not just a syllabus—it is the language of life. PsySphere is dedicated to changing how high school students study and understand the human mind.
+              We believe psychology is not just a syllabus—it is the language of life. Saarthi Classes is dedicated to changing how high school students study and understand the human mind.
             </p>
           </div>
         </Container>
@@ -35,7 +35,7 @@ export default function AboutPage() {
                 Too often, psychology is reduced to heavy definitions and dry rote memorization. Students memorize terms like &quot;conditioning&quot; or &quot;cognitive appraisal&quot; without observing them in action.
               </p>
               <p className="text-brand-text leading-relaxed text-sm">
-                At PsySphere, founded by Dravina Gupta, we do things differently. We map every theory to real human experiences, classic experiments, and case studies. This turns a complex syllabus into an engaging exploration, naturally leading to excellent marks in boards and CUET-UG.
+                At Saarthi Classes, founded by Dravina Gupta, we do things differently. We map every theory to real human experiences, classic experiments, and case studies. This turns a complex syllabus into an engaging exploration, naturally leading to excellent marks in boards and CUET-UG.
               </p>
             </div>
             <div className="bg-white p-8 rounded-2xl border border-brand-border space-y-6">

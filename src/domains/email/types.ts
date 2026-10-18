@@ -1,69 +1,72 @@
 export interface SendEmailResponse {
   success: boolean;
-  data?: any;
+  data?: { id: string };
   error?: string;
 }
 
-export interface DemoRequestReceivedPayload {
-  studentName: string;
-  classLevel: string;
-  programType: string;
-  preferredDate?: string;
-  preferredTime?: string;
+export interface WorkshopEmailDetails {
+  workshopTitle: string;
+  /** Human-readable date and time in IST, e.g. "Sat, 24 Oct · 5:00 – 6:00 PM IST" */
+  whenText: string;
+  meetingUrl: string | null;
 }
 
-export interface NewLeadInternalPayload {
-  admissionId: string;
+export interface WorkshopRegisteredPayload extends WorkshopEmailDetails {
   studentName: string;
-  parentName: string;
+}
+
+export interface WorkshopReminderPayload extends WorkshopEmailDetails {
+  studentName: string;
+}
+
+export interface WorkshopJoinInvitePayload {
+  studentName: string;
+  workshopTitle: string;
+  joinUrl: string;
+}
+
+export interface JoinRequestReceivedPayload {
+  studentName: string;
+  batchName: string;
+  planName: string;
+  amountInr: number;
+}
+
+export interface NewJoinRequestInternalPayload {
+  studentName: string;
   email: string;
   phone: string;
-  classLevel: string;
-  programType: string;
-  preferredDate?: string;
-  preferredTime?: string;
-  notes?: string;
+  parentName: string;
+  parentPhone: string;
+  batchName: string;
+  planName: string;
+  amountInr: number;
+  reviewUrl: string;
 }
 
-export interface DemoApprovedPayload {
+export interface JoinRequestApprovedPayload {
   studentName: string;
-  email: string;
-  demoDate: string;
-  teacherName?: string;
-  googleMeetUrl?: string;
+  batchName: string;
+  planName: string;
+  amountInr: number;
+  payUrl: string;
 }
 
-export interface DemoScheduledPayload {
+export interface JoinRequestDeclinedPayload {
   studentName: string;
-  demoDate: string;
-  demoTime: string;
-  teacherName: string;
-  googleMeetUrl: string;
+  batchName: string;
+  reason?: string | null;
 }
 
-export interface DemoRejectedPayload {
-  studentName: string;
-}
-
-export interface StudentInvitationPayload {
+export interface EnrollmentConfirmedPayload {
   studentName: string;
   studentId: string;
   email: string;
+  batchName: string;
+  planName: string;
+  amountInr: number;
+  paymentId: string;
   passwordSetupUrl: string;
-  teacherName?: string;
-  demoDate?: string;
-}
-
-export interface TeacherActivationPayload {
-  teacherName: string;
-  email: string;
-  passwordSetupUrl: string;
-}
-
-export interface PostDemoConversionPayload {
-  studentName: string;
-  previewUrl: string;
-  joinUrl: string;
 }
 
 export interface PasswordSetupPayload {
@@ -72,9 +75,8 @@ export interface PasswordSetupPayload {
   passwordSetupUrl: string;
 }
 
-export interface WelcomeStudentPayload {
-  studentName: string;
-  studentId: string;
+export interface TeacherActivationPayload {
+  teacherName: string;
   email: string;
+  passwordSetupUrl: string;
 }
-

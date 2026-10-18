@@ -3,31 +3,31 @@ import { EMAIL_DEFAULTS } from "./constants";
 import { db } from "@/db";
 import { emailDeliveries } from "@/db/schema";
 
-import {
+import type {
   SendEmailResponse,
-  DemoApprovedPayload,
-  StudentInvitationPayload,
+  WorkshopRegisteredPayload,
+  WorkshopReminderPayload,
+  WorkshopJoinInvitePayload,
+  JoinRequestReceivedPayload,
+  NewJoinRequestInternalPayload,
+  JoinRequestApprovedPayload,
+  JoinRequestDeclinedPayload,
+  EnrollmentConfirmedPayload,
   PasswordSetupPayload,
-  WelcomeStudentPayload,
-  DemoRequestReceivedPayload,
-  NewLeadInternalPayload,
-  DemoScheduledPayload,
-  DemoRejectedPayload,
   TeacherActivationPayload,
-  PostDemoConversionPayload,
 } from "./types";
 
 import {
-  getDemoApprovedTemplate,
-  getStudentInvitationTemplate,
+  getWorkshopRegisteredTemplate,
+  getWorkshopReminderTemplate,
+  getWorkshopJoinInviteTemplate,
+  getJoinRequestReceivedTemplate,
+  getNewJoinRequestInternalTemplate,
+  getJoinRequestApprovedTemplate,
+  getJoinRequestDeclinedTemplate,
+  getEnrollmentConfirmedTemplate,
   getPasswordSetupTemplate,
-  getWelcomeStudentTemplate,
-  getDemoRequestReceivedTemplate,
-  getNewLeadInternalTemplate,
-  getDemoScheduledTemplate,
-  getDemoRejectedTemplate,
   getTeacherActivationTemplate,
-  getPostDemoConversionTemplate,
 } from "./templates";
 
 /* ============================================================
@@ -205,283 +205,66 @@ export class EmailService {
     }
   }
 
-  /* ============================================================
-   * Demo Approved
-   * ============================================================ */
-
-  async sendDemoApproved(
+  private send(
     to: string,
-    payload: DemoApprovedPayload,
-    admissionId?: string
-  ): Promise<SendEmailResponse> {
-    const html = getDemoApprovedTemplate(payload);
-
-    const subject =
-      "Welcome to Saarthi Classes | Your Demo Class is Confirmed";
-
-    return this.sendHtmlEmail(
-      to,
-      subject,
-      html,
-      EMAIL_DEFAULTS.FROM,
-      {
-        type: "demo_approved",
-        relatedEntityType: "admission",
-        relatedEntityId: admissionId,
-      }
-    );
+    subject: string,
+    html: string,
+    type: string,
+    relatedEntityType?: string,
+    relatedEntityId?: string
+  ) {
+    return this.sendHtmlEmail(to, subject, html, EMAIL_DEFAULTS.FROM, {
+      type,
+      relatedEntityType,
+      relatedEntityId,
+    });
   }
 
-  /* ============================================================
-   * Student Invitation
-   * ============================================================ */
+  /* ---------------- Workshops ---------------- */
 
-  async sendStudentInvitation(
-    to: string,
-    payload: StudentInvitationPayload,
-    admissionId?: string
-  ): Promise<SendEmailResponse> {
-    const html = getStudentInvitationTemplate(payload);
-
-    const subject =
-      "Welcome to Saarthi Classes | Setup Your Account";
-
-    return this.sendHtmlEmail(
-      to,
-      subject,
-      html,
-      EMAIL_DEFAULTS.FROM,
-      {
-        type: "student_invitation",
-        relatedEntityType: "admission",
-        relatedEntityId: admissionId,
-      }
-    );
+  sendWorkshopRegistered(to: string, p: WorkshopRegisteredPayload, registrationId?: string) {
+    return this.send(to, `Seat confirmed: ${p.workshopTitle}`, getWorkshopRegisteredTemplate(p), "workshop_registered", "workshop_registration", registrationId);
   }
 
-  /* ============================================================
-   * Password Setup
-   * ============================================================ */
-
-  async sendPasswordSetup(
-    to: string,
-    payload: PasswordSetupPayload,
-    userId?: string
-  ): Promise<SendEmailResponse> {
-    const html = getPasswordSetupTemplate(payload);
-
-    const subject =
-      "Saarthi Classes | Create Your Password";
-
-    return this.sendHtmlEmail(
-      to,
-      subject,
-      html,
-      EMAIL_DEFAULTS.FROM,
-      {
-        type: "password_setup",
-        relatedEntityType: "profile",
-        relatedEntityId: userId,
-      }
-    );
+  sendWorkshopReminder(to: string, p: WorkshopReminderPayload, registrationId?: string) {
+    return this.send(to, `Reminder: ${p.workshopTitle}`, getWorkshopReminderTemplate(p), "workshop_reminder", "workshop_registration", registrationId);
   }
 
-  /* ============================================================
-   * Welcome Student
-   * ============================================================ */
-
-  async sendWelcomeStudent(
-    to: string,
-    payload: WelcomeStudentPayload,
-    userId?: string
-  ): Promise<SendEmailResponse> {
-    const html = getWelcomeStudentTemplate(payload);
-
-    const subject =
-      "Welcome to Saarthi Classes Core Student Portal";
-
-    return this.sendHtmlEmail(
-      to,
-      subject,
-      html,
-      EMAIL_DEFAULTS.FROM,
-      {
-        type: "welcome_student",
-        relatedEntityType: "profile",
-        relatedEntityId: userId,
-      }
-    );
+  sendWorkshopJoinInvite(to: string, p: WorkshopJoinInvitePayload, registrationId?: string) {
+    return this.send(to, "Continue learning with Saarthi Classes", getWorkshopJoinInviteTemplate(p), "workshop_join_invite", "workshop_registration", registrationId);
   }
 
-  /* ============================================================
-   * Demo Request Received
-   * ============================================================ */
+  /* ---------------- Joining ---------------- */
 
-  async sendDemoRequestReceived(
-    to: string,
-    payload: DemoRequestReceivedPayload,
-    admissionId?: string
-  ): Promise<SendEmailResponse> {
-    const html = getDemoRequestReceivedTemplate(payload);
-
-    const subject =
-      "Demo Class Request Received | Saarthi Classes";
-
-    return this.sendHtmlEmail(
-      to,
-      subject,
-      html,
-      EMAIL_DEFAULTS.FROM,
-      {
-        type: "demo_request_received",
-        relatedEntityType: "admission",
-        relatedEntityId: admissionId,
-      }
-    );
+  sendJoinRequestReceived(to: string, p: JoinRequestReceivedPayload, joinRequestId?: string) {
+    return this.send(to, "We've received your join request | Saarthi Classes", getJoinRequestReceivedTemplate(p), "join_request_received", "join_request", joinRequestId);
   }
 
-  /* ============================================================
-   * New Lead Internal Notification
-   * ============================================================ */
-
-  async sendNewLeadInternal(
-    payload: NewLeadInternalPayload
-  ): Promise<SendEmailResponse> {
-    const html = getNewLeadInternalTemplate(payload);
-
-    const subject =
-      `[NEW LEAD] Demo Request - ${payload.studentName}`;
-
-    const adminEmail =
-      process.env.EMAIL_REPLY_TO ||
-      "hello@classes.saarthilife.com";
-
-    return this.sendHtmlEmail(
-      adminEmail,
-      subject,
-      html,
-      EMAIL_DEFAULTS.FROM,
-      {
-        type: "new_lead_internal",
-        relatedEntityType: "admission",
-        relatedEntityId: payload.admissionId,
-      }
-    );
+  sendNewJoinRequestInternal(p: NewJoinRequestInternalPayload, joinRequestId?: string) {
+    const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL || EMAIL_DEFAULTS.REPLY_TO;
+    return this.send(adminEmail, `[Join request] ${p.studentName} · ${p.batchName}`, getNewJoinRequestInternalTemplate(p), "join_request_internal", "join_request", joinRequestId);
   }
 
-  /* ============================================================
-   * Demo Scheduled / Rescheduled
-   * ============================================================ */
-
-  async sendDemoScheduled(
-    to: string,
-    payload: DemoScheduledPayload,
-    isRescheduled?: boolean,
-    admissionId?: string
-  ): Promise<SendEmailResponse> {
-    const html = getDemoScheduledTemplate(
-      payload,
-      isRescheduled
-    );
-
-    const subject = isRescheduled
-      ? "Your Live Demo has been Rescheduled! | Saarthi Classes"
-      : "Your Live Demo is Scheduled! | Saarthi Classes";
-
-    return this.sendHtmlEmail(
-      to,
-      subject,
-      html,
-      EMAIL_DEFAULTS.FROM,
-      {
-        type: isRescheduled
-          ? "demo_rescheduled"
-          : "demo_scheduled",
-        relatedEntityType: "admission",
-        relatedEntityId: admissionId,
-      }
-    );
+  sendJoinRequestApproved(to: string, p: JoinRequestApprovedPayload, joinRequestId?: string) {
+    return this.send(to, "Your seat is approved: complete payment | Saarthi Classes", getJoinRequestApprovedTemplate(p), "join_request_approved", "join_request", joinRequestId);
   }
 
-  /* ============================================================
-   * Demo Rejected / Cancelled
-   * ============================================================ */
-
-  async sendDemoRejected(
-    to: string,
-    payload: DemoRejectedPayload,
-    admissionId?: string
-  ): Promise<SendEmailResponse> {
-    const html = getDemoRejectedTemplate(payload);
-
-    const subject =
-      "Demo Request Update | Saarthi Classes";
-
-    return this.sendHtmlEmail(
-      to,
-      subject,
-      html,
-      EMAIL_DEFAULTS.FROM,
-      {
-        type: "demo_rejected",
-        relatedEntityType: "admission",
-        relatedEntityId: admissionId,
-      }
-    );
+  sendJoinRequestDeclined(to: string, p: JoinRequestDeclinedPayload, joinRequestId?: string) {
+    return this.send(to, "About your join request | Saarthi Classes", getJoinRequestDeclinedTemplate(p), "join_request_declined", "join_request", joinRequestId);
   }
 
-  /* ============================================================
-   * Teacher Activation
-   * ============================================================ */
-
-  async sendTeacherActivation(
-    to: string,
-    payload: TeacherActivationPayload,
-    teacherId?: string
-  ): Promise<SendEmailResponse> {
-    const html = getTeacherActivationTemplate(payload);
-
-    const subject =
-      "Welcome to Saarthi Classes Faculty | Activate Your Account";
-
-    return this.sendHtmlEmail(
-      to,
-      subject,
-      html,
-      EMAIL_DEFAULTS.FROM,
-      {
-        type: "teacher_activation",
-        relatedEntityType: "profile",
-        relatedEntityId: teacherId,
-      }
-    );
+  sendEnrollmentConfirmed(to: string, p: EnrollmentConfirmedPayload, joinRequestId?: string) {
+    return this.send(to, "Welcome to Saarthi Classes: set up your account", getEnrollmentConfirmedTemplate(p), "enrollment_confirmed", "join_request", joinRequestId);
   }
 
-  /* ============================================================
-   * Post-Demo Conversion
-   * ============================================================ */
+  /* ---------------- Accounts ---------------- */
 
-  async sendPostDemoConversion(
-    to: string,
-    payload: PostDemoConversionPayload,
-    admissionId?: string
-  ): Promise<SendEmailResponse> {
-    const html = getPostDemoConversionTemplate(payload);
+  sendPasswordSetup(to: string, p: PasswordSetupPayload, userId?: string) {
+    return this.send(to, "Set your password | Saarthi Classes", getPasswordSetupTemplate(p), "password_setup", "profile", userId);
+  }
 
-    const subject =
-      "How Was Your Saarthi Classes Demo? Continue Your Journey With Us 💜";
-
-    return this.sendHtmlEmail(
-      to,
-      subject,
-      html,
-      EMAIL_DEFAULTS.FROM,
-      {
-        type: "post_demo_conversion",
-        relatedEntityType: "admission",
-        relatedEntityId: admissionId,
-      }
-    );
+  sendTeacherActivation(to: string, p: TeacherActivationPayload, teacherId?: string): Promise<SendEmailResponse> {
+    return this.send(to, "Your Saarthi Classes teacher account", getTeacherActivationTemplate(p), "teacher_activation", "profile", teacherId);
   }
 }
 

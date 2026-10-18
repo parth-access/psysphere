@@ -33,7 +33,7 @@ export const Filters = ({ options, selectedValue, onChange, className, id }: Fil
             key={option.value}
             onClick={() => onChange(option.value)}
             className={cn(
-              'relative px-3 py-1.5 text-xs font-medium font-sans transition-colors rounded-xs cursor-pointer select-none focus:outline-none focus:ring-1 focus:ring-brand-accent/20',
+              'relative px-3 py-1.5 text-xs font-medium font-sans transition-colors rounded-xl cursor-pointer select-none focus:outline-none focus:ring-1 focus:ring-brand-accent/20',
               isActive
                 ? 'text-brand-accent'
                 : 'text-brand-charcoal-muted hover:text-brand-charcoal hover:bg-brand-beige/40'
@@ -42,7 +42,7 @@ export const Filters = ({ options, selectedValue, onChange, className, id }: Fil
             {isActive && (
               <motion.div
                 layoutId="activeFilterBg"
-                className="absolute inset-0 bg-brand-cream border border-brand-stone-soft/60 rounded-xs -z-10 shadow-[0_1px_3px_rgba(0,0,0,0.01)]"
+                className="absolute inset-0 bg-brand-cream border border-brand-stone-soft/60 rounded-xl -z-10"
                 transition={{ type: 'spring', stiffness: 380, damping: 30 }}
               />
             )}

@@ -1,305 +1,156 @@
 import { db } from "@/db";
 import { profiles } from "@/db/schema/core/profiles";
 import { studentProfiles, studentIdCounters } from "@/db/schema/core/studentProfiles";
-import { admissionRepository } from "../admissions/repository";
+import { enrollments } from "@/db/schema/core/enrollments";
 import { createAdminClient } from "../auth/server";
-import { emailService } from "../email/service";
 import crypto from "crypto";
-import { sql, eq, ExtractTablesWithRelations } from "drizzle-orm";
+import { sql, eq, and, type ExtractTablesWithRelations } from "drizzle-orm";
 import * as schema from "@/db/schema";
-import { PgTransaction } from "drizzle-orm/pg-core";
-import { PostgresJsQueryResultHKT } from "drizzle-orm/postgres-js";
+import type { PgTransaction } from "drizzle-orm/pg-core";
+import type { PostgresJsQueryResultHKT } from "drizzle-orm/postgres-js";
+import { appUrl } from "../joining/tokens";
 
 type DBTx = PgTransaction<PostgresJsQueryResultHKT, typeof schema, ExtractTablesWithRelations<typeof schema>>;
 
-/**
- * Concurrency-safe, deterministic helper to generate the next Student ID for the current year.
- * format: PSY-YYYY-NNNN
- */
+/** Concurrency-safe student id for the current year: SC-YYYY-NNNN */
 async function generateStudentId(tx: DBTx): Promise<string> {
   const year = new Date().getFullYear();
-  
-  // Atomically upsert/increment the counter for the current year
   const [result] = await tx
     .insert(studentIdCounters)
     .values({ year, lastValue: 1 })
     .onConflictDoUpdate({
       target: studentIdCounters.year,
-      set: { lastValue: sql`${studentIdCounters.lastValue} + 1` }
+      set: { lastValue: sql`${studentIdCounters.lastValue} + 1` },
     })
     .returning({ lastValue: studentIdCounters.lastValue });
-
-  const nextNum = result?.lastValue ?? 1;
-  return `PSY-${year}-${String(nextNum).padStart(4, "0")}`;
+  return `SC-${year}-${String(result?.lastValue ?? 1).padStart(4, "0")}`;
 }
 
-export class OnboardingService {
-  async approveDemo(admissionId: string) {
-    // 1. Fetch Admission
-    const admission = await admissionRepository.findById(admissionId);
-    if (!admission) throw new Error("Admission not found");
+export interface ProvisionStudentInput {
+  studentName: string;
+  email: string;
+  phone: string;
+  parentName: string;
+  parentPhone: string;
+  batchId: string;
+}
 
-    // 2. Validate state & check for idempotency
-    // Already DEMO_APPROVED may return idempotently.
-    if (admission.status === "DEMO_APPROVED") {
-      console.log(`[OnboardingService] Admission ${admissionId} is already DEMO_APPROVED. Returning gracefully.`);
-      return { success: true };
-    }
+export interface ProvisionStudentResult {
+  userId: string;
+  studentId: string;
+  passwordSetupUrl: string;
+}
 
-    if (admission.status !== "LEAD" && admission.status !== "DEMO_BOOKED") {
-      throw new Error(`Cannot approve demo. Current status is ${admission.status}, but must be LEAD or DEMO_BOOKED.`);
-    }
+/** Finds an existing Supabase Auth user by email, paging through users if needed. */
+async function findAuthUserIdByEmail(email: string): Promise<string | null> {
+  const [local] = await db.select({ id: profiles.id }).from(profiles).where(eq(profiles.email, email)).limit(1);
+  if (local) return local.id;
 
-    // 3. Update status to DEMO_APPROVED (does NOT create accounts, profiles, student IDs or passwords)
-    await admissionRepository.updateStatus(admissionId, "DEMO_APPROVED");
-
-    // 4. Dispatch business notification
-    try {
-      console.log(`[OnboardingService] Dispatching demo approved email to ${admission.email}`);
-      const emailResult = await emailService.sendDemoApproved(admission.email, {
-        studentName: admission.studentName,
-        email: admission.email,
-        demoDate: admission.preferredDate ? `${admission.preferredDate} ${admission.preferredTime ? `at ${admission.preferredTime}` : ""}` : "TBD",
-      }, admissionId);
-      if (!emailResult.success) {
-        console.error(`⚠️ Demo approval email delivery failed: ${emailResult.error}`);
-      }
-    } catch (emailEx) {
-      console.error("[OnboardingService] Error calling email service:", emailEx);
-    }
-
-    return { success: true };
+  const admin = createAdminClient();
+  const perPage = 200;
+  for (let page = 1; page < 100; page++) {
+    const { data, error } = await admin.auth.admin.listUsers({ page, perPage });
+    if (error) throw new Error(`Supabase user lookup failed: ${error.message}`);
+    const match = data.users.find((u) => u.email?.toLowerCase() === email);
+    if (match) return match.id;
+    if (data.users.length < perPage) break;
   }
+  return null;
+}
 
-  async provisionStudentFromAdmission(admissionId: string) {
-    const admission = await admissionRepository.findById(admissionId);
-    if (!admission) throw new Error("Admission not found");
+/**
+ * Creates (or reuses) the student's login, profile and student profile,
+ * and enrolls them in the batch. Safe to call more than once.
+ */
+export async function provisionStudent(input: ProvisionStudentInput): Promise<ProvisionStudentResult> {
+  const email = input.email.trim().toLowerCase();
+  const admin = createAdminClient();
 
-    if (admission.status !== "DEMO_COMPLETED" && admission.status !== "ENROLLED") {
-      throw new Error(`Cannot convert to student. Status must be DEMO_COMPLETED. Current status: ${admission.status}`);
+  // 1. Login (Supabase Auth)
+  let userId = await findAuthUserIdByEmail(email);
+  let isNewUser = false;
+  if (!userId) {
+    const { data, error } = await admin.auth.admin.createUser({
+      email,
+      email_confirm: true,
+      password: crypto.randomUUID(), // never shown; the student sets their own
+      user_metadata: { role: "student", full_name: input.studentName },
+    });
+    if (error || !data.user) {
+      // Lost a race with another request: look again before failing.
+      userId = await findAuthUserIdByEmail(email);
+      if (!userId) throw new Error(`Could not create login: ${error?.message ?? "unknown error"}`);
+    } else {
+      userId = data.user.id;
+      isNewUser = true;
     }
+  }
+  const uid = userId;
 
-    // Check if they are already enrolled
-    if (admission.status === "ENROLLED") {
-      const [existingProfile] = await db.select().from(profiles).where(eq(profiles.email, admission.email));
-      if (existingProfile) {
-        const [sp] = await db.select().from(studentProfiles).where(eq(studentProfiles.profileId, existingProfile.id));
-        return {
-          success: true,
-          studentId: sp?.admissionNumber || null,
-          userId: existingProfile.id,
-          alreadyEnrolled: true
-        };
-      }
-    }
-
-    // 1. Setup Supabase Admin
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-    if (!supabaseUrl || !supabaseServiceKey) {
-      throw new Error("Supabase is unconfigured. Cannot securely provision student account.");
-    }
-
-    const supabaseAdmin = createAdminClient();
-
-    // 2. Check if Supabase Auth identity already exists for this email (pagination-safe)
-    let supabaseUserId = "";
-    let isNewUser = true;
-    let page = 1;
-    const perPage = 100;
-    let hasMore = true;
-
-    try {
-      while (hasMore) {
-        const { data: listData, error: listError } = await supabaseAdmin.auth.admin.listUsers({
-          page,
-          perPage,
-        });
-        if (listError) {
-          throw new Error(`Failed to list users in Supabase Auth: ${listError.message}`);
-        }
-        const users = listData?.users || [];
-        const existingAuthUser = users.find(
-          (u) => u.email?.toLowerCase() === admission.email.toLowerCase()
-        );
-        if (existingAuthUser) {
-          supabaseUserId = existingAuthUser.id;
-          isNewUser = false;
-          console.log(`[OnboardingService] Reusing existing Supabase Auth user: ${supabaseUserId}`);
-          break;
-        }
-        if (users.length < perPage) {
-          hasMore = false;
-        } else {
-          page++;
-        }
-      }
-    } catch (err: unknown) {
-      console.error("[OnboardingService] Auth lookup error:", err);
-    }
-
-    // 3. Create Supabase User if not exists (never generate plaintext temporary passwords for the user to read)
-    if (!supabaseUserId) {
-      const secureRandomPassword = crypto.randomUUID();
-      try {
-        const { data: userData, error: userError } = await supabaseAdmin.auth.admin.createUser({
-          email: admission.email,
-          email_confirm: true,
-          password: secureRandomPassword,
-          user_metadata: { role: "student", full_name: admission.studentName }
-        });
-        if (userError) {
-          throw new Error(`Supabase Auth creation failed: ${userError.message}`);
-        }
-        if (!userData?.user) {
-          throw new Error("Supabase Auth returned empty user on student creation.");
-        }
-        supabaseUserId = userData.user.id;
-        isNewUser = true;
-        console.log(`[OnboardingService] Created new Supabase Auth user: ${supabaseUserId}`);
-      } catch (error: unknown) {
-        const errMsg = error instanceof Error ? error.message : String(error);
-        throw new Error(`Auth provisioning failed: ${errMsg}`);
-      }
-    }
-
-    // 4. Create Postgres Records in a transaction
-    let studentId = "";
-    try {
-      await db.transaction(async (tx) => {
-        // Find or create Profile
-        const [existingProf] = await tx.select().from(profiles).where(eq(profiles.id, supabaseUserId));
-        if (!existingProf) {
-          await tx.insert(profiles).values({
-            id: supabaseUserId,
-            role: "student",
-            fullName: admission.studentName,
-            email: admission.email,
-            isActive: true,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          });
-        } else if (existingProf.role !== "student") {
-          await tx.update(profiles)
-            .set({ role: "student", updatedAt: new Date() })
-            .where(eq(profiles.id, supabaseUserId));
-        }
-
-        // Find or create Student Profile
-        const [existingStudProf] = await tx.select().from(studentProfiles).where(eq(studentProfiles.profileId, supabaseUserId));
-        if (!existingStudProf) {
-          studentId = await generateStudentId(tx);
-          await tx.insert(studentProfiles).values({
-            profileId: supabaseUserId,
-            admissionNumber: studentId,
-            guardianName: admission.parentName,
-            guardianEmail: admission.email,
-            guardianPhone: admission.phone,
-            enrollmentDate: new Date().toISOString().split('T')[0],
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          });
-        } else {
-          studentId = existingStudProf.admissionNumber || "";
-          if (!studentId) {
-            studentId = await generateStudentId(tx);
-            await tx.update(studentProfiles)
-              .set({ admissionNumber: studentId, updatedAt: new Date() })
-              .where(eq(studentProfiles.profileId, supabaseUserId));
-          }
-        }
-
-        // Create enrollment if required data is available (find active batch matching the class level)
-        const admissionClassLower = admission.class.toLowerCase();
-        const classLevel: "class_11" | "class_12" = admissionClassLower.includes("11") ? "class_11" : "class_12";
-
-        const { batches } = await import("@/db/schema/core/batches");
-        const matchingBatches = await tx.select().from(batches).where(eq(batches.classLevel, classLevel));
-        const activeBatch = matchingBatches.find(b => b.isActive);
-
-        if (activeBatch) {
-          const { enrollments } = await import("@/db/schema/core/enrollments");
-          const [existingEnrollment] = await tx.select()
-            .from(enrollments)
-            .where(eq(enrollments.studentProfileId, supabaseUserId));
-          
-          if (!existingEnrollment) {
-            await tx.insert(enrollments).values({
-              studentProfileId: supabaseUserId,
-              batchId: activeBatch.id,
-              status: "active",
-              enrolledAt: new Date(),
-              createdAt: new Date(),
-              updatedAt: new Date()
-            });
-          }
-        }
+  // 2. Profile, student profile and enrollment in one transaction
+  let studentId = "";
+  await db.transaction(async (tx) => {
+    const [existingProfile] = await tx.select().from(profiles).where(eq(profiles.id, uid));
+    if (!existingProfile) {
+      await tx.insert(profiles).values({
+        id: uid,
+        role: "student",
+        fullName: input.studentName,
+        email,
+        isActive: true,
       });
-    } catch (dbError: unknown) {
-      const errMsg = dbError instanceof Error ? dbError.message : String(dbError);
-      throw new Error(`Database transaction failed: ${errMsg}`);
+    } else if (existingProfile.role !== "student") {
+      throw new Error(`${email} already belongs to a ${existingProfile.role} account.`);
     }
 
-    // 5. Update Admission Status to ENROLLED
-    await admissionRepository.updateStatus(admissionId, "ENROLLED");
-
-    // 6. Generate setup link (invite or recovery)
-    let passwordSetupUrl = `${process.env.APP_URL || "http://localhost:3000"}/reset-password`;
-    if (supabaseUserId) {
-      try {
-        const linkType = isNewUser ? "invite" : "recovery";
-        const { data: linkData, error: linkError } = await supabaseAdmin.auth.admin.generateLink({
-          type: linkType,
-          email: admission.email,
-          options: {
-            redirectTo: `${process.env.APP_URL || "http://localhost:3000"}/reset-password`
-          }
-        });
-
-        if (linkError) {
-          console.error(`[OnboardingService] Failed to generate ${linkType} link from Supabase:`, linkError);
-          // Fallback to recovery if invite fails
-          if (linkType === "invite") {
-            const { data: recData, error: recError } = await supabaseAdmin.auth.admin.generateLink({
-              type: "recovery",
-              email: admission.email,
-              options: {
-                redirectTo: `${process.env.APP_URL || "http://localhost:3000"}/reset-password`
-              }
-            });
-            if (recData?.properties?.action_link) {
-              passwordSetupUrl = recData.properties.action_link;
-            }
-          }
-        } else if (linkData?.properties?.action_link) {
-          passwordSetupUrl = linkData.properties.action_link;
-          console.log(`[OnboardingService] Successfully generated secure Supabase setup link (${linkType}):`, passwordSetupUrl);
-        }
-      } catch (linkEx) {
-        console.error("[OnboardingService] Exception generating secure link from Supabase:", linkEx);
-      }
+    const [sp] = await tx.select().from(studentProfiles).where(eq(studentProfiles.profileId, uid));
+    if (!sp) {
+      studentId = await generateStudentId(tx);
+      await tx.insert(studentProfiles).values({
+        profileId: uid,
+        admissionNumber: studentId,
+        guardianName: input.parentName,
+        guardianPhone: input.parentPhone,
+        guardianEmail: null,
+        notes: `Student phone: ${input.phone}`,
+        enrollmentDate: new Date().toISOString().split("T")[0],
+      });
+    } else {
+      studentId = sp.admissionNumber || (await generateStudentId(tx));
+      await tx
+        .update(studentProfiles)
+        .set({
+          admissionNumber: studentId,
+          guardianName: input.parentName,
+          guardianPhone: input.parentPhone,
+          updatedAt: new Date(),
+        })
+        .where(eq(studentProfiles.profileId, uid));
     }
 
-    // 7. Send Account Invitation / Set Your Password link email
-    try {
-      const emailResult = await emailService.sendStudentInvitation(admission.email, {
-        studentName: admission.studentName,
-        studentId: studentId,
-        email: admission.email,
-        passwordSetupUrl,
-        teacherName: admission.assignedTeacher || "Dravina Gupta",
-        demoDate: admission.demoDate || undefined,
-      }, admissionId);
-      if (!emailResult.success) {
-        console.error(`⚠️ Invitation email delivery failed for ${admission.email}: ${emailResult.error}`);
-      }
-    } catch (emailErr: unknown) {
-      const msg = emailErr instanceof Error ? emailErr.message : String(emailErr);
-      console.error(`⚠️ Invitation email exception for ${admission.email}:`, msg);
-    }
+    await tx
+      .insert(enrollments)
+      .values({ studentProfileId: uid, batchId: input.batchId, status: "active" })
+      .onConflictDoNothing({ target: [enrollments.studentProfileId, enrollments.batchId] });
 
-    return { success: true, studentId, userId: supabaseUserId };
+    // Re-activate if they had dropped out of this batch before
+    await tx
+      .update(enrollments)
+      .set({ status: "active", leftAt: null, updatedAt: new Date() })
+      .where(and(eq(enrollments.studentProfileId, uid), eq(enrollments.batchId, input.batchId)));
+  });
+
+  // 3. Password setup link
+  let passwordSetupUrl = appUrl("/sign-in");
+  const redirectTo = appUrl("/reset-password");
+  for (const type of (isNewUser ? ["invite", "recovery"] : ["recovery"]) as ("invite" | "recovery")[]) {
+    const { data, error } = await admin.auth.admin.generateLink({ type, email, options: { redirectTo } });
+    if (!error && data?.properties?.action_link) {
+      passwordSetupUrl = data.properties.action_link;
+      break;
+    }
+    console.error(`[onboarding] ${type} link failed for ${email}:`, error?.message);
   }
-}
 
-export const onboardingService = new OnboardingService();
+  return { userId: uid, studentId, passwordSetupUrl };
+}

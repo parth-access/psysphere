@@ -14,6 +14,8 @@ const createBatchSchema = z.object({
   academicYear: z.string().min(1, "Academic year is required").max(20, "Academic year too long"),
   schedule: z.string().max(500, "Schedule description too long").nullable().optional(),
   teacherId: z.string().uuid("Invalid Teacher ID format"),
+  capacity: z.coerce.number().int().positive().nullable(),
+  joinMode: z.enum(["approval", "open"]),
 });
 
 export async function createBatchAction(formData: FormData) {
@@ -32,6 +34,8 @@ export async function createBatchAction(formData: FormData) {
     academicYear: rawAcademicYear,
     schedule: rawSchedule || null,
     teacherId: rawTeacherId,
+    capacity: formData.get("capacity") ? formData.get("capacity") : null,
+    joinMode: formData.get("joinMode") || "approval",
   });
 
   // Verify referenced teacher record server-side
@@ -57,6 +61,8 @@ export async function createBatchAction(formData: FormData) {
     academicYear: validated.academicYear,
     schedule: validated.schedule || null,
     teacherId: validated.teacherId,
+    capacity: validated.capacity,
+    joinMode: validated.joinMode,
     isActive: true,
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -66,3 +72,28 @@ export async function createBatchAction(formData: FormData) {
   revalidatePath("/dashboard");
 }
 
+
+const joiningSchema = z.object({
+  batchId: z.string().uuid(),
+  capacity: z.coerce.number().int().positive().nullable(),
+  joinMode: z.enum(["approval", "open"]),
+  acceptingStudents: z.boolean(),
+});
+
+/** Seats and joining rules for a batch (shown on the website's /join page). */
+export async function updateBatchJoiningAction(formData: FormData) {
+  await requireRole(["admin"]);
+  const v = joiningSchema.parse({
+    batchId: formData.get("batchId"),
+    capacity: formData.get("capacity") ? formData.get("capacity") : null,
+    joinMode: formData.get("joinMode"),
+    acceptingStudents: formData.get("acceptingStudents") === "on",
+  });
+  await db
+    .update(batches)
+    .set({ capacity: v.capacity, joinMode: v.joinMode, acceptingStudents: v.acceptingStudents, updatedAt: new Date() })
+    .where(eq(batches.id, v.batchId));
+  revalidatePath(`/dashboard/batches/${v.batchId}`);
+  revalidatePath("/dashboard/batches");
+  revalidatePath("/join");
+}

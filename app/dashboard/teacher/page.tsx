@@ -198,17 +198,17 @@ export default async function TeacherDashboardPage() {
     <div className="space-y-8 max-w-7xl mx-auto pb-12">
       
       {/* SECTION 1: Welcome & Contextual Header */}
-      <div id="teacher-hero-card" className="relative overflow-hidden p-8 rounded-3xl bg-radial from-stone-50 to-white border border-stone-200/60 shadow-xs">
+      <div id="teacher-hero-card" className="relative overflow-hidden p-8 rounded-2xl bg-radial from-stone-50 to-white border border-line/60">
         <div className="absolute top-0 right-0 w-64 h-64 bg-brand-surface/40 rounded-full blur-3xl -z-10" />
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-3">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-stone-100 rounded-full text-xs font-semibold text-stone-600 border border-stone-200/40">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-paper-deep rounded-full text-xs font-semibold text-ink-700 border border-line/40">
               <span>📅 Teaching Workspace</span>
             </div>
-            <h1 className="text-3xl font-serif font-bold text-gray-900 tracking-tight">
+            <h1 className="text-3xl font-serif font-bold text-ink-900 tracking-tight">
               {greeting}, {profile.fullName.split(" ")[0]} 👋
             </h1>
-            <p className="text-gray-600 text-sm font-sans max-w-2xl leading-relaxed">
+            <p className="text-ink-700 text-sm font-sans max-w-2xl leading-relaxed">
               {summaryText}
             </p>
           </div>
@@ -218,17 +218,17 @@ export default async function TeacherDashboardPage() {
       {/* SECTION 2: Next Class Centerpiece (Highlighted prominently) */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-widest">Next Scheduled Lecture</h2>
+          <h2 className="text-xs font-semibold text-ink-500 uppercase tracking-widest">Next Scheduled Lecture</h2>
           {nextClass && (
             <span className="text-xs text-brand-primary font-medium flex items-center gap-1.5 bg-brand-surface/60 px-2.5 py-1 rounded-full border border-brand-primary/10">
               <span className="relative flex h-2 w-2">
                 <span className={cn(
                   "animate-ping absolute inline-flex h-full w-full rounded-full opacity-75",
-                  isNextClassLive ? "bg-rose-400" : isNextClassStartsSoon ? "bg-amber-400" : "bg-brand-primary/40"
+                  isNextClassLive ? "bg-rose-400" : isNextClassStartsSoon ? "bg-marigold-500" : "bg-brand-primary/40"
                 )}></span>
                 <span className={cn(
                   "relative inline-flex rounded-full h-2 w-2",
-                  isNextClassLive ? "bg-rose-500" : isNextClassStartsSoon ? "bg-amber-500" : "bg-brand-primary"
+                  isNextClassLive ? "bg-rose-500" : isNextClassStartsSoon ? "bg-marigold-500" : "bg-brand-primary"
                 )}></span>
               </span>
               {countdownText}
@@ -237,17 +237,17 @@ export default async function TeacherDashboardPage() {
         </div>
 
         {!nextClass ? (
-          <div className="flex flex-col items-center justify-center py-6 px-6 bg-white border border-stone-150 rounded-3xl text-center shadow-3xs max-w-xl mx-auto h-[180px]">
-            <div className="w-10 h-10 rounded-xl bg-stone-50 flex items-center justify-center border border-stone-100 text-stone-400 mb-2.5">
+          <div className="flex flex-col items-center justify-center py-6 px-6 bg-white border border-line rounded-2xl text-center max-w-xl mx-auto h-[180px]">
+            <div className="w-10 h-10 rounded-xl bg-paper flex items-center justify-center border border-line text-ink-500 mb-2.5">
               <Calendar className="w-5 h-5" />
             </div>
-            <p className="text-sm font-serif font-bold text-stone-900">Enjoy your preparation time</p>
-            <p className="text-[11px] text-stone-500 mt-1 max-w-xs leading-normal">
+            <p className="text-sm font-serif font-bold text-ink-900">Enjoy your preparation time</p>
+            <p className="text-[11px] text-ink-500 mt-1 max-w-xs leading-normal">
               No upcoming lectures are currently scheduled. Prepare materials or review student notes.
             </p>
           </div>
         ) : (
-          <div className="relative overflow-hidden bg-white border border-stone-200/80 rounded-3xl shadow-sm transition-all duration-300 hover:shadow-md">
+          <div className="relative overflow-hidden bg-white border border-line/80 rounded-2xl transition-all duration-300 ">
             <div className="absolute top-0 left-0 w-2 h-full bg-brand-primary" />
             <div className="p-8 space-y-6">
               <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
@@ -261,10 +261,10 @@ export default async function TeacherDashboardPage() {
                     <span className={cn(
                       "text-xs font-semibold px-2.5 py-1 rounded-full border flex items-center gap-1.5",
                       isNextClassLive 
-                        ? "bg-rose-50 text-rose-700 border-rose-200" 
+                        ? "bg-rose-50 text-rose-600 border-rose-200" 
                         : isNextClassStartsSoon 
-                        ? "bg-amber-50 text-amber-700 border-amber-200" 
-                        : "bg-stone-50 text-stone-600 border-stone-200"
+                        ? "bg-marigold-100 text-marigold-700 border-marigold-100" 
+                        : "bg-paper text-ink-700 border-line"
                     )}>
                       {isNextClassLive && <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />}
                       {countdownText}
@@ -272,27 +272,27 @@ export default async function TeacherDashboardPage() {
                   </div>
 
                   <div className="space-y-1.5">
-                    <h3 className="text-2xl font-serif font-bold text-stone-900 leading-snug">
+                    <h3 className="text-2xl font-serif font-bold text-ink-900 leading-snug">
                       {nextClass.title}
                     </h3>
-                    <p className="text-stone-600 text-sm font-sans flex items-center gap-1.5">
-                      <Layers className="w-4 h-4 text-stone-400 shrink-0" />
+                    <p className="text-ink-700 text-sm font-sans flex items-center gap-1.5">
+                      <Layers className="w-4 h-4 text-ink-500 shrink-0" />
                       <span>Topic:</span>
-                      <span className="font-semibold text-stone-800">{nextClass.topicTitle}</span>
+                      <span className="font-semibold text-ink-900">{nextClass.topicTitle}</span>
                     </p>
                   </div>
 
-                  <div className="flex flex-wrap gap-x-6 gap-y-3 pt-2 border-t border-stone-100/80 text-xs font-medium text-stone-500">
-                    <span className="flex items-center gap-2 bg-stone-50/50 px-2.5 py-1 rounded-lg border border-stone-100">
-                      <Calendar className="w-4 h-4 text-stone-400" />
+                  <div className="flex flex-wrap gap-x-6 gap-y-3 pt-2 border-t border-line/80 text-xs font-medium text-ink-500">
+                    <span className="flex items-center gap-2 bg-paper/50 px-2.5 py-1 rounded-lg border border-line">
+                      <Calendar className="w-4 h-4 text-ink-500" />
                       {new Date(nextClass.startsAt).toLocaleDateString("en-GB", {
                         weekday: "long",
                         day: "numeric",
                         month: "short"
                       })}
                     </span>
-                    <span className="flex items-center gap-2 bg-stone-50/50 px-2.5 py-1 rounded-lg border border-stone-100">
-                      <Clock className="w-4 h-4 text-stone-400" />
+                    <span className="flex items-center gap-2 bg-paper/50 px-2.5 py-1 rounded-lg border border-line">
+                      <Clock className="w-4 h-4 text-ink-500" />
                       {new Date(nextClass.startsAt).toLocaleTimeString("en-GB", {
                         hour: "2-digit",
                         minute: "2-digit"
@@ -315,17 +315,17 @@ export default async function TeacherDashboardPage() {
                     target="_blank" 
                     rel="noopener noreferrer" 
                     className={cn(
-                      "inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl text-sm font-bold transition-all w-full md:w-auto text-center whitespace-nowrap cursor-pointer shadow-sm hover:shadow-md",
+                      "inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl text-sm font-bold transition-all w-full md:w-auto text-center whitespace-nowrap cursor-pointer hover:shadow-md",
                       isNextClassLive || isNextClassStartsSoon
                         ? "bg-brand-primary text-white hover:bg-brand-primary-hover ring-4 ring-brand-primary/10 scale-[1.03]"
-                        : "bg-stone-100 text-stone-700 hover:bg-stone-200 border border-stone-200/40"
+                        : "bg-paper-deep text-ink-700 hover:bg-line border border-line/40"
                     )}
                   >
                     <Video className="w-4 h-4" />
                     {isNextClassLive ? "Launch Live Lecture" : isNextClassStartsSoon ? "Join Class Space" : "Prepare Lecture Room"}
                     <ExternalLink className="w-3.5 h-3.5 ml-0.5" />
                   </a>
-                  <p className="text-[11px] text-stone-400 text-center md:text-right w-full leading-normal max-w-[240px] mx-auto md:mr-0">
+                  <p className="text-[11px] text-ink-500 text-center md:text-right w-full leading-normal max-w-[240px] mx-auto md:mr-0">
                     Syncs automatically with your synchronized Google Calendar event.
                   </p>
                 </div>
@@ -346,25 +346,25 @@ export default async function TeacherDashboardPage() {
           
           {/* SECTION 3: Today's Teaching Schedule (Timeline) */}
           <div className="space-y-4">
-            <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-widest">Today&apos;s Teaching Schedule</h2>
+            <h2 className="text-xs font-semibold text-ink-500 uppercase tracking-widest">Today&apos;s Teaching Schedule</h2>
             
-            <div className="bg-white border border-stone-200/80 rounded-3xl p-6 shadow-3xs">
+            <div className="bg-white border border-line/80 rounded-2xl p-6">
               {todayLectures.length === 0 ? (
                 <div className="text-center py-10 px-4">
-                  <div className="w-12 h-12 rounded-full bg-stone-50 flex items-center justify-center border border-stone-100 text-stone-400 mx-auto mb-3">
+                  <div className="w-12 h-12 rounded-full bg-paper flex items-center justify-center border border-line text-ink-500 mx-auto mb-3">
                     <Inbox className="w-5 h-5" />
                   </div>
-                  <p className="text-sm font-serif font-bold text-stone-800">No lectures scheduled for today</p>
+                  <p className="text-sm font-serif font-bold text-ink-900">No lectures scheduled for today</p>
                   {nextClass ? (
-                    <p className="text-xs text-stone-500 mt-1 max-w-xs mx-auto">
+                    <p className="text-xs text-ink-500 mt-1 max-w-xs mx-auto">
                       Enjoy your preparation day! Your next lecture is on {new Date(nextClass.startsAt).toLocaleDateString("en-GB", { day: "numeric", month: "short" })} at {new Date(nextClass.startsAt).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}.
                     </p>
                   ) : (
-                    <p className="text-xs text-stone-400 mt-1">Enjoy your teaching-free day!</p>
+                    <p className="text-xs text-ink-500 mt-1">Enjoy your teaching-free day!</p>
                   )}
                 </div>
               ) : (
-                <div className="relative pl-6 sm:pl-8 space-y-6 before:absolute before:top-2 before:left-[11px] before:bottom-2 before:w-[2px] before:bg-stone-100/80">
+                <div className="relative pl-6 sm:pl-8 space-y-6 before:absolute before:top-2 before:left-[11px] before:bottom-2 before:w-[2px] before:bg-paper-deep/80">
                   {todayLectures.map((cls) => {
                     const startsAt = new Date(cls.startsAt);
                     const endsAt = new Date(cls.endsAt);
@@ -372,8 +372,8 @@ export default async function TeacherDashboardPage() {
                     const diffMins = Math.ceil(diffMs / (1000 * 60));
 
                     let status: "Completed" | "Live" | "Starting Soon" | "Upcoming" | "Cancelled" = "Upcoming";
-                    let badgeStyle = "bg-stone-50 text-stone-600 border-stone-200";
-                    let dotStyle = "border-stone-200 bg-white text-stone-400";
+                    let badgeStyle = "bg-paper text-ink-700 border-line";
+                    let dotStyle = "border-line bg-white text-ink-500";
                     let cardOpacity = "opacity-100";
 
                     if (cls.status === "cancelled") {
@@ -383,8 +383,8 @@ export default async function TeacherDashboardPage() {
                       cardOpacity = "opacity-60";
                     } else if (cls.status === "completed" || now > endsAt) {
                       status = "Completed";
-                      badgeStyle = "bg-emerald-50 text-emerald-700 border-emerald-100 font-medium";
-                      dotStyle = "border-emerald-500 bg-emerald-50 text-emerald-600";
+                      badgeStyle = "bg-sage-100 text-sage-600 border-sage-100 font-medium";
+                      dotStyle = "border-sage-100 bg-sage-100 text-sage-600";
                       cardOpacity = "opacity-70";
                     } else if (now >= startsAt && now <= endsAt) {
                       status = "Live";
@@ -392,8 +392,8 @@ export default async function TeacherDashboardPage() {
                       dotStyle = "border-rose-500 bg-rose-500 text-white animate-pulse";
                     } else if (diffMins > 0 && diffMins <= 15) {
                       status = "Starting Soon";
-                      badgeStyle = "bg-amber-50 text-amber-700 border-amber-200 font-semibold";
-                      dotStyle = "border-amber-500 bg-amber-50 text-amber-600";
+                      badgeStyle = "bg-marigold-100 text-marigold-700 border-marigold-100 font-semibold";
+                      dotStyle = "border-marigold-100 bg-marigold-100 text-marigold-700";
                     }
 
                     const timeString = startsAt.toLocaleTimeString("en-GB", {
@@ -402,7 +402,7 @@ export default async function TeacherDashboardPage() {
                     });
 
                     return (
-                      <div key={cls.id} className={cn("relative flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-2xl bg-stone-50/40 hover:bg-stone-50/80 border border-stone-150/40 hover:border-stone-200/60 transition-all", cardOpacity)}>
+                      <div key={cls.id} className={cn("relative flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-2xl bg-paper/40 hover:bg-paper/80 border border-line/40 hover:border-line/60 transition-all", cardOpacity)}>
                         
                         {/* Timeline Node Icon/Dot */}
                         <div className={cn(
@@ -410,7 +410,7 @@ export default async function TeacherDashboardPage() {
                           dotStyle
                         )}>
                           {status === "Completed" ? (
-                            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                            <CheckCircle2 className="w-4 h-4 text-sage-600 shrink-0" />
                           ) : status === "Live" ? (
                             <span className="w-2 h-2 rounded-full bg-white" />
                           ) : (
@@ -421,32 +421,32 @@ export default async function TeacherDashboardPage() {
                         {/* Schedule Info */}
                         <div className="flex items-start gap-4">
                           <div className="text-left shrink-0 min-w-[65px] pt-0.5">
-                            <span className="block text-xs uppercase tracking-wider font-semibold text-stone-400">Time</span>
-                            <span className="block text-sm font-bold text-stone-800">{timeString}</span>
+                            <span className="block text-xs uppercase tracking-wider font-semibold text-ink-500">Time</span>
+                            <span className="block text-sm font-bold text-ink-900">{timeString}</span>
                           </div>
                           
                           <div className="space-y-1">
                             <div className="flex items-center gap-2 flex-wrap">
-                              <span className="text-[10px] font-bold px-2 py-0.5 bg-stone-100 text-stone-600 border border-stone-200/50 rounded-md uppercase tracking-wider">
+                              <span className="text-[10px] font-bold px-2 py-0.5 bg-paper-deep text-ink-700 border border-line/50 rounded-md uppercase tracking-wider">
                                 {cls.batchName}
                               </span>
                               <span className={cn("text-[10px] px-2 py-0.5 border rounded-md font-semibold", badgeStyle)}>
                                 {status === "Starting Soon" ? `Starting in ${diffMins}m` : status}
                               </span>
                             </div>
-                            <h4 className="text-sm font-bold text-stone-900">{cls.title}</h4>
-                            <p className="text-xs text-stone-500">Topic: <span className="text-stone-700 font-medium">{cls.topicTitle}</span></p>
+                            <h4 className="text-sm font-bold text-ink-900">{cls.title}</h4>
+                            <p className="text-xs text-ink-500">Topic: <span className="text-ink-700 font-medium">{cls.topicTitle}</span></p>
                           </div>
                         </div>
 
                         {/* Interactive Action or Finished State */}
                         <div className="sm:text-right w-full sm:w-auto pt-2 sm:pt-0 shrink-0">
                           {status === "Completed" ? (
-                            <span className="inline-flex items-center gap-1 px-3 py-1 bg-stone-100/60 text-stone-500 rounded-lg text-xs font-semibold border border-stone-200/40">
+                            <span className="inline-flex items-center gap-1 px-3 py-1 bg-paper-deep/60 text-ink-500 rounded-lg text-xs font-semibold border border-line/40">
                               ✓ Completed
                             </span>
                           ) : status === "Cancelled" ? (
-                            <span className="inline-block px-3 py-1 bg-stone-100/40 text-stone-400 rounded-lg text-xs font-semibold">
+                            <span className="inline-block px-3 py-1 bg-paper-deep/40 text-ink-500 rounded-lg text-xs font-semibold">
                               Cancelled
                             </span>
                           ) : (
@@ -457,8 +457,8 @@ export default async function TeacherDashboardPage() {
                               className={cn(
                                 "inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold transition-all w-full sm:w-auto cursor-pointer border",
                                 status === "Live" || status === "Starting Soon"
-                                  ? "bg-brand-primary text-white border-transparent hover:bg-brand-primary-hover shadow-3xs"
-                                  : "bg-white text-stone-700 border-stone-200 hover:bg-stone-50"
+                                  ? "bg-brand-primary text-white border-transparent hover:bg-brand-primary-hover"
+                                  : "bg-white text-ink-700 border-line hover:bg-paper"
                               )}
                             >
                               <Video className="w-3.5 h-3.5" />
@@ -483,52 +483,52 @@ export default async function TeacherDashboardPage() {
           
           {/* SECTION 5: Quick Actions & Teaching Tools */}
           <div className="space-y-4">
-            <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-widest">Teaching Tools</h2>
-            <div className="bg-white border border-stone-200/80 rounded-3xl p-5 shadow-3xs space-y-3.5">
+            <h2 className="text-xs font-semibold text-ink-500 uppercase tracking-widest">Teaching Tools</h2>
+            <div className="bg-white border border-line/80 rounded-2xl p-5 space-y-3.5">
               
               {/* Primary Active Actions */}
               <div className="flex flex-col gap-2">
                 <Link 
                   href="/dashboard/classes" 
-                  className="flex items-center justify-between px-4 py-3 bg-stone-50 hover:bg-stone-100/80 border border-stone-150 rounded-xl transition-all group cursor-pointer text-left font-sans text-xs font-bold text-stone-800"
+                  className="flex items-center justify-between px-4 py-3 bg-paper hover:bg-paper-deep/80 border border-line rounded-xl transition-all group cursor-pointer text-left font-sans text-xs font-bold text-ink-900"
                 >
                   <span className="flex items-center gap-2">
                     <Plus className="w-4 h-4 text-brand-primary" />
                     Schedule Lecture
                   </span>
-                  <ArrowUpRight className="w-3.5 h-3.5 text-stone-400 group-hover:text-brand-primary transition-colors" />
+                  <ArrowUpRight className="w-3.5 h-3.5 text-ink-500 group-hover:text-brand-primary transition-colors" />
                 </Link>
 
                 <Link 
                   href="/dashboard/classes" 
-                  className="flex items-center justify-between px-4 py-3 bg-stone-50 hover:bg-stone-100/80 border border-stone-150 rounded-xl transition-all group cursor-pointer text-left font-sans text-xs font-bold text-stone-800"
+                  className="flex items-center justify-between px-4 py-3 bg-paper hover:bg-paper-deep/80 border border-line rounded-xl transition-all group cursor-pointer text-left font-sans text-xs font-bold text-ink-900"
                 >
                   <span className="flex items-center gap-2">
                     <BookOpen className="w-4 h-4 text-brand-primary" />
                     Classes Overview
                   </span>
-                  <ArrowUpRight className="w-3.5 h-3.5 text-stone-400 group-hover:text-brand-primary transition-colors" />
+                  <ArrowUpRight className="w-3.5 h-3.5 text-ink-500 group-hover:text-brand-primary transition-colors" />
                 </Link>
               </div>
 
               {/* Future Action Stubs / Placeholders */}
-              <div className="pt-3 border-t border-stone-100 space-y-2">
-                <span className="block text-[10px] font-bold text-stone-400 uppercase tracking-widest px-1 mb-1.5">Coming Soon</span>
+              <div className="pt-3 border-t border-line space-y-2">
+                <span className="block text-[10px] font-bold text-ink-500 uppercase tracking-widest px-1 mb-1.5">Coming Soon</span>
                 
-                <div className="flex items-center justify-between px-4 py-2.5 rounded-xl border border-stone-100 text-stone-400/80 hover:bg-stone-50/40 transition-colors select-none">
+                <div className="flex items-center justify-between px-4 py-2.5 rounded-xl border border-line text-ink-500/80 hover:bg-paper/40 transition-colors select-none">
                   <div className="flex items-center gap-2.5">
-                    <FileText className="w-4 h-4 text-stone-400/60" />
+                    <FileText className="w-4 h-4 text-ink-500/60" />
                     <span className="text-xs font-medium">Teaching Notes</span>
                   </div>
-                  <span className="text-[9px] px-1.5 py-0.5 bg-stone-100 text-stone-400 rounded-md font-bold uppercase tracking-wider">Soon</span>
+                  <span className="text-[9px] px-1.5 py-0.5 bg-paper-deep text-ink-500 rounded-md font-bold uppercase tracking-wider">Soon</span>
                 </div>
 
-                <div className="flex items-center justify-between px-4 py-2.5 rounded-xl border border-stone-100 text-stone-400/80 hover:bg-stone-50/40 transition-colors select-none">
+                <div className="flex items-center justify-between px-4 py-2.5 rounded-xl border border-line text-ink-500/80 hover:bg-paper/40 transition-colors select-none">
                   <div className="flex items-center gap-2.5">
-                    <HelpCircle className="w-4 h-4 text-stone-400/60" />
+                    <HelpCircle className="w-4 h-4 text-ink-500/60" />
                     <span className="text-xs font-medium">Student Questions</span>
                   </div>
-                  <span className="text-[9px] px-1.5 py-0.5 bg-stone-100 text-stone-400 rounded-md font-bold uppercase tracking-wider">Soon</span>
+                  <span className="text-[9px] px-1.5 py-0.5 bg-paper-deep text-ink-500 rounded-md font-bold uppercase tracking-wider">Soon</span>
                 </div>
               </div>
 
@@ -537,10 +537,10 @@ export default async function TeacherDashboardPage() {
 
           {/* SECTION 4: My Coaching Batches (Enhanced design) */}
           <div className="space-y-4">
-            <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-widest">My Coaching Batches</h2>
+            <h2 className="text-xs font-semibold text-ink-500 uppercase tracking-widest">My Coaching Batches</h2>
             
             {activeBatches.length === 0 ? (
-              <div className="text-center py-8 bg-white border border-stone-150 rounded-3xl text-stone-500 text-sm">
+              <div className="text-center py-8 bg-white border border-line rounded-2xl text-ink-500 text-sm">
                 You are not currently assigned to any active coaching batches.
               </div>
             ) : (
@@ -583,28 +583,28 @@ export default async function TeacherDashboardPage() {
                   const completionPercentage = totalLectures > 0 ? Math.round((completedLectures / totalLectures) * 100) : 0;
 
                   return (
-                    <div key={batch.id} className="p-6 bg-white border border-stone-200/80 rounded-3xl shadow-3xs space-y-4 hover:border-brand-primary/25 transition-all duration-300">
+                    <div key={batch.id} className="p-6 bg-white border border-line/80 rounded-2xl space-y-4 hover:border-brand-primary/25 transition-all duration-300">
                       <div>
                         <div className="flex items-center justify-between gap-2">
-                          <h4 className="font-serif font-bold text-lg text-stone-950">{batch.name}</h4>
-                          <span className="text-[10px] font-bold px-2 py-0.5 bg-stone-100 text-stone-600 rounded-md uppercase tracking-wider shrink-0">
+                          <h4 className="font-serif font-bold text-lg text-ink-900">{batch.name}</h4>
+                          <span className="text-[10px] font-bold px-2 py-0.5 bg-paper-deep text-ink-700 rounded-md uppercase tracking-wider shrink-0">
                             {batch.classLevel.replace(/_/g, " ")}
                           </span>
                         </div>
-                        <p className="text-xs text-stone-400 mt-0.5">Academic Cohort: {batch.academicYear}</p>
+                        <p className="text-xs text-ink-500 mt-0.5">Academic Cohort: {batch.academicYear}</p>
                       </div>
 
-                      <div className="grid grid-cols-2 gap-3 pt-3 border-t border-stone-100 text-xs">
+                      <div className="grid grid-cols-2 gap-3 pt-3 border-t border-line text-xs">
                         <div className="space-y-0.5">
-                          <span className="block text-stone-400 font-semibold uppercase tracking-wider text-[9px]">Active Students</span>
-                          <span className="font-bold text-stone-800 flex items-center gap-1">
-                            <Users className="w-3.5 h-3.5 text-stone-400" />
+                          <span className="block text-ink-500 font-semibold uppercase tracking-wider text-[9px]">Active Students</span>
+                          <span className="font-bold text-ink-900 flex items-center gap-1">
+                            <Users className="w-3.5 h-3.5 text-ink-500" />
                             {batch.studentsCount} Enrolled
                           </span>
                         </div>
                         <div className="space-y-0.5">
-                          <span className="block text-stone-400 font-semibold uppercase tracking-wider text-[9px]">Next Live Lecture</span>
-                          <span className="font-semibold text-stone-700 truncate block max-w-full">
+                          <span className="block text-ink-500 font-semibold uppercase tracking-wider text-[9px]">Next Live Lecture</span>
+                          <span className="font-semibold text-ink-700 truncate block max-w-full">
                             {nextLectureDateStr}
                           </span>
                         </div>
@@ -613,11 +613,11 @@ export default async function TeacherDashboardPage() {
                       {/* Small Progress Indicator */}
                       {totalLectures > 0 && (
                         <div className="pt-2.5 space-y-1.5">
-                          <div className="flex justify-between text-[10px] font-semibold text-stone-500">
+                          <div className="flex justify-between text-[10px] font-semibold text-ink-500">
                             <span>Course Progress</span>
-                            <span className="font-bold text-stone-800">{completedLectures} / {totalLectures} ({completionPercentage}%)</span>
+                            <span className="font-bold text-ink-900">{completedLectures} / {totalLectures} ({completionPercentage}%)</span>
                           </div>
-                          <div className="w-full bg-stone-100 rounded-full h-1.5 overflow-hidden">
+                          <div className="w-full bg-paper-deep rounded-full h-1.5 overflow-hidden">
                             <div 
                               className="bg-brand-primary h-full rounded-full transition-all duration-500 ease-out" 
                               style={{ width: `${completionPercentage}%` }}

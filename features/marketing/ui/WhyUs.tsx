@@ -1,39 +1,33 @@
 import { Container } from './Container';
-import { H2, Body } from './Typography';
-import { BookOpen, Brain, CheckCircle, FileText, Target, Users } from 'lucide-react';
+import { H2, Body, Eyebrow } from './Typography';
 
-const features = [
-  { icon: Users, title: 'Expert Faculty', desc: 'Learn directly from dedicated educators with 2 Years Teaching Experience in psychology.' },
-  { icon: Brain, title: 'Concept-Based Learning', desc: 'No rote memorization. We build a deep understanding of psychological principles.' },
-  { icon: CheckCircle, title: 'Weekly Tests', desc: 'Regular assessments to track progress and identify areas for improvement.' },
-  { icon: BookOpen, title: 'Study Material', desc: 'Premium, curated notes and practice booklets designed for board exams.' },
-  { icon: Target, title: 'CUET Preparation', desc: 'Integrated coaching for CUET-UG alongside your Class 11 and Class 12 syllabus.' },
-  { icon: FileText, title: 'Parent Support', desc: 'Transparent tracking and regular updates on your child\'s academic progress.' },
+const steps = [
+  { n: '01', tag: 'Understand', title: 'Live concept classes', desc: 'Theories explained with everyday examples, not memorised lists.' },
+  { n: '02', tag: 'Write', title: 'Answer-writing practice', desc: 'Board-style answers, checked with written feedback.' },
+  { n: '03', tag: 'Test', title: 'A short weekly test', desc: 'Timed, then reviewed together in the next class.' },
+  { n: '04', tag: 'Report', title: 'Parents see progress', desc: 'Scores and attendance, every week, in plain language.' },
 ];
 
 export function WhyUs() {
   return (
-    <section className="py-24 bg-brand-canvas" id="about">
+    <section id="how-it-works" className="py-20 sm:py-24">
       <Container>
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <H2 className="mb-6">Why Choose Saarthi Classes?</H2>
-          <Body>
-            We don&apos;t just teach psychology; we prepare students for academic excellence
-            and real-world application through a structured, supportive environment.
-          </Body>
+        <div className="mb-12 max-w-xl">
+          <Eyebrow className="mb-3">How it works</Eyebrow>
+          <H2 className="mb-3">The same rhythm every week</H2>
+          <Body>So students always know what comes next, and nothing is left to the night before the exam.</Body>
         </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {features.map((feature, i) => (
-            <div key={i} className="bg-white p-8 rounded-3xl border border-brand-border shadow-sm hover:shadow-[0_20px_40px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-1">
-              <div className="w-14 h-14 rounded-2xl bg-brand-primary/10 flex items-center justify-center mb-6">
-                <feature.icon className="h-7 w-7 text-brand-primary" />
-              </div>
-              <h3 className="font-serif text-xl font-semibold text-brand-text mb-3">{feature.title}</h3>
-              <p className="font-sans text-brand-text-muted leading-relaxed">{feature.desc}</p>
-            </div>
+        <ol className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          {steps.map((s, i) => (
+            <li key={s.n} className={`flex flex-col gap-2.5 border-t-2 pt-5 ${i === steps.length - 1 ? 'border-marigold-500' : 'border-ink-900'}`}>
+              <p className="text-[13px] font-semibold text-marigold-700">
+                {s.n} · {s.tag}
+              </p>
+              <h3 className="text-xl font-semibold text-ink-900">{s.title}</h3>
+              <p className="text-[16px] leading-relaxed text-ink-500">{s.desc}</p>
+            </li>
           ))}
-        </div>
+        </ol>
       </Container>
     </section>
   );

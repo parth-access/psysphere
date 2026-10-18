@@ -76,15 +76,15 @@ export function TodaysFocus() {
   const completedCount = tasks.filter((t) => t.completed).length;
 
   return (
-    <div className="bg-white border border-stone-200/80 rounded-3xl p-6 shadow-3xs space-y-4">
+    <div className="bg-white border border-line/80 rounded-2xl p-6 space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600 border border-amber-100">
+          <div className="w-8 h-8 rounded-lg bg-marigold-100 flex items-center justify-center text-marigold-700 border border-marigold-100">
             <ListTodo className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="text-sm font-bold text-stone-900">Today&apos;s Focus</h3>
-            <p className="text-[11px] text-stone-500">
+            <h3 className="text-sm font-bold text-ink-900">Today&apos;s Focus</h3>
+            <p className="text-[11px] text-ink-500">
               {tasks.length > 0 
                 ? `${completedCount} of ${tasks.length} tasks completed`
                 : "Your notepad is clear"}
@@ -104,9 +104,9 @@ export function TodaysFocus() {
 
       {/* Task list */}
       {tasks.length === 0 ? (
-        <div className="text-center py-6 border border-dashed border-stone-200 rounded-2xl bg-stone-50/50">
-          <p className="text-xs text-stone-500 font-medium">No tasks on your plate for today!</p>
-          <p className="text-[10px] text-stone-400 mt-0.5">Add a quick note or task below to stay focused.</p>
+        <div className="text-center py-6 border border-dashed border-line rounded-2xl bg-paper/50">
+          <p className="text-xs text-ink-500 font-medium">No tasks on your plate for today!</p>
+          <p className="text-[10px] text-ink-500 mt-0.5">Add a quick note or task below to stay focused.</p>
         </div>
       ) : (
         <div className="space-y-2">
@@ -115,27 +115,27 @@ export function TodaysFocus() {
               key={task.id} 
               className={`flex items-start justify-between gap-3 p-3 rounded-xl border transition-all group ${
                 task.completed 
-                  ? "bg-stone-50/70 border-stone-150/50 text-stone-400 opacity-80" 
-                  : "bg-white border-stone-200/60 text-stone-700 hover:border-stone-300"
+                  ? "bg-paper/70 border-line/50 text-ink-500 opacity-80" 
+                  : "bg-white border-line/60 text-ink-700 hover:border-line"
               }`}
             >
               <button 
                 onClick={() => handleToggle(task.id)}
-                className="pt-0.5 text-stone-400 hover:text-brand-primary transition-colors shrink-0"
+                className="pt-0.5 text-ink-500 hover:text-brand-primary transition-colors shrink-0"
               >
                 {task.completed ? (
-                  <CheckSquare className="w-4 h-4 text-emerald-600" />
+                  <CheckSquare className="w-4 h-4 text-sage-600" />
                 ) : (
-                  <Square className="w-4 h-4 text-stone-300 group-hover:text-stone-400" />
+                  <Square className="w-4 h-4 text-ink-300 group-hover:text-ink-500" />
                 )}
               </button>
 
               <div className="flex-1 min-w-0">
-                <span className={`text-xs block leading-relaxed break-words font-medium ${task.completed ? "line-through text-stone-400" : "text-stone-800"}`}>
+                <span className={`text-xs block leading-relaxed break-words font-medium ${task.completed ? "line-through text-ink-500" : "text-ink-900"}`}>
                   {task.text}
                 </span>
                 {task.category && !task.completed && (
-                  <span className="inline-block text-[9px] font-bold text-stone-400 uppercase tracking-wider mt-0.5">
+                  <span className="inline-block text-[9px] font-bold text-ink-500 uppercase tracking-wider mt-0.5">
                     {task.category}
                   </span>
                 )}
@@ -143,7 +143,7 @@ export function TodaysFocus() {
 
               <button 
                 onClick={() => handleDeleteTask(task.id)}
-                className="opacity-0 group-hover:opacity-100 p-1 text-stone-300 hover:text-rose-500 rounded-md hover:bg-rose-50 transition-all shrink-0 self-center"
+                className="opacity-0 group-hover:opacity-100 p-1 text-ink-300 hover:text-rose-600 rounded-md hover:bg-rose-50 transition-all shrink-0 self-center"
               >
                 <Trash2 className="w-3.5 h-3.5" />
               </button>
@@ -159,11 +159,11 @@ export function TodaysFocus() {
           value={newTaskText}
           onChange={(e) => setNewTaskText(e.target.value)}
           placeholder="Add a custom task for today..."
-          className="flex-1 bg-stone-50 border border-stone-200 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/20 rounded-xl px-3 py-2 text-xs text-stone-800 placeholder-stone-400 focus:outline-none transition-all"
+          className="flex-1 bg-paper border border-line focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/20 rounded-xl px-3 py-2 text-xs text-ink-900 placeholder-stone-400 focus:outline-none transition-all"
         />
         <button 
           type="submit"
-          className="p-2 bg-stone-900 hover:bg-stone-800 text-white rounded-xl transition-colors cursor-pointer shrink-0"
+          className="p-2 bg-ink-900 hover:bg-ink-900 text-white rounded-xl transition-colors cursor-pointer shrink-0"
         >
           <Plus className="w-4 h-4" />
         </button>

@@ -58,8 +58,8 @@ export default function BoardsCuetCoursePage() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button href="/book-demo" className="!px-8 !py-4">
-                Book Free Demo
+              <Button href="/workshops" className="!px-8 !py-4">
+                Join a Free Workshop
               </Button>
               <Button href="/contact" variant="secondary" className="!px-8 !py-4">
                 Contact Teacher
@@ -222,11 +222,11 @@ export default function BoardsCuetCoursePage() {
           <div className="max-w-2xl mx-auto">
             <h2 className="font-serif text-3xl md:text-4xl font-semibold mb-6">Elevate Your Academic Potential</h2>
             <p className="text-white/80 mb-8 max-w-lg mx-auto">
-              Book a complimentary demo session with Dravina Gupta and experience our integrated, board-and-CUET methodology.
+              Join a free live workshop with Dravina Gupta and experience our integrated, board-and-CUET methodology.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button href="/book-demo" className="!px-8">
-                Book Free Demo
+              <Button href="/workshops" className="!px-8">
+                Join a Free Workshop
               </Button>
               <Button href="/contact" variant="secondary" className="!px-8 border-white/20 text-white hover:bg-white/10">
                 Contact Now

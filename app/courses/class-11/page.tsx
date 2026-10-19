@@ -61,8 +61,8 @@ export default function Class11CoursePage() {
               <Button href="/workshops" className="!px-8 !py-4">
                 Join a Free Workshop
               </Button>
-              <Button href="/contact" variant="secondary" className="!px-8 !py-4">
-                Contact Teacher
+              <Button href="/join?class=class_11&track=standard" variant="outline" className="!px-8 !py-4">
+                Join this course
               </Button>
             </div>
           </div>
@@ -111,7 +111,7 @@ export default function Class11CoursePage() {
       <section className="py-20 bg-white border-b border-brand-border">
         <Container>
           <div className="max-w-4xl mx-auto">
-            <H2 className="mb-4 text-center">Program Features</H2>
+            <H2 className="mb-4 text-center">What’s included</H2>
             <p className="text-center text-brand-text-muted mb-12 max-w-xl mx-auto">
               A comprehensive toolkit for every student to thrive under Dravina Gupta&apos;s personalized care.
             </p>

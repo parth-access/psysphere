@@ -185,7 +185,7 @@ export function renderBaseEmailLayout(title: string, contentHtml: string): strin
       <div class="wrapper">
         <div class="container">
           <div class="header">
-            <div class="logo-box">S</div>
+            <img src="https://www.saarthilife.com/saarthi-logo.webp" alt="Saarthi" height="40" style="height:40px;width:auto;border:0;" />
             <div class="brand-name">Saarthi Classes</div>
           </div>
           <div class="body-content">

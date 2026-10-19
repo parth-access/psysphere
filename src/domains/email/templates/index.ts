@@ -10,6 +10,7 @@ import type {
   EnrollmentConfirmedPayload,
   PasswordSetupPayload,
   TeacherActivationPayload,
+  WeeklyReportPayload,
 } from "../types";
 
 /** Escape user-supplied text before putting it into email HTML. */
@@ -189,4 +190,29 @@ export function getTeacherActivationTemplate(p: TeacherActivationPayload): strin
     ${signOff}
   `;
   return renderBaseEmailLayout("Your teacher account | Saarthi Classes", content);
+}
+
+/* ------------------------------------------------------------------ */
+/* Weekly parent report                                                */
+/* ------------------------------------------------------------------ */
+
+export function getWeeklyReportTemplate(p: WeeklyReportPayload): string {
+  const list = (items: string[]) => (items.length ? `<ul class="bullet-list">${items.map((i) => `<li class="bullet-item">${i}</li>`).join("")}</ul>` : `<p>None this week.</p>`);
+  const content = `
+    <h1>${e(p.studentName)}’s week</h1>
+    <p>${e(p.weekLabel)} · ${e(p.batchName)}</p>
+    <div class="highlight-box">
+      ${row("Classes attended", p.totalClasses ? `${p.attended} of ${p.totalClasses}` : "No classes this week")}
+    </div>
+    <h2>Marks</h2>
+    ${list(p.results.map((r) => `<strong>${e(r.title)}</strong>: ${e(r.marks)} / ${e(r.max)}${r.feedback ? `. “${e(r.feedback)}”` : ""}`))}
+    <h2>Work still to submit</h2>
+    ${list(p.pendingWork.map((w) => `${e(w.title)} (due ${e(w.dueText)})`))}
+    <h2>Coming up</h2>
+    ${list(p.upcoming.map((u) => `${e(u.title)}, ${e(u.whenText)}`))}
+    ${button(p.dashboardUrl, "Open student dashboard")}
+    <p>Questions? Just reply to this email.</p>
+    ${signOff}
+  `;
+  return renderBaseEmailLayout("Weekly progress | Saarthi Classes", content);
 }

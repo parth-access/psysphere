@@ -22,6 +22,7 @@ export const workshopRegistrationSchema = personSchema.extend({
 });
 
 export const joinRequestSchema = personSchema.extend({
+  parentEmail: z.string().trim().toLowerCase().email("Enter a valid parent email").optional().or(z.literal("")).transform((v) => v || null),
   track: z.enum(["standard", "cuet"], { message: "Choose a course" }),
   planId: z.string().min(1, "Choose a plan"),
   batchId: z.string().uuid("Choose a batch"),

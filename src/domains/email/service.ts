@@ -15,6 +15,7 @@ import type {
   EnrollmentConfirmedPayload,
   PasswordSetupPayload,
   TeacherActivationPayload,
+  WeeklyReportPayload,
 } from "./types";
 
 import {
@@ -28,6 +29,7 @@ import {
   getEnrollmentConfirmedTemplate,
   getPasswordSetupTemplate,
   getTeacherActivationTemplate,
+  getWeeklyReportTemplate,
 } from "./templates";
 
 /* ============================================================
@@ -261,6 +263,10 @@ export class EmailService {
 
   sendPasswordSetup(to: string, p: PasswordSetupPayload, userId?: string) {
     return this.send(to, "Set your password | Saarthi Classes", getPasswordSetupTemplate(p), "password_setup", "profile", userId);
+  }
+
+  sendWeeklyReport(to: string, p: WeeklyReportPayload, studentId?: string) {
+    return this.send(to, `${p.studentName}’s week at Saarthi Classes`, getWeeklyReportTemplate(p), "weekly_report", "profile", studentId);
   }
 
   sendTeacherActivation(to: string, p: TeacherActivationPayload, teacherId?: string): Promise<SendEmailResponse> {

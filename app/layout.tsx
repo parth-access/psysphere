@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Hanken_Grotesk, Fraunces } from 'next/font/google';
 import './globals.css'; // Global styles
+import { SITE } from '@/constants/site';
 
 const sans = Hanken_Grotesk({
   subsets: ['latin'],
@@ -15,6 +16,8 @@ const serif = Fraunces({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE.url),
+  icons: { icon: SITE.logoUrl, apple: SITE.logoUrl },
   title: 'Saarthi Classes — Psychology for Class 11, 12 & CUET',
   description: 'Academic workspace built specifically for Class 11 and Class 12 Psychology coaching.',
   openGraph: {

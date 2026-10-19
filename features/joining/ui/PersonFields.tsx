@@ -6,10 +6,12 @@ export function PersonFields({
   errors,
   defaultClass,
   showClass = true,
+  showParentEmail = false,
 }: {
   errors: FieldErrors;
   defaultClass?: string;
   showClass?: boolean;
+  showParentEmail?: boolean;
 }) {
   return (
     <>
@@ -45,6 +47,11 @@ export function PersonFields({
             <TextInput name="parentPhone" type="tel" inputMode="tel" placeholder="98765 43210" required error={errors.parentPhone} />
           </Field>
         </div>
+        {showParentEmail && (
+          <Field label="Parent’s email (optional)" name="parentEmail" error={errors.parentEmail} hint="We send a short progress report here every week">
+            <TextInput name="parentEmail" type="email" error={errors.parentEmail} />
+          </Field>
+        )}
       </FormSection>
 
       {/* Honeypot for bots, hidden from people and screen readers */}

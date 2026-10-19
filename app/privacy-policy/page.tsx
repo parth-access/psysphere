@@ -16,7 +16,7 @@ export default function PrivacyPolicyPage() {
               Legal Policy
             </span>
             <H1 className="mb-4">Privacy Policy</H1>
-            <p className="text-sm text-brand-text-muted">Last Updated: August 2, 2026</p>
+            <p className="text-sm text-brand-text-muted">Last Updated: October 19, 2026</p>
           </div>
         </Container>
       </section>
@@ -34,14 +34,14 @@ export default function PrivacyPolicyPage() {
             <div>
               <h3 className="font-serif text-lg font-semibold text-brand-text mb-3">2. Accounts & Onboarding</h3>
               <p>
-                When you register for a student or teacher account with Saarthi Classes, we collect registration details including your full name, email address, school grade, parent/guardian contact info, and study preferences. This data is strictly used to provision your personalized learning dashboard, assign batches, and communicate important classroom updates.
+                When you register for a student or teacher account with Saarthi Classes, we collect registration details including the student’s full name, email address, mobile number and class, and a parent or guardian’s name and mobile number. This data is strictly used to provision your personalized learning dashboard, assign batches, and communicate important classroom updates.
               </p>
             </div>
 
             <div>
               <h3 className="font-serif text-lg font-semibold text-brand-text mb-3">3. Data Collection & Usage</h3>
               <p>
-                We collect information directly provided by you during registration or demo-booking, including contact emails, student answers, feedback, and performance tracking sheets. This information is processed to maintain academic tracking, provide comprehensive performance feedback, and personalize your educational path.
+                We collect information you give us when you register for a free workshop, request a seat in a batch, contact us, or use the student dashboard, including contact details, attendance, assignment submissions, test scores and feedback. This information is processed to maintain academic tracking, provide comprehensive performance feedback, and personalize your educational path.
               </p>
             </div>
 
@@ -69,7 +69,7 @@ export default function PrivacyPolicyPage() {
             <div>
               <h3 className="font-serif text-lg font-semibold text-brand-text mb-3">7. Third-Party Services</h3>
               <p>
-                We never sell or trade student data to third-party ad brokers. We only share essential, scoped information with verified sub-processors such as email delivery networks, hosting environments, and database storage modules necessary to run the student experience.
+                We never sell or trade student data to third-party ad brokers. We only share the information needed with the service providers that run Saarthi Classes: Razorpay (payments; we never see or store your card or bank details), Google (Calendar and Meet links for classes), Resend (email delivery), Supabase (database, login and file storage) and Vercel (hosting).
               </p>
             </div>
 

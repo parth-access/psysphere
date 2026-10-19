@@ -61,8 +61,8 @@ export default function Class12CoursePage() {
               <Button href="/workshops" className="!px-8 !py-4">
                 Join a Free Workshop
               </Button>
-              <Button href="/contact" variant="secondary" className="!px-8 !py-4">
-                Contact Teacher
+              <Button href="/join?class=class_12&track=standard" variant="outline" className="!px-8 !py-4">
+                Join this course
               </Button>
             </div>
           </div>
@@ -111,7 +111,7 @@ export default function Class12CoursePage() {
       <section className="py-20 bg-white border-b border-brand-border">
         <Container>
           <div className="max-w-4xl mx-auto">
-            <H2 className="mb-4 text-center">Program Features</H2>
+            <H2 className="mb-4 text-center">What’s included</H2>
             <p className="text-center text-brand-text-muted mb-12 max-w-xl mx-auto">
               Strategic support designed to maximize board scoring potential while keeping pressure levels low.
             </p>
@@ -189,7 +189,7 @@ export default function Class12CoursePage() {
             <H2 className="mb-10 text-center">Frequently Asked Questions</H2>
             <div className="space-y-6">
               {[
-                { q: "Is this course aligned with the latest CBSE syllabus?", a: "Yes. The program is fully updated and in perfect alignment with the latest CBSE guidelines, NCERT textbook, and board exam marking pattern." },
+                { q: "Is this course aligned with the latest CBSE syllabus?", a: "Yes. The course is fully updated and in perfect alignment with the latest CBSE guidelines, NCERT textbook, and board exam marking pattern." },
                 { q: "Does the teacher review answers individually?", a: "Absolutely. Every test and assignment undergoes meticulous individual review by Dravina Gupta. Students receive detailed feedback on their answer structures, presentation, and content." },
                 { q: "What if a student misses a class?", a: "Recorded backups of classes are securely available, ensuring no student lags behind in their preparation." },
               ].map((item, i) => (

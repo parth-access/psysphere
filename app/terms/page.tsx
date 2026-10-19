@@ -15,7 +15,7 @@ export default function TermsAndConditionsPage() {
               Legal Terms
             </span>
             <H1 className="mb-4">Terms &amp; Conditions</H1>
-            <p className="text-sm text-brand-text-muted">Last Updated: August 2, 2026</p>
+            <p className="text-sm text-brand-text-muted">Last Updated: October 19, 2026</p>
           </div>
         </Container>
       </section>
@@ -47,7 +47,7 @@ export default function TermsAndConditionsPage() {
             <div>
               <h3 className="font-serif text-lg font-semibold text-brand-text mb-3">4. Payments &amp; Fee Terms</h3>
               <p>
-                Class fees must be paid in full or installments as agreed upon prior to joining the specific academic batch. All pricing figures on the platform are in Indian Rupees (INR) unless specified otherwise. Access to live classrooms and student dashboards may be suspended if recurring fees are not paid on time.
+                Fees are shown upfront for each plan and are paid online through Razorpay before a student joins a batch. A seat is confirmed only after the payment succeeds; some batches also need approval from Saarthi Classes before payment. All pricing figures on the platform are in Indian Rupees (INR) unless specified otherwise. Access to live classrooms and student dashboards may be suspended if recurring fees are not paid on time.
               </p>
             </div>
 

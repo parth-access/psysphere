@@ -38,7 +38,7 @@ export default function CuetUgCoursePage() {
                 <Clock className="h-5 w-5 text-brand-primary shrink-0" />
                 <div>
                   <span className="block text-xs text-brand-text-muted uppercase tracking-wider font-semibold">Format</span>
-                  <span className="text-sm font-medium text-brand-text">Intensive Crash Program</span>
+                  <span className="text-sm font-medium text-brand-text">Focused CUET course</span>
                 </div>
               </div>
               <div className="flex items-center gap-3">
@@ -61,8 +61,8 @@ export default function CuetUgCoursePage() {
               <Button href="/workshops" className="!px-8 !py-4">
                 Join a Free Workshop
               </Button>
-              <Button href="/contact" variant="secondary" className="!px-8 !py-4">
-                Contact Teacher
+              <Button href="/join?class=class_12&track=cuet" variant="outline" className="!px-8 !py-4">
+                Join this course
               </Button>
             </div>
           </div>
@@ -121,7 +121,7 @@ export default function CuetUgCoursePage() {
       <section className="py-20 bg-white border-b border-brand-border">
         <Container>
           <div className="max-w-4xl mx-auto">
-            <H2 className="mb-4 text-center">Program Features</H2>
+            <H2 className="mb-4 text-center">What’s included</H2>
             <p className="text-center text-brand-text-muted mb-12 max-w-xl mx-auto">
               Intense, targeted tools built to maximize speeds and secure 100 percentile ranks.
             </p>

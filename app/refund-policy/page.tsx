@@ -17,7 +17,7 @@ export default function RefundPolicyPage() {
               Tuition Policy
             </span>
             <H1 className="mb-4">Refund Policy</H1>
-            <p className="text-sm text-brand-text-muted">Last Updated: August 2, 2026</p>
+            <p className="text-sm text-brand-text-muted">Last Updated: October 19, 2026</p>
           </div>
         </Container>
       </section>
@@ -27,9 +27,9 @@ export default function RefundPolicyPage() {
         <Container>
           <div className="max-w-3xl mx-auto bg-white p-10 md:p-12 rounded-2xl border border-brand-border space-y-8 text-sm text-brand-text leading-relaxed">
             <div>
-              <h3 className="font-serif text-lg font-semibold text-brand-text mb-3">1. Transparency &amp; Demos First</h3>
+              <h3 className="font-serif text-lg font-semibold text-brand-text mb-3">1. Free Workshops First</h3>
               <p>
-                We believe that every student deserves a learning environment that matches their pace. To guarantee transparency, Saarthi Classes provides a completely free, complimentary demo class with Dravina Gupta prior to any tuition payment. This ensures that you can experience our conceptual and compassionate teaching firsthand before making any financial commitment.
+                We believe that every student deserves a learning environment that matches their pace. That is why Saarthi Classes runs free live workshops with Dravina Gupta, open to anyone before they pay anything. You can experience the teaching first, then decide whether to join a batch. All fees are paid online through Razorpay, and a seat is confirmed only once the payment succeeds.
               </p>
             </div>
 
@@ -61,7 +61,7 @@ export default function RefundPolicyPage() {
                 To request a refund, please send a simple, direct message through our <Link href="/contact" className="font-semibold text-brand-primary hover:underline">Contact Form</Link> with your full name, registered batch name, date of enrollment, and billing receipt. 
               </p>
               <p className="mt-2">
-                Our team handles these requests with utmost empathy and respect. Once approved, the refund will be credited back to your original payment mode within <span className="font-semibold text-brand-text">5 to 7 business days</span>.
+                Our team handles these requests with utmost empathy and respect. Once approved, the refund will be issued through Razorpay to your original payment method (UPI, card, net banking or wallet) within <span className="font-semibold text-brand-text">5 to 7 business days</span>.
               </p>
             </div>
           </div>

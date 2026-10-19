@@ -24,7 +24,7 @@ export default function BoardsCuetCoursePage() {
             </Link>
             
             <div className="inline-block py-1 px-3 rounded-full bg-brand-primary/10 text-brand-primary text-xs font-bold tracking-widest uppercase mb-6">
-              Class 12 • Dual Preparation Program
+              Class 12 • Boards + CUET
             </div>
             
             <H1 className="mb-6">Boards + CUET Integrated</H1>
@@ -61,8 +61,8 @@ export default function BoardsCuetCoursePage() {
               <Button href="/workshops" className="!px-8 !py-4">
                 Join a Free Workshop
               </Button>
-              <Button href="/contact" variant="secondary" className="!px-8 !py-4">
-                Contact Teacher
+              <Button href="/join?class=class_12&track=cuet" variant="outline" className="!px-8 !py-4">
+                Join this course
               </Button>
             </div>
           </div>
@@ -121,7 +121,7 @@ export default function BoardsCuetCoursePage() {
       <section className="py-20 bg-white border-b border-brand-border">
         <Container>
           <div className="max-w-4xl mx-auto">
-            <H2 className="mb-4 text-center">Program Features</H2>
+            <H2 className="mb-4 text-center">What’s included</H2>
             <p className="text-center text-brand-text-muted mb-12 max-w-xl mx-auto">
               A holistic ecosystem providing comprehensive prep for school excellence and college admissions.
             </p>

@@ -17,6 +17,7 @@ export * from "./core/enrollments";
 export * from "./core/emailDeliveries";
 export * from "./core/workshops";
 export * from "./core/joinRequests";
+export * from "./core/contactMessages";
 
 /* ============================================================
  * Academic
@@ -27,4 +28,5 @@ export * from "./academic/attendance";
 export * from "./academic/assignments";
 export * from "./academic/assignmentAttempts";
 export * from "./academic/evaluations";
+export * from "./academic/studyMaterials";
 

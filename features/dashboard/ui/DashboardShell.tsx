@@ -15,8 +15,15 @@ import {
   UserPlus,
   Menu,
   X,
+  Inbox,
+  IndianRupee,
+  CalendarCheck,
+  ClipboardList,
+  FolderOpen,
+  UserRound,
 } from "lucide-react";
 import { signOutAction } from "@/src/domains/auth/actions";
+import { Logo } from "@/features/marketing/ui/Logo";
 
 type Profile = { fullName: string; role: string } | null | undefined;
 
@@ -26,9 +33,17 @@ const NAV_ITEMS = [
   { label: "Today", href: "/dashboard/student", icon: LayoutDashboard, roles: ["student"] },
   { label: "Workshops", href: "/dashboard/workshops", icon: Sparkles, roles: ["admin"] },
   { label: "Join requests", href: "/dashboard/join-requests", icon: UserPlus, roles: ["admin"] },
+  { label: "Messages", href: "/dashboard/messages", icon: Inbox, roles: ["admin"] },
+  { label: "Payments", href: "/dashboard/payments", icon: IndianRupee, roles: ["admin"] },
   { label: "Students", href: "/dashboard/students", icon: Users, roles: ["admin"] },
   { label: "Batches", href: "/dashboard/batches", icon: Layers, roles: ["admin"] },
   { label: "Classes", href: "/dashboard/classes", icon: BookOpen, roles: ["admin", "teacher"] },
+  { label: "Attendance", href: "/dashboard/attendance", icon: CalendarCheck, roles: ["admin", "teacher"] },
+  { label: "Assignments", href: "/dashboard/assignments", icon: ClipboardList, roles: ["admin", "teacher", "student"] },
+  { label: "Study material", href: "/dashboard/materials", icon: FolderOpen, roles: ["admin", "teacher", "student"] },
+  { label: "My classes", href: "/dashboard/my-classes", icon: BookOpen, roles: ["student"] },
+  { label: "Fees & payments", href: "/dashboard/my-payments", icon: IndianRupee, roles: ["student"] },
+  { label: "Profile", href: "/dashboard/profile", icon: UserRound, roles: ["admin", "teacher", "student"] },
   { label: "Teachers", href: "/dashboard/teachers", icon: GraduationCap, roles: ["admin"] },
   { label: "Settings", href: "/dashboard/settings", icon: Settings, roles: ["admin"] },
 ];
@@ -44,13 +59,8 @@ function SidebarContent({ profile, onNavigate }: { profile: Profile; onNavigate?
 
   return (
     <div className="flex h-full flex-col gap-8 bg-ink-900 px-4 py-6 text-ink-300">
-      <Link href="/" className="flex items-center gap-2.5 px-2 font-serif text-xl font-semibold text-paper" onClick={onNavigate}>
-        <svg width="24" height="24" viewBox="0 0 28 28" aria-hidden="true">
-          <circle cx="14" cy="14" r="12" fill="none" stroke="#FAF6EF" strokeWidth="2" />
-          <path d="M6 18 C 11 18, 12 10, 18 10" fill="none" stroke="#FAF6EF" strokeWidth="2" strokeLinecap="round" />
-          <circle cx="19" cy="10" r="2.5" fill="#E3962B" />
-        </svg>
-        Saarthi Classes
+      <Link href="/" className="px-2" onClick={onNavigate} aria-label="Saarthi Classes home">
+        <Logo tone="paper" />
       </Link>
 
       <nav aria-label="Dashboard" className="flex flex-1 flex-col gap-1 overflow-y-auto">
@@ -137,7 +147,7 @@ export function DashboardShell({ profile, children }: { profile: Profile; childr
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
-          <span className="font-serif text-lg font-semibold">Saarthi Classes</span>
+          <Logo />
         </header>
         <main id="main" className="flex-1 px-4 py-8 sm:px-6 lg:px-10 lg:py-10">
           <div className="mx-auto max-w-6xl">{children}</div>

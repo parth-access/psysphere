@@ -28,8 +28,7 @@ import {
   Compass,
   ArrowUpRight,
   TrendingUp,
-  Award
-} from "lucide-react";
+  Award, ChevronRight } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -513,23 +512,10 @@ export default async function TeacherDashboardPage() {
 
               {/* Future Action Stubs / Placeholders */}
               <div className="pt-3 border-t border-line space-y-2">
-                <span className="block text-[10px] font-bold text-ink-500 uppercase tracking-widest px-1 mb-1.5">Coming Soon</span>
-                
-                <div className="flex items-center justify-between px-4 py-2.5 rounded-xl border border-line text-ink-500/80 hover:bg-paper/40 transition-colors select-none">
-                  <div className="flex items-center gap-2.5">
-                    <FileText className="w-4 h-4 text-ink-500/60" />
-                    <span className="text-xs font-medium">Teaching Notes</span>
-                  </div>
-                  <span className="text-[9px] px-1.5 py-0.5 bg-paper-deep text-ink-500 rounded-md font-bold uppercase tracking-wider">Soon</span>
-                </div>
-
-                <div className="flex items-center justify-between px-4 py-2.5 rounded-xl border border-line text-ink-500/80 hover:bg-paper/40 transition-colors select-none">
-                  <div className="flex items-center gap-2.5">
-                    <HelpCircle className="w-4 h-4 text-ink-500/60" />
-                    <span className="text-xs font-medium">Student Questions</span>
-                  </div>
-                  <span className="text-[9px] px-1.5 py-0.5 bg-paper-deep text-ink-500 rounded-md font-bold uppercase tracking-wider">Soon</span>
-                </div>
+                <Link href="/dashboard/attendance" className="flex min-h-11 items-center justify-between rounded-xl border border-line px-4 text-sm font-medium text-ink-900 hover:bg-paper">Mark attendance<ChevronRight className="h-4 w-4 text-ink-500" aria-hidden="true" /></Link>
+                <Link href="/dashboard/assignments" className="flex min-h-11 items-center justify-between rounded-xl border border-line px-4 text-sm font-medium text-ink-900 hover:bg-paper">Set & grade assignments<ChevronRight className="h-4 w-4 text-ink-500" aria-hidden="true" /></Link>
+                <Link href="/dashboard/materials" className="flex min-h-11 items-center justify-between rounded-xl border border-line px-4 text-sm font-medium text-ink-900 hover:bg-paper">Share study material<ChevronRight className="h-4 w-4 text-ink-500" aria-hidden="true" /></Link>
+                <Link href="/dashboard/profile" className="flex min-h-11 items-center justify-between rounded-xl border border-line px-4 text-sm font-medium text-ink-900 hover:bg-paper">Profile & password<ChevronRight className="h-4 w-4 text-ink-500" aria-hidden="true" /></Link>
               </div>
 
             </div>

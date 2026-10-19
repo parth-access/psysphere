@@ -637,33 +637,11 @@ export default async function StudentDashboardPage() {
                 </Link>
               </div>
 
-              {/* Future Feature Placeholders with 'Coming Soon' indicator */}
               <div className="pt-3 border-t border-line space-y-2">
-                <span className="block text-[10px] font-bold text-ink-500 uppercase tracking-widest px-1 mb-1.5">Coming Soon</span>
-                
-                <div className="flex items-center justify-between px-4 py-2.5 rounded-xl border border-line text-ink-500 hover:bg-paper/40 transition-colors select-none">
-                  <div className="flex items-center gap-2.5">
-                    <HelpCircle className="w-4 h-4 text-ink-500/60" />
-                    <span className="text-xs font-medium">Ask My Instructor</span>
-                  </div>
-                  <span className="text-[9px] px-1.5 py-0.5 bg-paper-deep text-ink-500 rounded-md font-bold uppercase tracking-wider">Soon</span>
-                </div>
-
-                <div className="flex items-center justify-between px-4 py-2.5 rounded-xl border border-line text-ink-500 hover:bg-paper/40 transition-colors select-none">
-                  <div className="flex items-center gap-2.5">
-                    <BookOpen className="w-4 h-4 text-ink-500/60" />
-                    <span className="text-xs font-medium">Discussion Forum</span>
-                  </div>
-                  <span className="text-[9px] px-1.5 py-0.5 bg-paper-deep text-ink-500 rounded-md font-bold uppercase tracking-wider">Soon</span>
-                </div>
-
-                <div className="flex items-center justify-between px-4 py-2.5 rounded-xl border border-line text-ink-500 hover:bg-paper/40 transition-colors select-none">
-                  <div className="flex items-center gap-2.5">
-                    <Award className="w-4 h-4 text-ink-500/60" />
-                    <span className="text-xs font-medium">AI Study Revision</span>
-                  </div>
-                  <span className="text-[9px] px-1.5 py-0.5 bg-paper-deep text-ink-500 rounded-md font-bold uppercase tracking-wider">Soon</span>
-                </div>
+                <Link href="/dashboard/my-classes" className="flex min-h-11 items-center justify-between rounded-xl border border-line px-4 text-sm font-medium text-ink-900 hover:bg-paper">My classes & attendance<ChevronRight className="h-4 w-4 text-ink-500" aria-hidden="true" /></Link>
+                <Link href="/dashboard/assignments" className="flex min-h-11 items-center justify-between rounded-xl border border-line px-4 text-sm font-medium text-ink-900 hover:bg-paper">Assignments & results<ChevronRight className="h-4 w-4 text-ink-500" aria-hidden="true" /></Link>
+                <Link href="/dashboard/materials" className="flex min-h-11 items-center justify-between rounded-xl border border-line px-4 text-sm font-medium text-ink-900 hover:bg-paper">Study material<ChevronRight className="h-4 w-4 text-ink-500" aria-hidden="true" /></Link>
+                <Link href="/dashboard/my-payments" className="flex min-h-11 items-center justify-between rounded-xl border border-line px-4 text-sm font-medium text-ink-900 hover:bg-paper">Fees & receipts<ChevronRight className="h-4 w-4 text-ink-500" aria-hidden="true" /></Link>
               </div>
 
             </div>

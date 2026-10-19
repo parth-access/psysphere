@@ -160,7 +160,7 @@ export function JoinForm({
           {errors.batchId && <p className="text-[13px] font-medium text-rose-600">{errors.batchId}</p>}
         </FormSection>
 
-        <PersonFields errors={errors} showClass={false} />
+        <PersonFields errors={errors} showClass={false} showParentEmail />
       </div>
 
       <aside className="lg:sticky lg:top-28 lg:self-start">

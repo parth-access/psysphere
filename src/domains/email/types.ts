@@ -80,3 +80,15 @@ export interface TeacherActivationPayload {
   email: string;
   passwordSetupUrl: string;
 }
+
+export interface WeeklyReportPayload {
+  studentName: string;
+  batchName: string;
+  weekLabel: string;
+  attended: number;
+  totalClasses: number;
+  results: { title: string; marks: number; max: number; feedback?: string | null }[];
+  pendingWork: { title: string; dueText: string }[];
+  upcoming: { title: string; whenText: string }[];
+  dashboardUrl: string;
+}

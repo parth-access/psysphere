@@ -341,7 +341,7 @@ export default function ResetPasswordPage() {
                 <CheckCircle className="h-10 w-10 text-sage-600" />
               </div>
 
-              <h3 className="text-md font-serif font-semibold text-sage-600">
+              <h3 className="text-md font-serif text-sage-600">
                 Password Set Successfully
               </h3>
 
@@ -356,7 +356,7 @@ export default function ResetPasswordPage() {
                 <AlertCircle className="h-10 w-10 text-rose-600" />
               </div>
 
-              <h3 className="text-center text-md font-serif font-semibold text-rose-600">
+              <h3 className="text-center text-md font-serif text-rose-600">
                 Invalid or Expired Link
               </h3>
 
@@ -414,7 +414,7 @@ export default function ResetPasswordPage() {
                     onChange={(e) =>
                       setPassword(e.target.value)
                     }
-                    className="block w-full min-h-12 pl-10 pr-3 text-[16px] bg-surface border border-line rounded-xl text-ink-900 placeholder:text-ink-500/70 focus:outline-none focus:ring-2 focus:ring-ink-700/30 focus:border-ink-700 disabled:opacity-50"
+                    className="block w-full min-h-12 pl-10 pr-3 text-[16px] bg-surface border border-line rounded-xl text-ink-900 placeholder:text-ink-500/70 focus:outline-none focus:ring-2 focus:ring-forest-800/25 focus:border-forest-800 disabled:opacity-50"
                     placeholder="Min 8 characters"
                   />
                 </div>
@@ -445,7 +445,7 @@ export default function ResetPasswordPage() {
                     onChange={(e) =>
                       setConfirmPassword(e.target.value)
                     }
-                    className="block w-full min-h-12 pl-10 pr-3 text-[16px] bg-surface border border-line rounded-xl text-ink-900 placeholder:text-ink-500/70 focus:outline-none focus:ring-2 focus:ring-ink-700/30 focus:border-ink-700 disabled:opacity-50"
+                    className="block w-full min-h-12 pl-10 pr-3 text-[16px] bg-surface border border-line rounded-xl text-ink-900 placeholder:text-ink-500/70 focus:outline-none focus:ring-2 focus:ring-forest-800/25 focus:border-forest-800 disabled:opacity-50"
                     placeholder="Repeat password"
                   />
                 </div>
@@ -455,7 +455,7 @@ export default function ResetPasswordPage() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full min-h-12 flex justify-center items-center gap-2 px-4 rounded-xl font-semibold text-paper bg-ink-900 hover:bg-ink-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-700/40 disabled:opacity-60 transition-colors cursor-pointer"
+                  className="w-full min-h-12 flex justify-center items-center gap-2 px-4 rounded-full font-bold text-paper bg-forest-800 hover:bg-forest-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-700/40 disabled:opacity-60 transition-colors cursor-pointer"
                 >
                   {isLoading ? (
                     <>

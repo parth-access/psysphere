@@ -56,7 +56,7 @@ export default async function AttendancePage() {
                       <p className="font-semibold text-ink-900">{s.title}</p>
                       <p className="text-sm text-ink-500">{batchName} · {formatIST(s.startsAt)}</p>
                     </div>
-                    <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${done ? "bg-sage-100 text-sage-600" : "bg-marigold-100 text-marigold-700"}`}>
+                    <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${done ? "bg-sage-100 text-sage-600" : "bg-marigold-100 text-gold-700"}`}>
                       {done ? `Marked (${marked[s.id]})` : "Not marked"}
                     </span>
                   </Link>

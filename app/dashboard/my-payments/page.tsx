@@ -29,7 +29,7 @@ export default async function MyPaymentsPage() {
                   <p className="text-sm text-ink-500">{batchName} · paid {formatIST(r.paidAt, { dateStyle: "medium" })}</p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="font-serif text-xl font-semibold text-ink-900">{inr(r.amountInr)}</span>
+                  <span className="font-serif text-xl text-ink-900">{inr(r.amountInr)}</span>
                   <Link href={`/dashboard/my-payments/${r.id}`} className="inline-flex min-h-10 items-center rounded-xl border border-line px-4 text-sm font-semibold text-ink-900 hover:bg-paper">Receipt</Link>
                 </div>
               </li>

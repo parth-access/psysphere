@@ -64,7 +64,7 @@ export default async function MyClassesPage() {
                   <p className="text-sm text-ink-500">{s.topicTitle} · {batchName} · {formatIST(s.startsAt)}</p>
                 </div>
                 {s.status !== "cancelled" ? (
-                  <a href={s.meetingUrl} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-10 items-center gap-2 rounded-xl bg-ink-900 px-4 text-sm font-semibold text-paper hover:bg-ink-700">
+                  <a href={s.meetingUrl} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-10 items-center gap-2 rounded-full bg-forest-800 px-4 text-sm font-semibold text-paper hover:bg-forest-900">
                     <Video className="h-4 w-4" aria-hidden="true" /> Join
                   </a>
                 ) : <span className="text-sm font-semibold text-rose-600">Cancelled</span>}

@@ -58,7 +58,7 @@ function SidebarContent({ profile, onNavigate }: { profile: Profile; onNavigate?
   const items = NAV_ITEMS.filter((i) => i.roles.includes(role));
 
   return (
-    <div className="flex h-full flex-col gap-8 bg-ink-900 px-4 py-6 text-ink-300">
+    <div className="flex h-full flex-col gap-8 bg-forest-950 px-4 py-6 text-paper/70">
       <Link href="/" className="px-2" onClick={onNavigate} aria-label="Saarthi Classes home">
         <Logo tone="paper" />
       </Link>
@@ -74,11 +74,11 @@ function SidebarContent({ profile, onNavigate }: { profile: Profile; onNavigate?
               href={item.href}
               onClick={onNavigate}
               aria-current={active ? "page" : undefined}
-              className={`flex min-h-11 items-center gap-3 rounded-xl px-3 text-[15px] font-medium transition-colors ${
-                active ? "bg-ink-700 text-paper" : "hover:bg-ink-700/60 hover:text-paper"
+              className={`flex min-h-11 items-center gap-3 rounded-full px-4 text-[15px] font-semibold transition-colors ${
+                active ? "bg-forest-800 text-paper shadow-[inset_0_1px_0_rgb(255_255_255/0.08)]" : "hover:bg-paper/5 hover:text-paper"
               }`}
             >
-              <item.icon className={`h-[18px] w-[18px] ${active ? "text-marigold-500" : ""}`} aria-hidden="true" />
+              <item.icon className={`h-[18px] w-[18px] ${active ? "text-gold-400" : ""}`} aria-hidden="true" />
               {item.label}
             </Link>
           );
@@ -86,8 +86,8 @@ function SidebarContent({ profile, onNavigate }: { profile: Profile; onNavigate?
       </nav>
 
       {profile && (
-        <div className="flex items-center gap-3 rounded-xl bg-ink-700/50 p-3">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-marigold-500 text-xs font-bold text-ink-900">
+        <div className="flex items-center gap-3 rounded-[20px] bg-paper/5 p-3">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gold-500 text-xs font-bold text-ink-900">
             {initials(profile.fullName)}
           </div>
           <div className="min-w-0 flex-1">
@@ -95,7 +95,7 @@ function SidebarContent({ profile, onNavigate }: { profile: Profile; onNavigate?
             <p className="text-xs capitalize">{profile.role}</p>
           </div>
           <form action={signOutAction}>
-            <button type="submit" aria-label="Log out" className="flex h-9 w-9 items-center justify-center rounded-lg hover:bg-ink-700 hover:text-paper">
+            <button type="submit" aria-label="Log out" className="flex h-9 w-9 items-center justify-center rounded-full hover:bg-paper/10 hover:text-paper">
               <LogOut className="h-4 w-4" aria-hidden="true" />
             </button>
           </form>
@@ -129,7 +129,7 @@ export function DashboardShell({ profile, children }: { profile: Profile; childr
 
       {open && (
         <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true" aria-label="Menu">
-          <button type="button" aria-label="Close menu" className="absolute inset-0 bg-ink-900/50" onClick={() => setOpen(false)} />
+          <button type="button" aria-label="Close menu" className="absolute inset-0 bg-forest-950/60 backdrop-blur-sm" onClick={() => setOpen(false)} />
           <div className="relative h-full w-72 max-w-[85vw]">
             <SidebarContent profile={profile} onNavigate={() => setOpen(false)} />
           </div>

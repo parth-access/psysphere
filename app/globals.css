@@ -1,49 +1,82 @@
 @import "tailwindcss";
+
+/*
+ * Saarthi Classes design tokens.
+ * Forest green + gold come from the parent Saarthi brand (saarthilife.com and the Ψ logo).
+ * Pastels colour-code courses and give the student-facing pages some warmth.
+ */
 @theme {
-  --font-serif: var(--font-serif), "Fraunces", Georgia, serif;
-  --font-sans: var(--font-sans), "Hanken Grotesk", system-ui, sans-serif;
+  --font-serif: var(--font-serif), "Newsreader", Georgia, serif;
+  --font-sans: var(--font-sans), "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-hand: var(--font-hand), "Caveat", cursive;
 
-  /* Direction A: Ink & Marigold */
-  --color-ink-900: #1C2541;
-  --color-ink-700: #2E3A5F;
-  --color-ink-500: #5B6478;
-  --color-ink-300: #C9CEDB;
-  --color-ink-100: #E6E9F2;
-  --color-paper: #FAF6EF;
-  --color-paper-deep: #F1ECE3;
+  /* Brand */
+  --color-forest-950: #0F2E1E;
+  --color-forest-900: #164A2E;
+  --color-forest-800: #1F5E3B; /* Saarthi green */
+  --color-forest-700: #26704A;
+  --color-forest-500: #4E9A6E;
+  --color-forest-100: #DDEDE1;
+  --color-forest-50: #EFF6F0;
+  --color-gold-400: #F0BE4F;
+  --color-gold-500: #E6A520; /* Saarthi gold: fills only, never text on light */
+  --color-gold-700: #8C5E07; /* gold text on light */
+  --color-gold-100: #FCF0D2;
+
+  /* Pastels for course colour-coding and highlights */
+  --color-mint: #D6EBDC;
+  --color-lilac: #E6E0F4;
+  --color-peach: #F8DDCB;
+  --color-sky: #D9E9F3;
+  --color-butter: #FBEFC4;
+
+  /* Neutrals: green-tinted ink on warm paper */
+  --color-ink-900: #15281D;
+  --color-ink-700: #2C4235;
+  --color-ink-500: #5A6B60;
+  --color-ink-300: #C5CFC7;
+  --color-ink-100: #E7EDE6;
+  --color-paper: #FBF8F1;
+  --color-paper-deep: #F3EDE0;
   --color-surface: #FFFFFF;
-  --color-line: #E7E1D6;
-  --color-marigold-100: #FBEBD3;
-  --color-marigold-500: #E3962B; /* fills only, never text on light */
-  --color-marigold-700: #A2611A; /* accent text */
-  --color-sage-100: #E3EDE6;
-  --color-sage-600: #4F7A63;
-  --color-rose-100: #F6E1DF;
-  --color-rose-600: #B9473F;
+  --color-line: #E6DFCF;
 
-  /* Older names, now pointing at the new palette */
-  --color-brand-canvas: #FAF6EF;
+  /* Older accent names, kept so existing pages pick up the new palette */
+  --color-marigold-100: #FCF0D2;
+  --color-marigold-500: #E6A520;
+  --color-marigold-700: #8C5E07;
+  --color-sage-100: #DDEDE1;
+  --color-sage-600: #2E7A4F;
+  --color-rose-100: #F7E1DE;
+  --color-rose-600: #B3423A;
+
+  --color-brand-canvas: #FBF8F1;
   --color-brand-surface: #FFFFFF;
-  --color-brand-primary: #1C2541;
-  --color-brand-primary-hover: #2E3A5F;
-  --color-brand-accent: #E3962B;
-  --color-brand-text: #1C2541;
-  --color-brand-text-muted: #5B6478;
-  --color-brand-border: #E7E1D6;
-  --color-brand-success: #4F7A63;
-  --color-brand-danger: #B9473F;
-  --color-brand-ivory: #FAF6EF;
-  --color-brand-beige: #E7E1D6;
+  --color-brand-primary: #1F5E3B;
+  --color-brand-primary-hover: #164A2E;
+  --color-brand-accent: #E6A520;
+  --color-brand-accent-hover: #F0BE4F;
+  --color-brand-text: #15281D;
+  --color-brand-text-muted: #5A6B60;
+  --color-brand-border: #E6DFCF;
+  --color-brand-success: #2E7A4F;
+  --color-brand-danger: #B3423A;
+  --color-brand-ivory: #FBF8F1;
+  --color-brand-beige: #E6DFCF;
   --color-brand-cream: #FFFFFF;
-  --color-brand-stone-soft: #E7E1D6;
-  --color-brand-charcoal: #1C2541;
-  --color-brand-charcoal-muted: #5B6478;
-  --color-brand-sage: #1C2541;
-  --color-brand-sage-light: #FAF6EF;
+  --color-brand-stone-soft: #E6DFCF;
+  --color-brand-charcoal: #15281D;
+  --color-brand-charcoal-muted: #5A6B60;
+  --color-brand-sage: #1F5E3B;
+  --color-brand-sage-light: #EFF6F0;
 
-  /* Standard utilities mapped for styling */
+  --shadow-soft: 0 1px 2px rgb(21 40 29 / 0.04), 0 8px 24px -8px rgb(21 40 29 / 0.10);
+  --shadow-lift: 0 2px 4px rgb(21 40 29 / 0.05), 0 24px 48px -16px rgb(21 40 29 / 0.18);
+
   --animate-fade-in: fade-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   --animate-slide-up: slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-marquee: marquee 50s linear infinite;
+  --animate-float: float 6s ease-in-out infinite;
 }
 
 @keyframes fade-in {
@@ -54,15 +87,48 @@
   from { transform: translateY(20px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 }
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
 
 html, body {
-  background-color: var(--color-brand-canvas);
-  color: var(--color-brand-text);
+  background-color: var(--color-paper);
+  color: var(--color-ink-900);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
 
-/* Custom scrollbar matching the minimal aesthetic */
+/* Display serif: lighter weight and tighter tracking at large sizes */
+.font-serif {
+  letter-spacing: -0.02em;
+}
+
+::selection {
+  background: var(--color-gold-100);
+  color: var(--color-ink-900);
+}
+
+/* Faint notebook grid for hero and feature backgrounds */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgb(31 94 59 / 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(31 94 59 / 0.06) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -71,9 +137,9 @@ html, body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-brand-border);
+  background: var(--color-line);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #d6d3d1;
+  background: var(--color-ink-300);
 }

@@ -47,7 +47,7 @@ export default async function AssignmentPage({
         <ArrowLeft className="h-4 w-4" aria-hidden="true" /> All assignments
       </Link>
       <div>
-        <h1 className="font-serif text-[32px] font-semibold text-ink-900">{a.title}</h1>
+        <h1 className="font-serif text-[32px] text-ink-900">{a.title}</h1>
         <p className="text-ink-500">{row.batchName} · due {formatIST(a.dueAt)} · out of {max}</p>
       </div>
       <DashboardCard title="Instructions">
@@ -71,7 +71,7 @@ export default async function AssignmentPage({
         {submitted && <p role="status" className="rounded-xl bg-sage-100 px-4 py-3 text-sm font-medium text-sage-600">Submitted. You can edit it until results are out.</p>}
         {closed && mine?.ev && (
           <DashboardCard title="Your result">
-            <p className="font-serif text-4xl font-semibold text-ink-900">{Number(mine.ev.marksObtained)} <span className="text-xl text-ink-500">/ {max}</span></p>
+            <p className="font-serif text-4xl text-ink-900">{Number(mine.ev.marksObtained)} <span className="text-xl text-ink-500">/ {max}</span></p>
             {mine.ev.teacherFeedback && <p className="mt-4 whitespace-pre-line text-[15px] text-ink-900">{mine.ev.teacherFeedback}</p>}
           </DashboardCard>
         )}
@@ -87,10 +87,10 @@ export default async function AssignmentPage({
                 <label htmlFor="attachmentUrl" className="mb-1 block text-sm font-semibold text-ink-900">Link to a photo or document (optional)</label>
                 <input id="attachmentUrl" name="attachmentUrl" type="url" placeholder="https://drive.google.com/…" defaultValue={mine?.attempt.attachmentUrl ?? ""} className={input} />
               </div>
-              <button type="submit" className="min-h-11 rounded-xl bg-ink-900 px-6 text-sm font-semibold text-paper hover:bg-ink-700">
+              <button type="submit" className="min-h-11 rounded-full bg-forest-800 px-6 text-sm font-semibold text-paper hover:bg-forest-900">
                 {mine ? "Update submission" : "Submit"}
               </button>
-              {a.dueAt < new Date() && <p className="text-sm text-marigold-700">This is past the due date. It will be marked as late.</p>}
+              {a.dueAt < new Date() && <p className="text-sm text-gold-700">This is past the due date. It will be marked as late.</p>}
             </form>
           )}
         </DashboardCard>
@@ -157,7 +157,7 @@ export default async function AssignmentPage({
                           <label htmlFor={`f-${x.attempt.id}`} className="mb-1 block text-xs font-semibold text-ink-500">Feedback</label>
                           <input id={`f-${x.attempt.id}`} name="feedback" defaultValue={x.ev?.teacherFeedback ?? ""} className={input} />
                         </div>
-                        <button type="submit" className="min-h-11 rounded-xl bg-ink-900 px-5 text-sm font-semibold text-paper hover:bg-ink-700">
+                        <button type="submit" className="min-h-11 rounded-full bg-forest-800 px-5 text-sm font-semibold text-paper hover:bg-forest-900">
                           {x.ev ? "Update" : "Save marks"}
                         </button>
                       </form>

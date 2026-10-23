@@ -21,7 +21,7 @@ export default function ContactPage() {
       <div className="grid gap-12 lg:grid-cols-[1fr_1.2fr]">
         <section className="flex flex-col gap-6">
           <Eyebrow>Contact</Eyebrow>
-          <h1 className="font-serif text-4xl font-semibold leading-tight sm:text-5xl">Talk to us</h1>
+          <h1 className="font-serif text-[44px] leading-[1] sm:text-[60px]">Talk to us</h1>
           <p className="text-lg text-ink-500">
             Questions about batches, workshops or fees? Parents and students are both welcome to reach out.
           </p>
@@ -31,7 +31,7 @@ export default function ContactPage() {
                 <a
                   href={c.href}
                   {...(c.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                  className="flex items-center gap-4 rounded-2xl border border-line bg-surface p-4 hover:border-ink-300"
+                  className="flex items-center gap-4 rounded-[28px] border border-line bg-surface p-4 hover:border-ink-300"
                 >
                   <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-ink-100 text-ink-900">
                     <c.icon className="h-5 w-5" aria-hidden="true" />

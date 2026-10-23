@@ -55,7 +55,7 @@ export default async function JoinRequestsPage({
             key={t.id}
             href={`/dashboard/join-requests?tab=${t.id}`}
             aria-current={tab === t.id ? "page" : undefined}
-            className={`inline-flex min-h-10 items-center gap-2 rounded-xl px-4 text-sm font-semibold ${tab === t.id ? "bg-ink-900 text-paper" : "border border-line bg-white text-ink-900 hover:bg-paper"}`}
+            className={`inline-flex min-h-10 items-center gap-2 rounded-full px-4 text-sm font-semibold ${tab === t.id ? "bg-forest-800 text-paper" : "border border-line bg-white text-ink-900 hover:bg-paper"}`}
           >
             {t.label}
             <span className={`rounded-full px-2 text-xs ${tab === t.id ? "bg-ink-700" : "bg-paper-deep"}`}>{counts[t.id] ?? 0}</span>
@@ -76,7 +76,7 @@ export default async function JoinRequestsPage({
                   <div className="flex flex-wrap items-center gap-2">
                     <p className="font-semibold text-ink-900">{r.studentName}</p>
                     <StatusBadge status={r.status} />
-                    {r.workshopId && <span className="rounded-full bg-marigold-100 px-2 py-0.5 text-xs font-semibold text-marigold-700">From workshop</span>}
+                    {r.workshopId && <span className="rounded-full bg-marigold-100 px-2 py-0.5 text-xs font-semibold text-gold-700">From workshop</span>}
                   </div>
                   <p className="text-sm text-ink-500">{r.email} · {r.phone}</p>
                   <p className="text-sm text-ink-500">Parent: {r.parentName} · {r.parentPhone}</p>
@@ -95,7 +95,7 @@ export default async function JoinRequestsPage({
                   {(r.status === "pending" || r.status === "approved") && (
                     <form action={approveAction}>
                       <input type="hidden" name="id" value={r.id} />
-                      <button type="submit" className={`${btn} bg-ink-900 text-paper hover:bg-ink-700`}>
+                      <button type="submit" className={`${btn} bg-forest-800 text-paper hover:bg-forest-900`}>
                         {r.status === "pending" ? "Approve" : "Resend payment link"}
                       </button>
                     </form>
@@ -112,7 +112,7 @@ export default async function JoinRequestsPage({
                   {r.status === "paid" && (
                     <form action={retryEnrollAction}>
                       <input type="hidden" name="id" value={r.id} />
-                      <button type="submit" className={`${btn} bg-ink-900 text-paper hover:bg-ink-700`}>Retry account setup</button>
+                      <button type="submit" className={`${btn} bg-forest-800 text-paper hover:bg-forest-900`}>Retry account setup</button>
                     </form>
                   )}
                   {r.status === "enrolled" && r.studentProfileId && (

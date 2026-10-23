@@ -39,7 +39,7 @@ export function DetailsForm({
         </>
       )}
       <div className="flex items-center gap-4">
-        <button type="submit" disabled={pending} className="min-h-11 rounded-xl bg-ink-900 px-6 text-sm font-semibold text-paper hover:bg-ink-700 disabled:opacity-60">Save</button>
+        <button type="submit" disabled={pending} className="min-h-11 rounded-full bg-forest-800 px-6 text-sm font-semibold text-paper hover:bg-forest-900 disabled:opacity-60">Save</button>
         <Msg s={state} />
       </div>
     </form>
@@ -53,7 +53,7 @@ export function PasswordForm() {
       <div><label htmlFor="password" className={label}>New password</label><input id="password" name="password" type="password" autoComplete="new-password" minLength={8} required className={input} /></div>
       <div><label htmlFor="confirm" className={label}>Type it again</label><input id="confirm" name="confirm" type="password" autoComplete="new-password" required className={input} /></div>
       <div className="flex items-center gap-4">
-        <button type="submit" disabled={pending} className="min-h-11 rounded-xl bg-ink-900 px-6 text-sm font-semibold text-paper hover:bg-ink-700 disabled:opacity-60">Change password</button>
+        <button type="submit" disabled={pending} className="min-h-11 rounded-full bg-forest-800 px-6 text-sm font-semibold text-paper hover:bg-forest-900 disabled:opacity-60">Change password</button>
         <Msg s={state} />
       </div>
     </form>

@@ -12,9 +12,9 @@ const inr = (n: number) => `₹${n.toLocaleString("en-IN")}`;
 function Message({ icon, title, children }: { icon: React.ReactNode; title: string; children: React.ReactNode }) {
   return (
     <PublicShell>
-      <div className="mx-auto flex max-w-xl flex-col items-start gap-4 rounded-2xl border border-line bg-surface p-8">
+      <div className="mx-auto flex max-w-xl flex-col items-start gap-4 rounded-[28px] border border-line bg-surface p-8">
         {icon}
-        <h1 className="font-serif text-3xl font-semibold">{title}</h1>
+        <h1 className="font-serif text-3xl">{title}</h1>
         <div className="text-ink-500">{children}</div>
       </div>
     </PublicShell>
@@ -54,9 +54,9 @@ export default async function PayPage({ params }: { params: Promise<{ token: str
       <div className="mx-auto flex max-w-xl flex-col gap-6">
         <header className="flex flex-col gap-3">
           <Eyebrow>Last step</Eyebrow>
-          <h1 className="font-serif text-4xl font-semibold leading-tight">Confirm your seat, {r.studentName.split(" ")[0]}</h1>
+          <h1 className="font-serif text-4xl leading-tight">Confirm your seat, {r.studentName.split(" ")[0]}</h1>
         </header>
-        <div className="flex flex-col gap-5 rounded-2xl bg-ink-900 p-6 text-paper">
+        <div className="flex flex-col gap-5 rounded-[28px] bg-forest-900 p-6 text-paper">
           <dl className="flex flex-col gap-2 text-[15px]">
             <div className="flex justify-between gap-4"><dt className="text-ink-300">Batch</dt><dd className="text-right">{found.batchName}</dd></div>
             {found.schedule && <div className="flex justify-between gap-4"><dt className="text-ink-300">Timings</dt><dd className="text-right">{found.schedule}</dd></div>}
@@ -65,7 +65,7 @@ export default async function PayPage({ params }: { params: Promise<{ token: str
           </dl>
           <div className="flex items-baseline justify-between border-t border-ink-700 pt-4">
             <span className="text-ink-300">To pay</span>
-            <span className="font-serif text-3xl font-semibold">{inr(r.amountInr)}</span>
+            <span className="font-serif text-3xl">{inr(r.amountInr)}</span>
           </div>
           <PayButton token={token} label={`Pay ${inr(r.amountInr)}`} />
         </div>

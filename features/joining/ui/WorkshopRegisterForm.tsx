@@ -12,9 +12,9 @@ export function WorkshopRegisterForm({ workshopId, defaultClass }: { workshopId:
 
   if (state.status === "done") {
     return (
-      <div role="status" className="flex flex-col gap-3 rounded-2xl border border-line bg-surface p-6">
+      <div role="status" className="flex flex-col gap-3 rounded-[28px] border border-line bg-surface p-6">
         <CheckCircle2 className="h-8 w-8 text-sage-600" aria-hidden="true" />
-        <h2 className="font-serif text-2xl font-semibold">
+        <h2 className="font-serif text-2xl">
           {state.alreadyRegistered ? "You’re already registered" : "Your seat is reserved"}
         </h2>
         <p className="text-ink-500">
@@ -31,7 +31,7 @@ export function WorkshopRegisterForm({ workshopId, defaultClass }: { workshopId:
   const errors = state.status === "error" ? state.errors : {};
 
   return (
-    <form action={action} noValidate className="relative flex flex-col gap-8 rounded-2xl border border-line bg-surface p-6 sm:p-8">
+    <form action={action} noValidate className="relative flex flex-col gap-8 rounded-[28px] border border-line bg-surface p-6 sm:p-8">
       <input type="hidden" name="workshopId" value={workshopId} />
       <PersonFields errors={errors} defaultClass={defaultClass} />
       {state.status === "error" && state.message && (

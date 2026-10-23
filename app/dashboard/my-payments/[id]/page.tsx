@@ -28,10 +28,10 @@ export default async function ReceiptPage({ params }: { params: Promise<{ id: st
   return (
     <div className="mx-auto max-w-2xl space-y-6">
       <div className="flex justify-end print:hidden"><PrintButton /></div>
-      <article className="rounded-2xl border border-line bg-surface p-8 print:border-0 print:p-0">
+      <article className="rounded-[24px] border border-line bg-surface p-8 print:border-0 print:p-0">
         <header className="flex flex-wrap items-start justify-between gap-4 border-b border-line pb-6">
           <div>
-            <p className="font-serif text-2xl font-semibold text-ink-900">Payment receipt</p>
+            <p className="font-serif text-2xl text-ink-900">Payment receipt</p>
             <p className="text-sm text-ink-500">{SITE.name} · {SITE.email} · {SITE.phone}</p>
           </div>
           <p className="text-sm text-ink-500">Receipt no. {r.id.slice(0, 8).toUpperCase()}</p>
@@ -48,7 +48,7 @@ export default async function ReceiptPage({ params }: { params: Promise<{ id: st
         </dl>
         <div className="flex items-baseline justify-between border-t border-line pt-6">
           <span className="text-ink-500">Amount paid</span>
-          <span className="font-serif text-3xl font-semibold text-ink-900">{inr(r.amountInr)}</span>
+          <span className="font-serif text-3xl text-ink-900">{inr(r.amountInr)}</span>
         </div>
       </article>
     </div>

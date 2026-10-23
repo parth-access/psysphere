@@ -14,12 +14,12 @@ export function StatusBadge({ status, className }: StatusBadgeProps) {
   const normalizedStatus = status as StatusType;
   
   const styles: Partial<Record<StatusType, string>> = {
-    pending: "bg-marigold-100 text-marigold-700 border-marigold-100",
+    pending: "bg-marigold-100 text-gold-700 border-marigold-100",
     approved: "bg-sage-100 text-sage-600 border-sage-100",
     completed: "bg-sage-100 text-sage-600 border-sage-100",
     cancelled: "bg-rose-100 text-rose-600 border-rose-100",
     active: "bg-sage-100 text-sage-600 border-sage-100",
-    warning: "bg-marigold-100 text-marigold-700 border-marigold-100",
+    warning: "bg-marigold-100 text-gold-700 border-marigold-100",
     scheduled: "bg-ink-100 text-ink-700 border-ink-100",
     upcoming: "bg-ink-100 text-ink-700 border-ink-100",
     paid: "bg-ink-100 text-ink-700 border-ink-100",

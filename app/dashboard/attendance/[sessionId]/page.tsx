@@ -98,7 +98,7 @@ export default async function SessionAttendancePage({
         <ArrowLeft className="h-4 w-4" aria-hidden="true" /> All classes
       </Link>
       <div>
-        <h1 className="font-serif text-[32px] font-semibold text-ink-900">{row.s.title}</h1>
+        <h1 className="font-serif text-[32px] text-ink-900">{row.s.title}</h1>
         <p className="text-ink-500">{row.batchName} · {formatIST(row.s.startsAt)}</p>
       </div>
       {saved && <p role="status" className="rounded-xl bg-sage-100 px-4 py-3 text-sm font-medium text-sage-600">Attendance saved.</p>}
@@ -120,7 +120,7 @@ export default async function SessionAttendancePage({
                       {STATUSES.map((o) => (
                         <label key={o.value} className="cursor-pointer">
                           <input type="radio" name={`s_${st.id}`} value={o.value} defaultChecked={current === o.value} className="peer sr-only" />
-                          <span className="flex min-h-9 items-center rounded-lg px-3 text-sm font-semibold text-ink-700 peer-checked:bg-ink-900 peer-checked:text-paper peer-focus-visible:ring-2 peer-focus-visible:ring-ink-700/40">
+                          <span className="flex min-h-9 items-center rounded-lg px-3 text-sm font-semibold text-ink-700 peer-checked:bg-forest-800 peer-checked:text-paper peer-focus-visible:ring-2 peer-focus-visible:ring-ink-700/40">
                             {o.label}
                           </span>
                         </label>
@@ -130,7 +130,7 @@ export default async function SessionAttendancePage({
                 );
               })}
             </ul>
-            <button type="submit" className="min-h-11 rounded-xl bg-ink-900 px-6 text-sm font-semibold text-paper hover:bg-ink-700">
+            <button type="submit" className="min-h-11 rounded-full bg-forest-800 px-6 text-sm font-semibold text-paper hover:bg-forest-900">
               Save attendance
             </button>
           </form>

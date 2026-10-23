@@ -29,7 +29,7 @@ export default async function JoinPage({
     <PublicShell>
       <header className="mb-10 flex max-w-2xl flex-col gap-3">
         <Eyebrow>Join a batch</Eyebrow>
-        <h1 className="font-serif text-4xl font-semibold leading-tight sm:text-5xl">Get your seat</h1>
+        <h1 className="font-serif text-[44px] leading-[1] sm:text-[60px]">Get your seat</h1>
         <p className="text-lg text-ink-500">
           Choose your course, plan and batch. Batches are small, so some need Dravina’s approval first.
         </p>

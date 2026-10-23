@@ -286,7 +286,7 @@ export default async function StudentDashboardPage() {
                       <span className={`px-2.5 py-1 text-[9px] font-bold rounded-md border uppercase tracking-wider ${
                         isNextClassLive 
                           ? "bg-rose-50 text-rose-600 border-rose-200 animate-pulse" 
-                          : "bg-marigold-100 text-marigold-700 border-marigold-100"
+                          : "bg-marigold-100 text-gold-700 border-marigold-100"
                       }`}>
                         {nextClassCountdown}
                       </span>
@@ -486,7 +486,7 @@ export default async function StudentDashboardPage() {
                 {[
                   { name: "Lecture Notes", count: "0", icon: FileText, bg: "bg-ink-100 text-ink-700 border-ink-100" },
                   { name: "Syllabus PDFs", count: "0", icon: Bookmark, bg: "bg-teal-50/40 text-teal-600 border-teal-100" },
-                  { name: "Class Slides", count: "0", icon: BookOpen, bg: "bg-marigold-100 text-marigold-700 border-marigold-100" },
+                  { name: "Class Slides", count: "0", icon: BookOpen, bg: "bg-marigold-100 text-gold-700 border-marigold-100" },
                   { name: "Practice Qs", count: "0", icon: Award, bg: "bg-ink-100 text-ink-700 border-ink-300" }
                 ].map((cat, i) => {
                   const Icon = cat.icon;

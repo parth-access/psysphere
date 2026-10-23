@@ -12,7 +12,7 @@ export const Badge = ({ children, className, variant = 'neutral', id, ...props }
     neutral: 'bg-brand-beige text-brand-charcoal-muted border border-brand-stone-soft/50',
     accent: 'bg-brand-accent/10 text-brand-accent border border-brand-accent/20',
     success: 'bg-sage-100 text-sage-600 border border-sage-100/50',
-    warning: 'bg-marigold-100 text-marigold-700 border border-marigold-100/50',
+    warning: 'bg-marigold-100 text-gold-700 border border-marigold-100/50',
     info: 'bg-ink-100 text-ink-700 border border-ink-100/50',
     sage: 'bg-brand-sage-light text-brand-sage border border-brand-sage/20',
   };

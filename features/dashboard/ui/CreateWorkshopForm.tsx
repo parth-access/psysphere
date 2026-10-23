@@ -47,7 +47,7 @@ export function CreateWorkshopForm() {
         </div>
       </div>
       {state.error && <p role="alert" className="rounded-xl bg-rose-100 px-4 py-3 text-sm font-medium text-rose-600">{state.error}</p>}
-      <button type="submit" disabled={pending} className="w-full min-h-11 rounded-xl bg-ink-900 text-paper text-sm font-semibold hover:bg-ink-700 disabled:opacity-60">
+      <button type="submit" disabled={pending} className="w-full min-h-11 rounded-full bg-forest-800 text-paper text-sm font-semibold hover:bg-forest-900 disabled:opacity-60">
         {pending ? "Creating Meet link…" : "Create workshop"}
       </button>
       <p className="text-xs text-ink-500">A Google Meet link is created automatically and the workshop appears on the website.</p>

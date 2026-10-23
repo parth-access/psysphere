@@ -38,12 +38,12 @@ export default async function WorkshopAdminPage({
         </Link>
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-serif font-semibold text-ink-900">{w.title}</h1>
+            <h1 className="text-2xl font-serif text-ink-900">{w.title}</h1>
             <p className="text-sm text-ink-500">{formatWorkshopTime(w.startsAt, w.endsAt)}</p>
           </div>
           <div className="flex flex-wrap gap-2">
             {w.meetingUrl && (
-              <a href={w.meetingUrl} target="_blank" rel="noreferrer" className={`${btn} bg-ink-900 text-paper hover:bg-ink-700`}>
+              <a href={w.meetingUrl} target="_blank" rel="noreferrer" className={`${btn} bg-forest-800 text-paper hover:bg-forest-900`}>
                 <Video className="h-4 w-4" aria-hidden="true" /> Open Meet
               </a>
             )}
@@ -116,7 +116,7 @@ export default async function WorkshopAdminPage({
             <form action={sendRemindersAction} className="space-y-3">
               <input type="hidden" name="id" value={w.id} />
               <p className="text-sm text-ink-500">Email everyone the time and Meet link again.</p>
-              <button type="submit" disabled={registrations.length === 0} className={`${btn} w-full bg-ink-900 text-paper hover:bg-ink-700 disabled:opacity-50`}>
+              <button type="submit" disabled={registrations.length === 0} className={`${btn} w-full bg-forest-800 text-paper hover:bg-forest-900 disabled:opacity-50`}>
                 Send reminder
               </button>
               {w.remindersSentAt && <p className="text-xs text-ink-500">Last sent {fmt(w.remindersSentAt)}</p>}

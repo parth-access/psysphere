@@ -10,7 +10,7 @@ export const Card = ({ children, className, id, ...props }: CardProps) => {
     <div
       id={id}
       className={cn(
-        'bg-white border border-brand-stone-soft rounded-xl transition-all duration-300',
+        'bg-surface border border-line rounded-[24px] transition-all duration-300',
         className
       )}
       {...props}
@@ -36,7 +36,7 @@ export const CardTitle = ({ children, className, id, ...props }: React.HTMLAttri
   return (
     <h3
       id={id}
-      className={cn('font-serif text-lg font-medium tracking-tight text-brand-charcoal', className)}
+      className={cn('font-serif text-xl tracking-tight text-brand-charcoal', className)}
       {...props}
     >
       {children}
@@ -48,7 +48,7 @@ export const CardDescription = ({ children, className, id, ...props }: React.HTM
   return (
     <p
       id={id}
-      className={cn('font-sans text-xs text-brand-charcoal-muted font-light leading-relaxed', className)}
+      className={cn('font-sans text-sm text-ink-500 leading-relaxed', className)}
       {...props}
     >
       {children}

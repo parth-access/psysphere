@@ -30,7 +30,7 @@ export default async function WorkshopPage({ params }: { params: Promise<{ id: s
       <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr]">
         <section className="flex flex-col gap-5">
           <Eyebrow>Free workshop</Eyebrow>
-          <h1 className="font-serif text-4xl font-semibold leading-tight">{w.title}</h1>
+          <h1 className="font-serif text-4xl leading-tight">{w.title}</h1>
           <ul className="flex flex-col gap-3 text-ink-500">
             <li className="flex items-center gap-2"><CalendarDays className="h-5 w-5" aria-hidden="true" />{formatWorkshopTime(w.startsAt, w.endsAt)}</li>
             <li className="flex items-center gap-2"><Video className="h-5 w-5" aria-hidden="true" />Live on Google Meet with Dravina Gupta</li>
@@ -41,20 +41,20 @@ export default async function WorkshopPage({ params }: { params: Promise<{ id: s
           </ul>
           {w.description && <p className="whitespace-pre-line text-lg leading-relaxed">{w.description}</p>}
           <div className="rounded-2xl border border-line bg-paper-deep p-5 text-[15px] text-ink-500">
-            It’s completely free, with no obligation to join. Afterwards we’ll email you how to get a seat
-            in a batch if you’d like to continue.
+            The workshop is free, and you don’t have to join a batch afterwards. If you want to carry on, we’ll
+            email you how to get a seat.
           </div>
         </section>
 
         <section aria-label="Register">
           {over ? (
-            <div className="rounded-2xl border border-line bg-surface p-6">
-              <h2 className="font-serif text-2xl font-semibold">This workshop has finished</h2>
+            <div className="rounded-[28px] border border-line bg-surface p-6">
+              <h2 className="font-serif text-2xl">This workshop has finished</h2>
               <p className="mt-2 text-ink-500">See upcoming workshops, or request a seat in a batch.</p>
             </div>
           ) : full ? (
-            <div className="rounded-2xl border border-line bg-surface p-6">
-              <h2 className="font-serif text-2xl font-semibold">This workshop is full</h2>
+            <div className="rounded-[28px] border border-line bg-surface p-6">
+              <h2 className="font-serif text-2xl">This workshop is full</h2>
               <p className="mt-2 text-ink-500">Please pick another date from the workshops page.</p>
             </div>
           ) : (

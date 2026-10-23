@@ -75,9 +75,9 @@ export function getWorkshopJoinInviteTemplate(p: WorkshopJoinInvitePayload): str
   const content = `
     <h1>Thank you for coming!</h1>
     <p>Hi ${e(p.studentName)},</p>
-    <p>Thank you for joining <strong>${e(p.workshopTitle)}</strong>. If you enjoyed learning this way and want to continue through the year, you can request a seat in one of our small batches.</p>
+    <p>Thank you for joining <strong>${e(p.workshopTitle)}</strong>. If you'd like to keep learning this way through the year, request a seat in one of our small batches.</p>
     ${button(p.joinUrl, "Join a batch")}
-    <p>You'll see the batches, timings and fees on the next page. Your parent's details are needed to complete the request.</p>
+    <p>The next page lists the batches, timings and fees. You'll need a parent's details to send the request.</p>
     ${signOff}
   `;
   return renderBaseEmailLayout("Continue learning with Saarthi Classes", content);
@@ -91,7 +91,7 @@ export function getJoinRequestReceivedTemplate(p: JoinRequestReceivedPayload): s
   const content = `
     <h1>We've received your request</h1>
     <p>Hi ${e(p.studentName)},</p>
-    <p>Thank you for requesting a seat. Dravina will review it shortly, and you'll get an email with a payment link once it's approved.</p>
+    <p>Thank you for requesting a seat. Dravina will look at it soon. Once she approves it, we'll email you a payment link.</p>
     <div class="highlight-box">
       ${row("Batch", e(p.batchName))}
       ${row("Plan", e(p.planName))}
@@ -122,7 +122,7 @@ export function getJoinRequestApprovedTemplate(p: JoinRequestApprovedPayload): s
   const content = `
     <h1>Your seat is approved</h1>
     <p>Hi ${e(p.studentName)},</p>
-    <p>Good news: your request to join <strong>${e(p.batchName)}</strong> has been approved. Complete the payment to confirm your seat. Your student account is created as soon as the payment goes through.</p>
+    <p>Dravina approved your request to join <strong>${e(p.batchName)}</strong>. Pay below to confirm your seat. We create your student account as soon as the payment goes through.</p>
     <div class="highlight-box">
       ${row("Plan", e(p.planName))}
       ${row("Fee", e(inr(p.amountInr)))}
@@ -150,7 +150,7 @@ export function getEnrollmentConfirmedTemplate(p: EnrollmentConfirmedPayload): s
   const content = `
     <h1>Welcome to Saarthi Classes</h1>
     <p>Hi ${e(p.studentName)},</p>
-    <p>Your payment was received and your seat in <strong>${e(p.batchName)}</strong> is confirmed.</p>
+    <p>We've received your payment, and your seat in <strong>${e(p.batchName)}</strong> is confirmed.</p>
     <div class="highlight-box">
       ${row("Student ID", e(p.studentId))}
       ${row("Login email", e(p.email))}
@@ -185,7 +185,7 @@ export function getTeacherActivationTemplate(p: TeacherActivationPayload): strin
   const content = `
     <h1>Welcome to the Saarthi Classes faculty</h1>
     <p>Hi ${e(p.teacherName)},</p>
-    <p>A teacher account has been created for you (${e(p.email)}). Set your password to manage your batches, classes and attendance.</p>
+    <p>We've set up a teacher account for you (${e(p.email)}). Set your password to manage your batches, classes and attendance.</p>
     ${button(p.passwordSetupUrl, "Activate account")}
     ${signOff}
   `;
@@ -211,7 +211,7 @@ export function getWeeklyReportTemplate(p: WeeklyReportPayload): string {
     <h2>Coming up</h2>
     ${list(p.upcoming.map((u) => `${e(u.title)}, ${e(u.whenText)}`))}
     ${button(p.dashboardUrl, "Open student dashboard")}
-    <p>Questions? Just reply to this email.</p>
+    <p>Questions? Reply to this email.</p>
     ${signOff}
   `;
   return renderBaseEmailLayout("Weekly progress | Saarthi Classes", content);

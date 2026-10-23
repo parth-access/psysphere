@@ -119,7 +119,7 @@ export function JoinForm({
                     <span className="rounded-full bg-marigold-500 px-2.5 py-0.5 text-xs font-semibold text-ink-900">Popular</span>
                   )}
                 </span>
-                <span className="font-serif text-2xl font-semibold">{inr(p.price)}</span>
+                <span className="font-serif text-2xl">{inr(p.price)}</span>
                 <span className="text-sm text-ink-500">
                   {p.classes} classes{p.save ? ` · save ${inr(p.save)}` : ""}
                 </span>
@@ -164,8 +164,8 @@ export function JoinForm({
       </div>
 
       <aside className="lg:sticky lg:top-28 lg:self-start">
-        <div className="flex flex-col gap-4 rounded-2xl bg-ink-900 p-6 text-paper">
-          <h2 className="font-serif text-xl font-semibold">Summary</h2>
+        <div className="flex flex-col gap-4 rounded-[28px] bg-forest-900 p-6 text-paper">
+          <h2 className="font-serif text-xl">Summary</h2>
           <dl className="flex flex-col gap-2 text-[15px]">
             <div className="flex justify-between gap-4"><dt className="text-ink-300">Course</dt><dd className="text-right">{classLevel === "class_11" ? "Class 11" : "Class 12"} · {track === "cuet" ? "Boards + CUET" : "Boards"}</dd></div>
             <div className="flex justify-between gap-4"><dt className="text-ink-300">Plan</dt><dd className="text-right">{plan ? `${plan.name} · ${plan.classes} classes` : "—"}</dd></div>
@@ -173,7 +173,7 @@ export function JoinForm({
           </dl>
           <div className="flex items-baseline justify-between border-t border-ink-700 pt-4">
             <span className="text-ink-300">Fee</span>
-            <span className="font-serif text-3xl font-semibold">{plan ? inr(plan.price) : "—"}</span>
+            <span className="font-serif text-3xl">{plan ? inr(plan.price) : "—"}</span>
           </div>
           <label className="flex items-start gap-3 text-sm text-ink-300">
             <input type="checkbox" name="consent" required className="mt-1 h-4 w-4 accent-marigold-500" />

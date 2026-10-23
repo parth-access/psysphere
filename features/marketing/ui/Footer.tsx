@@ -36,8 +36,8 @@ const columns = [
 
 export function Footer() {
   return (
-    <footer className="bg-ink-900 text-ink-300">
-      <Container className="grid gap-12 py-16 md:grid-cols-[1.4fr_repeat(3,1fr)]">
+    <footer className="overflow-hidden bg-forest-950 text-paper/70">
+      <Container className="grid gap-12 pb-12 pt-20 md:grid-cols-[1.4fr_repeat(3,1fr)]">
         <div className="flex flex-col gap-4">
           <Link href="/" aria-label="Saarthi Classes home">
             <Logo tone="paper" />
@@ -64,7 +64,7 @@ export function Footer() {
         </div>
         {columns.map((c) => (
           <nav key={c.title} aria-label={c.title}>
-            <h2 className="mb-4 text-[13px] font-semibold uppercase tracking-[0.12em] text-marigold-500">{c.title}</h2>
+            <h2 className="mb-4 text-[13px] font-semibold uppercase tracking-[0.12em] text-gold-400">{c.title}</h2>
             <ul className="flex flex-col gap-3 text-[15px]">
               {c.links.map((l) => (
                 <li key={l.href}>
@@ -77,7 +77,10 @@ export function Footer() {
           </nav>
         ))}
       </Container>
-      <div className="border-t border-ink-700">
+      <div aria-hidden="true" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <p className="select-none whitespace-nowrap font-serif text-[22vw] leading-[0.8] text-paper/[0.06] lg:text-[240px]">Saarthi</p>
+      </div>
+      <div className="border-t border-paper/10">
         <Container className="flex flex-wrap justify-between gap-2 py-6 text-[13px]">
           <p>© {new Date().getFullYear()} Saarthi Classes</p>
           <p>

@@ -12,9 +12,9 @@ export function ContactForm() {
 
   if (state.status === 'sent') {
     return (
-      <div role="status" className="flex flex-col gap-3 rounded-2xl border border-line bg-surface p-8">
+      <div role="status" className="flex flex-col gap-3 rounded-[28px] border border-line bg-surface p-8">
         <CheckCircle2 className="h-8 w-8 text-sage-600" aria-hidden="true" />
-        <h2 className="font-serif text-2xl font-semibold text-ink-900">Message sent</h2>
+        <h2 className="font-serif text-2xl text-ink-900">Message sent</h2>
         <p className="text-ink-500">Thank you. We usually reply within a day.</p>
       </div>
     );
@@ -22,7 +22,7 @@ export function ContactForm() {
 
   const errors = state.status === 'error' ? state.errors : {};
   return (
-    <form action={action} noValidate className="relative flex flex-col gap-5 rounded-2xl border border-line bg-surface p-6 sm:p-8">
+    <form action={action} noValidate className="relative flex flex-col gap-5 rounded-[28px] border border-line bg-surface p-6 sm:p-8">
       <div className="grid gap-5 sm:grid-cols-2">
         <Field label="Your name" name="name" error={errors.name}>
           <TextInput name="name" autoComplete="name" required error={errors.name} />

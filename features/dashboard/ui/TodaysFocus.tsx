@@ -79,7 +79,7 @@ export function TodaysFocus() {
     <div className="bg-white border border-line/80 rounded-2xl p-6 space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-marigold-100 flex items-center justify-center text-marigold-700 border border-marigold-100">
+          <div className="w-8 h-8 rounded-lg bg-marigold-100 flex items-center justify-center text-gold-700 border border-marigold-100">
             <ListTodo className="w-4 h-4" />
           </div>
           <div>
@@ -163,7 +163,7 @@ export function TodaysFocus() {
         />
         <button 
           type="submit"
-          className="p-2 bg-ink-900 hover:bg-ink-900 text-white rounded-xl transition-colors cursor-pointer shrink-0"
+          className="p-2 bg-forest-800 hover:bg-forest-900 text-paper rounded-full transition-colors cursor-pointer shrink-0"
         >
           <Plus className="w-4 h-4" />
         </button>

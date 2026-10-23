@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
-import { Container } from './Container';
 import { Button } from './Button';
 import { Logo } from './Logo';
 import { NAVIGATION } from '@/constants/navigation';
@@ -34,18 +33,18 @@ export function Navbar() {
   }, [pathname]);
 
   return (
-    <header
-      className={`fixed inset-x-0 top-0 z-50 border-b transition-colors ${
-        scrolled || open ? 'border-line bg-paper/95 backdrop-blur' : 'border-transparent bg-paper'
-      }`}
-    >
-      <Container>
-        <nav aria-label="Main" className="flex h-[72px] items-center justify-between gap-4">
+    <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-4">
+      <div
+        className={`mx-auto max-w-7xl rounded-[22px] border transition-all duration-300 ${
+          scrolled || open ? 'border-line bg-paper/90 shadow-soft backdrop-blur-md' : 'border-transparent bg-transparent'
+        }`}
+      >
+        <nav aria-label="Main" className="flex h-16 items-center justify-between gap-4 pl-4 pr-2 sm:pl-5">
           <Link href={NAVIGATION.home} aria-label="Saarthi Classes home">
             <Logo />
           </Link>
 
-          <ul className="hidden items-center gap-7 md:flex">
+          <ul className="hidden items-center gap-1 md:flex">
             {navLinks.map((l) => {
               const active = pathname === l.href || pathname.startsWith(`${l.href}/`);
               return (
@@ -53,7 +52,9 @@ export function Navbar() {
                   <Link
                     href={l.href}
                     aria-current={active ? 'page' : undefined}
-                    className={`text-[15px] font-medium transition-colors ${active ? 'text-ink-900 underline decoration-marigold-500 decoration-2 underline-offset-8' : 'text-ink-500 hover:text-ink-900'}`}
+                    className={`rounded-full px-4 py-2 text-[15px] font-semibold transition-colors ${
+                      active ? 'bg-forest-50 text-forest-800' : 'text-ink-700 hover:bg-ink-100 hover:text-ink-900'
+                    }`}
                   >
                     {l.label}
                   </Link>
@@ -62,8 +63,8 @@ export function Navbar() {
             })}
           </ul>
 
-          <div className="hidden items-center gap-5 md:flex">
-            <Link href="/sign-in" className="text-[15px] font-medium text-ink-500 hover:text-ink-900">
+          <div className="hidden items-center gap-2 md:flex">
+            <Link href="/sign-in" className="rounded-full px-4 py-2 text-[15px] font-semibold text-ink-700 hover:bg-ink-100 hover:text-ink-900">
               Log in
             </Link>
             <Button href={NAVIGATION.workshops} className="!min-h-11 !px-5">
@@ -74,7 +75,7 @@ export function Navbar() {
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
-            className="flex h-11 w-11 items-center justify-center rounded-xl text-ink-900 hover:bg-ink-100 md:hidden"
+            className="flex h-11 w-11 items-center justify-center rounded-full text-ink-900 hover:bg-ink-100 md:hidden"
             aria-label={open ? 'Close menu' : 'Open menu'}
             aria-expanded={open}
             aria-controls="mobile-menu"
@@ -82,25 +83,23 @@ export function Navbar() {
             {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
         </nav>
-      </Container>
 
-      {open && (
-        <div id="mobile-menu" className="border-t border-line bg-paper md:hidden">
-          <Container className="flex flex-col gap-1 py-4">
+        {open && (
+          <div id="mobile-menu" className="flex flex-col gap-1 border-t border-line px-3 pb-4 pt-3 md:hidden">
             {navLinks.map((l) => (
-              <Link key={l.href} href={l.href} className="rounded-xl px-3 py-3 text-lg font-medium text-ink-900 hover:bg-ink-100">
+              <Link key={l.href} href={l.href} className="rounded-2xl px-3 py-3 text-lg font-semibold text-ink-900 hover:bg-ink-100">
                 {l.label}
               </Link>
             ))}
-            <Link href="/sign-in" className="rounded-xl px-3 py-3 text-lg font-medium text-ink-500 hover:bg-ink-100">
+            <Link href="/sign-in" className="rounded-2xl px-3 py-3 text-lg font-semibold text-ink-500 hover:bg-ink-100">
               Log in
             </Link>
             <Button href={NAVIGATION.workshops} className="mt-2 w-full">
               Join a free workshop
             </Button>
-          </Container>
-        </div>
-      )}
+          </div>
+        )}
+      </div>
     </header>
   );
 }

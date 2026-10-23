@@ -62,7 +62,7 @@ export default async function AssignmentsPage() {
                   const overdue = a.dueAt < now;
                   const done = myAttempts.has(a.id);
                   const badge = isStudent
-                    ? a.resultsPublishedAt ? ["Results out", "bg-ink-100 text-ink-700"] : done ? ["Submitted", "bg-sage-100 text-sage-600"] : overdue ? ["Missed", "bg-rose-100 text-rose-600"] : ["To do", "bg-marigold-100 text-marigold-700"]
+                    ? a.resultsPublishedAt ? ["Results out", "bg-ink-100 text-ink-700"] : done ? ["Submitted", "bg-sage-100 text-sage-600"] : overdue ? ["Missed", "bg-rose-100 text-rose-600"] : ["To do", "bg-marigold-100 text-gold-700"]
                     : a.resultsPublishedAt ? ["Results out", "bg-ink-100 text-ink-700"] : [`${submissionCounts[a.id] ?? 0} submitted`, "bg-paper-deep text-ink-700"];
                   return (
                     <li key={a.id}>
@@ -96,7 +96,7 @@ export default async function AssignmentsPage() {
                   <div><label htmlFor="dueTime" className={label}>Time</label><input id="dueTime" type="time" name="dueTime" defaultValue="21:00" required className={input} /></div>
                 </div>
                 <div><label htmlFor="maxMarks" className={label}>Out of (marks)</label><input id="maxMarks" type="number" name="maxMarks" min={1} defaultValue={20} required className={input} /></div>
-                <button type="submit" className="w-full min-h-11 rounded-xl bg-ink-900 text-sm font-semibold text-paper hover:bg-ink-700">Create and share</button>
+                <button type="submit" className="w-full min-h-11 rounded-full bg-forest-800 text-sm font-semibold text-paper hover:bg-forest-900">Create and share</button>
               </form>
             )}
           </DashboardCard>

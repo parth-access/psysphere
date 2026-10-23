@@ -147,14 +147,14 @@ export default async function DashboardHomePage() {
                     {nextWorkshop.startsAt.toLocaleString("en-IN", { timeZone: "Asia/Kolkata", dateStyle: "medium", timeStyle: "short" })}
                   </p>
                 </div>
-                <a href={`/dashboard/workshops/${nextWorkshop.id}`} className="inline-flex min-h-10 items-center rounded-xl bg-ink-900 px-4 text-sm font-semibold text-paper hover:bg-ink-700">
+                <a href={`/dashboard/workshops/${nextWorkshop.id}`} className="inline-flex min-h-10 items-center rounded-full bg-forest-800 px-4 text-sm font-semibold text-paper hover:bg-forest-900">
                   Manage
                 </a>
               </div>
             ) : (
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <p className="text-sm text-ink-500">No workshop scheduled. Workshops are how new students find you.</p>
-                <a href="/dashboard/workshops" className="inline-flex min-h-10 items-center rounded-xl bg-ink-900 px-4 text-sm font-semibold text-paper hover:bg-ink-700">
+                <a href="/dashboard/workshops" className="inline-flex min-h-10 items-center rounded-full bg-forest-800 px-4 text-sm font-semibold text-paper hover:bg-forest-900">
                   Schedule one
                 </a>
               </div>

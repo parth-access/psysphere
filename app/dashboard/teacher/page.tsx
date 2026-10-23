@@ -262,7 +262,7 @@ export default async function TeacherDashboardPage() {
                       isNextClassLive 
                         ? "bg-rose-50 text-rose-600 border-rose-200" 
                         : isNextClassStartsSoon 
-                        ? "bg-marigold-100 text-marigold-700 border-marigold-100" 
+                        ? "bg-marigold-100 text-gold-700 border-marigold-100" 
                         : "bg-paper text-ink-700 border-line"
                     )}>
                       {isNextClassLive && <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />}
@@ -391,8 +391,8 @@ export default async function TeacherDashboardPage() {
                       dotStyle = "border-rose-500 bg-rose-500 text-white animate-pulse";
                     } else if (diffMins > 0 && diffMins <= 15) {
                       status = "Starting Soon";
-                      badgeStyle = "bg-marigold-100 text-marigold-700 border-marigold-100 font-semibold";
-                      dotStyle = "border-marigold-100 bg-marigold-100 text-marigold-700";
+                      badgeStyle = "bg-marigold-100 text-gold-700 border-marigold-100 font-semibold";
+                      dotStyle = "border-marigold-100 bg-marigold-100 text-gold-700";
                     }
 
                     const timeString = startsAt.toLocaleTimeString("en-GB", {

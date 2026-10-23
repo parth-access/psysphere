@@ -49,10 +49,15 @@ export function TextInput({
   );
 }
 
-export function FormSection({ title, children }: { title: string; children: ReactNode }) {
+export function FormSection({ title, step, children }: { title: string; step?: number; children: ReactNode }) {
   return (
-    <fieldset className="flex flex-col gap-4 border-0 p-0 m-0">
-      <legend className="mb-1 font-serif text-xl text-ink-900">{title}</legend>
+    <fieldset className="m-0 flex flex-col gap-4 border-0 p-0">
+      <legend className="mb-4 flex items-center gap-3 font-serif text-2xl text-ink-900">
+        {step !== undefined && (
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-forest-800 font-sans text-sm font-bold text-paper">{step}</span>
+        )}
+        {title}
+      </legend>
       {children}
     </fieldset>
   );
@@ -63,3 +68,7 @@ export const primaryButtonClass =
 
 export const secondaryButtonClass =
   "inline-flex min-h-12 items-center justify-center gap-2 rounded-full border-[1.5px] border-ink-900 px-6 font-bold text-ink-900 transition-colors hover:bg-ink-100";
+
+/** Gold button for use on the dark green summary and payment cards. */
+export const accentButtonClass =
+  "inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-gold-500 px-6 font-bold text-ink-900 transition-colors hover:bg-gold-400 disabled:cursor-not-allowed disabled:opacity-60";

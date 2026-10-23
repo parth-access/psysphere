@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { listJoinableBatches } from "@/src/domains/joining/service";
-import { PublicShell, Eyebrow } from "@/features/joining/ui/PublicShell";
-import { JoinForm } from "@/features/joining/ui/JoinForm";
+import { PublicShell } from "@/features/joining/ui/PublicShell";
+import { JoinView } from "@/features/joining/ui/JoinView";
+import { isUuid } from "@/lib/ids";
 
 export const dynamic = "force-dynamic";
 
@@ -9,8 +10,6 @@ export const metadata: Metadata = {
   title: "Join a batch | Saarthi Classes",
   description: "Request a seat in a Saarthi Classes psychology batch for Class 11, Class 12 or CUET.",
 };
-
-const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export default async function JoinPage({
   searchParams,
@@ -27,19 +26,12 @@ export default async function JoinPage({
 
   return (
     <PublicShell>
-      <header className="mb-10 flex max-w-2xl flex-col gap-3">
-        <Eyebrow>Join a batch</Eyebrow>
-        <h1 className="font-serif text-[44px] leading-[1] sm:text-[60px]">Get your seat</h1>
-        <p className="text-lg text-ink-500">
-          Choose your course, plan and batch. Batches are small, so some need Dravina’s approval first.
-        </p>
-      </header>
-      <JoinForm
+      <JoinView
         batches={batches}
         initialClass={cls === "class_11" || cls === "class_12" ? cls : undefined}
         initialTrack={track === "standard" || track === "cuet" ? track : undefined}
         initialPlan={one("plan")}
-        workshopId={workshop && UUID.test(workshop) ? workshop : undefined}
+        workshopId={workshop && isUuid(workshop) ? workshop : undefined}
       />
     </PublicShell>
   );

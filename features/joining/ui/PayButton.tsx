@@ -5,7 +5,7 @@ import Script from "next/script";
 import { useRouter } from "next/navigation";
 import { Lock } from "lucide-react";
 import { startPaymentAction, confirmPaymentAction } from "@/app/join/pay/[token]/actions";
-import { primaryButtonClass } from "./Field";
+import { accentButtonClass } from "./Field";
 
 type RazorpayResponse = { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string };
 
@@ -42,7 +42,7 @@ export function PayButton({ token, label }: { token: string; label: string }) {
       name: "Saarthi Classes",
       description: order.description,
       prefill: order.prefill,
-      theme: { color: "#1C2541" },
+      theme: { color: "#1F5E3B" },
       modal: { ondismiss: () => setBusy(false) },
       handler: async (response: RazorpayResponse) => {
         const done = await confirmPaymentAction(token, response);
@@ -64,16 +64,16 @@ export function PayButton({ token, label }: { token: string; label: string }) {
   return (
     <div className="flex flex-col gap-3">
       <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="afterInteractive" />
-      <button type="button" onClick={pay} disabled={busy} className={`${primaryButtonClass} !bg-marigold-500 !text-ink-900 hover:!bg-marigold-100`}>
+      <button type="button" onClick={pay} disabled={busy} className={accentButtonClass}>
         <Lock className="h-4 w-4" aria-hidden="true" />
         {busy ? "Opening payment…" : label}
       </button>
       {error && (
-        <p role="alert" className="rounded-xl bg-rose-100 px-4 py-3 text-sm font-medium text-rose-600">
+        <p role="alert" className="rounded-2xl bg-rose-100 px-4 py-3 text-sm font-medium text-rose-600">
           {error}
         </p>
       )}
-      <p className="text-[13px] text-ink-300">UPI, cards, net banking and wallets via Razorpay.</p>
+      <p className="text-[13px] text-paper/65">UPI, cards, net banking and wallets, through Razorpay.</p>
     </div>
   );
 }

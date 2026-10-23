@@ -7,15 +7,18 @@ export function PersonFields({
   defaultClass,
   showClass = true,
   showParentEmail = false,
+  firstStep,
 }: {
   errors: FieldErrors;
   defaultClass?: string;
   showClass?: boolean;
   showParentEmail?: boolean;
+  /** Number the two sections when they continue a numbered form. */
+  firstStep?: number;
 }) {
   return (
     <>
-      <FormSection title="Student">
+      <FormSection title="Student" step={firstStep}>
         <Field label="Full name" name="studentName" error={errors.studentName}>
           <TextInput name="studentName" autoComplete="name" required error={errors.studentName} />
         </Field>
@@ -38,7 +41,7 @@ export function PersonFields({
         )}
       </FormSection>
 
-      <FormSection title="Parent or guardian">
+      <FormSection title="Parent or guardian" step={firstStep !== undefined ? firstStep + 1 : undefined}>
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="Parent’s name" name="parentName" error={errors.parentName}>
             <TextInput name="parentName" required error={errors.parentName} />

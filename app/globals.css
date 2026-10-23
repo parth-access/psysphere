@@ -20,6 +20,7 @@
   --color-forest-50: #EFF6F0;
   --color-gold-400: #F0BE4F;
   --color-gold-500: #E6A520; /* Saarthi gold: fills only, never text on light */
+  --color-gold-600: #B7790A; /* gold marks on light surfaces (3:1+) */
   --color-gold-700: #8C5E07; /* gold text on light */
   --color-gold-100: #FCF0D2;
 

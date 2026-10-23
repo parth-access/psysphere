@@ -20,3 +20,6 @@ dist
 out
 # clerk configuration (can include secrets)
 /.clerk/
+
+# TypeScript incremental build cache
+*.tsbuildinfo

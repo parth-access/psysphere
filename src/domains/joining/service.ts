@@ -360,6 +360,10 @@ export async function finalizePaidOrder(orderId: string, paymentId: string) {
       .from(joinRequests)
       .where(eq(joinRequests.razorpayOrderId, orderId));
     if (!current) throw new JoinError(`No join request for order ${orderId}.`);
+    if (current.status !== "paid" && current.status !== "enrolled") {
+      // Money was taken for a request that was declined (or reset) while the student was paying.
+      console.error(`[joining] Payment ${paymentId} captured for ${current.status} request ${current.id}; refund or enrol by hand.`);
+    }
     return { requestId: current.id, status: current.status };
   }
 

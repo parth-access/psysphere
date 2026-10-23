@@ -27,6 +27,9 @@ export default function DashboardError({
           {error.message || "An unexpected error occurred while processing your request."}
         </p>
         <div className="flex justify-center gap-4">
+          <Button variant="outline" onClick={() => reset()}>
+            Try again
+          </Button>
           <Button onClick={() => router.push('/dashboard')}>
             Go to My Dashboard
           </Button>

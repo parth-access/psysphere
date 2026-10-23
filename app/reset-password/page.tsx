@@ -14,7 +14,12 @@ import {
 
 export default function ResetPasswordPage() {
   const router = useRouter();
-  const [supabase] = React.useState<any>(() => createClient());
+  // We read the link's tokens ourselves. If the client also picked them up from the URL, it would
+  // sign in on load and our clean-up sign-out below would revoke the very session the link created.
+  const [supabase] = React.useState(() =>
+    createClient({ isSingleton: false, auth: { detectSessionInUrl: false } })
+  );
+  const started = React.useRef(false);
 
   const [password, setPassword] = React.useState("");
   const [confirmPassword, setConfirmPassword] = React.useState("");
@@ -28,169 +33,95 @@ export default function ResetPasswordPage() {
   const [recoveryEmail, setRecoveryEmail] = React.useState<string | null>(null);
 
   React.useEffect(() => {
-    let mounted = true;
+    // A link can only be redeemed once, so never run this twice (Strict Mode re-runs effects in dev).
+    if (started.current) return;
+    started.current = true;
+
+    const fail = (message: string) => {
+      setError(message);
+      setRecoveryVerified(false);
+      setCheckingSession(false);
+    };
+    const verified = (email: string | undefined) => {
+      setRecoveryEmail(email ?? null);
+      setRecoveryVerified(true);
+      setCheckingSession(false);
+    };
 
     const initializeRecoverySession = async () => {
-      if (!supabase) {
-        if (mounted) {
-          setError("Authentication client could not be initialized.");
-          setCheckingSession(false);
-        }
-        return;
-      }
       try {
-        const hash = typeof window !== "undefined" ? window.location.hash : "";
-        const search = typeof window !== "undefined" ? window.location.search : "";
-
-        // Parse hash fragment
-        const hashParams = new URLSearchParams(hash.startsWith("#") ? hash.substring(1) : hash);
+        const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
         const accessToken = hashParams.get("access_token");
         const refreshToken = hashParams.get("refresh_token");
 
-        // Parse query params (PKCE flow or verification token)
-        const searchParams = new URLSearchParams(search);
+        const searchParams = new URLSearchParams(window.location.search);
         const code = searchParams.get("code");
         const tokenHash = searchParams.get("token_hash");
 
-        const hasRecoveryParams = !!(accessToken || code || tokenHash);
+        // Keep the one-time tokens out of the address bar and browser history.
+        if (window.location.hash || window.location.search) {
+          window.history.replaceState(null, "", window.location.pathname);
+        }
 
-        console.log("[ResetPassword] Checking URL tokens:", {
-          hasHashToken: !!accessToken,
-          hasCode: !!code,
-          hasTokenHash: !!tokenHash
-        });
-
-        // If we have no recovery parameters, reject access immediately to prevent direct navigation access
-        if (!hasRecoveryParams) {
-          if (mounted) {
-            setError("This password setup link is invalid or has expired. Please request a new invitation from the Saarthi Classes administrator.");
-            setRecoveryVerified(false);
-            setCheckingSession(false);
-          }
+        if (!accessToken && !code && !tokenHash) {
+          fail("This password setup link is invalid or has expired. Please request a new invitation from the Saarthi Classes administrator.");
           return;
         }
 
-        // Isolating the session: Sign out any pre-existing user (e.g. admin) to ensure clean credential state
+        // Drop any session already in this browser (an admin testing the link, say) so the password
+        // change lands on the right account. "local" leaves that person's other devices signed in.
         const { data: { session: existingSession } } = await supabase.auth.getSession();
         if (existingSession) {
-          console.log("[ResetPassword] Pre-existing session found. Signing out before processing recovery credentials...");
-          await supabase.auth.signOut();
+          await supabase.auth.signOut({ scope: "local" });
         }
 
-        // 1. Process PKCE Code
         if (code) {
-          console.log("[ResetPassword] Exchanging PKCE code...");
           const { data, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
-          if (exchangeError) {
+          if (exchangeError || !data?.session) {
             console.error("[ResetPassword] PKCE exchange error:", exchangeError);
-            if (mounted) {
-              setError("The verification code is invalid or has expired.");
-              setRecoveryVerified(false);
-              setCheckingSession(false);
-            }
+            fail("The verification code is invalid or has expired.");
             return;
           }
-
-          if (data?.session) {
-            console.log("[ResetPassword] Successfully established recovery session via PKCE.");
-            if (mounted) {
-              setRecoveryEmail(data.session.user.email ?? null);
-              setRecoveryVerified(true);
-              setCheckingSession(false);
-            }
-            return;
-          }
+          verified(data.session.user.email);
+          return;
         }
 
-        // 2. Process token_hash
         if (tokenHash) {
-          console.log("[ResetPassword] Verifying OTP token_hash...");
           const { data, error: otpError } = await supabase.auth.verifyOtp({
             token_hash: tokenHash,
             type: "recovery",
           });
-
-          if (otpError) {
+          if (otpError || !data?.session) {
             console.error("[ResetPassword] OTP verification error:", otpError);
-            if (mounted) {
-              setError("Verification via token failed or token has expired.");
-              setRecoveryVerified(false);
-              setCheckingSession(false);
-            }
+            fail("Verification via token failed or token has expired.");
             return;
           }
-
-          if (data?.session) {
-            console.log("[ResetPassword] Successfully established recovery session via OTP verification.");
-            if (mounted) {
-              setRecoveryEmail(data.session.user.email ?? null);
-              setRecoveryVerified(true);
-              setCheckingSession(false);
-            }
-            return;
-          }
+          verified(data.session.user.email);
+          return;
         }
 
-        // 3. Process Hash/Implicit tokens
         if (accessToken && refreshToken) {
-          console.log("[ResetPassword] Initializing session via hash tokens...");
           const { data, error: setSessionError } = await supabase.auth.setSession({
             access_token: accessToken,
             refresh_token: refreshToken,
           });
-
-          if (setSessionError) {
+          if (setSessionError || !data?.session) {
             console.error("[ResetPassword] setSession failed:", setSessionError);
-            if (mounted) {
-              setError("We could not establish the secure session from your invitation link.");
-              setRecoveryVerified(false);
-              setCheckingSession(false);
-            }
+            fail("We could not establish the secure session from your invitation link.");
             return;
           }
-
-          if (data?.session) {
-            console.log("[ResetPassword] Successfully established recovery session via hash tokens.");
-            if (mounted) {
-              setRecoveryEmail(data.session.user.email ?? null);
-              setRecoveryVerified(true);
-              setCheckingSession(false);
-            }
-            return;
-          }
+          verified(data.session.user.email);
+          return;
         }
 
-        if (mounted) {
-          setError("We could not establish a secure session from the provided credentials.");
-          setRecoveryVerified(false);
-          setCheckingSession(false);
-        }
-
+        fail("We could not establish a secure session from the provided credentials.");
       } catch (err) {
         console.error("[ResetPassword] Recovery initialization failed:", err);
-        if (mounted) {
-          setRecoveryVerified(false);
-          setError("We could not verify this password setup link. Please request a new invitation.");
-          setCheckingSession(false);
-        }
+        fail("We could not verify this password setup link. Please request a new invitation.");
       }
     };
 
-    let cleanup: (() => void) | undefined;
-
-    initializeRecoverySession().then((result) => {
-      if (typeof result === "function") {
-        cleanup = result as any;
-      }
-    });
-
-    return () => {
-      mounted = false;
-
-      if (cleanup) {
-        cleanup();
-      }
-    };
+    initializeRecoverySession();
   }, [supabase]);
 
   const handleSubmit = async (
@@ -213,11 +144,6 @@ export default function ResetPasswordPage() {
 
     if (password !== confirmPassword) {
       setError("Passwords do not match.");
-      return;
-    }
-
-    if (!supabase) {
-      setError("Authentication client not initialized.");
       return;
     }
 

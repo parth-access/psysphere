@@ -131,8 +131,8 @@ export default async function ClassesPage() {
               } else if (diffMinsFeatured > 0 && diffMinsFeatured <= 60) {
                 featuredCountdownText = `Starts in ${diffMinsFeatured} mins`;
               } else {
-                const dayStr = startsAtFeatured.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" });
-                const timeStr = startsAtFeatured.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+                const dayStr = startsAtFeatured.toLocaleDateString("en-GB", { timeZone: "Asia/Kolkata", weekday: "short", day: "numeric", month: "short" });
+                const timeStr = startsAtFeatured.toLocaleTimeString("en-GB", { timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit" });
                 featuredCountdownText = `${dayStr} at ${timeStr}`;
               }
 
@@ -226,11 +226,11 @@ export default async function ClassesPage() {
                                   <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-ink-500 pt-1 border-t border-line">
                                     <span className="flex items-center gap-1">
                                       <CalendarIcon className="w-3.5 h-3.5 text-ink-500" />
-                                      {clsStartsAt.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                                      {clsStartsAt.toLocaleDateString("en-GB", { timeZone: "Asia/Kolkata", day: "numeric", month: "short", year: "numeric" })}
                                     </span>
                                     <span className="flex items-center gap-1">
                                       <Clock className="w-3.5 h-3.5 text-ink-500" />
-                                      {clsStartsAt.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })} ({clsDurationMins}m)
+                                      {clsStartsAt.toLocaleTimeString("en-GB", { timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit" })} ({clsDurationMins}m)
                                     </span>
                                   </div>
                                 </div>
@@ -314,12 +314,12 @@ export default async function ClassesPage() {
                             <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-ink-500">
                               <span className="flex items-center gap-1">
                                 <CalendarIcon className="w-3.5 h-3.5" />
-                                {startsAt.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                                {startsAt.toLocaleDateString("en-GB", { timeZone: "Asia/Kolkata", day: "numeric", month: "short", year: "numeric" })}
                               </span>
                               <span>•</span>
                               <span className="flex items-center gap-1">
                                 <Clock className="w-3.5 h-3.5" />
-                                {startsAt.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })} ({durationMins}m)
+                                {startsAt.toLocaleTimeString("en-GB", { timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit" })} ({durationMins}m)
                               </span>
                             </div>
                           </div>
@@ -412,7 +412,7 @@ export default async function ClassesPage() {
                       type="date" 
                       name="date" 
                       required 
-                      defaultValue={new Date().toISOString().split('T')[0]}
+                      defaultValue={new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" })}
                       className="w-full px-3 py-2 border border-line rounded-lg text-sm bg-white focus:outline-none"
                     />
                   </div>

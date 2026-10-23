@@ -1,6 +1,7 @@
 import { and, asc, count, desc, eq, gte, inArray, isNotNull, isNull, lt, ne, notExists, or, sql } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 import { db } from "@/db";
+import { istDayStart } from "@/lib/ids";
 import { joinRequests } from "@/db/schema/core/joinRequests";
 import { batches } from "@/db/schema/core/batches";
 import { enrollments } from "@/db/schema/core/enrollments";
@@ -15,11 +16,7 @@ import { evaluations } from "@/db/schema/academic/evaluations";
 const DAY = 86_400_000;
 const IST_OFFSET = 330 * 60_000;
 
-/** Midnight in India for the day containing `d`, as a UTC instant. */
-export function istDayStart(d: Date) {
-  const t = d.getTime() + IST_OFFSET;
-  return new Date(t - (t % DAY) - IST_OFFSET);
-}
+export { istDayStart };
 
 /** First instant of the IST calendar month `monthsAgo` months before `d`. */
 export function istMonthStart(d: Date, monthsAgo = 0) {

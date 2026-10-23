@@ -28,6 +28,7 @@ import {
   AlertCircle
 } from "lucide-react";
 import Link from "next/link";
+import { istHour, sameIstDay } from "@/lib/ids";
 
 export const dynamic = "force-dynamic";
 
@@ -127,7 +128,7 @@ export default async function StudentDashboardPage() {
 
   // Derive contextual information for Hero
   const firstName = profile.fullName ? profile.fullName.split(" ")[0] : "Student";
-  const hour = now.getHours();
+  const hour = istHour(now);
   let greeting = "Good Morning";
   let greetingEmoji = "👋";
   if (hour >= 12 && hour < 17) {
@@ -150,15 +151,15 @@ export default async function StudentDashboardPage() {
     } else if (diffMins > 0 && diffMins <= 60) {
       heroContextText = `Your next Psychology lecture starts in ${diffMins} minute${diffMins === 1 ? "" : "s"}.`;
     } else {
-      const isToday = startsAt.toDateString() === now.toDateString();
-      const isTomorrow = startsAt.toDateString() === new Date(now.getTime() + 86400000).toDateString();
-      const timeStr = startsAt.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+      const isToday = sameIstDay(startsAt, now);
+      const isTomorrow = sameIstDay(startsAt, new Date(now.getTime() + 86400000));
+      const timeStr = startsAt.toLocaleTimeString("en-US", { timeZone: "Asia/Kolkata", hour: "numeric", minute: "2-digit" });
       if (isToday) {
         heroContextText = `Your next Psychology lecture starts today at ${timeStr}.`;
       } else if (isTomorrow) {
         heroContextText = `Your next Psychology lecture starts tomorrow at ${timeStr}.`;
       } else {
-        const dayStr = startsAt.toLocaleDateString("en-US", { weekday: "long" });
+        const dayStr = startsAt.toLocaleDateString("en-US", { timeZone: "Asia/Kolkata", weekday: "long" });
         heroContextText = `Your next Psychology lecture is scheduled for ${dayStr} at ${timeStr}.`;
       }
     }
@@ -181,15 +182,15 @@ export default async function StudentDashboardPage() {
     } else if (diffMins > 0 && diffMins <= 60) {
       nextClassCountdown = `Starts in ${diffMins} mins`;
     } else {
-      const isToday = startsAt.toDateString() === now.toDateString();
-      const isTomorrow = startsAt.toDateString() === new Date(now.getTime() + 86400000).toDateString();
-      const timeStr = startsAt.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+      const isToday = sameIstDay(startsAt, now);
+      const isTomorrow = sameIstDay(startsAt, new Date(now.getTime() + 86400000));
+      const timeStr = startsAt.toLocaleTimeString("en-US", { timeZone: "Asia/Kolkata", hour: "numeric", minute: "2-digit" });
       if (isToday) {
         nextClassCountdown = `Today at ${timeStr}`;
       } else if (isTomorrow) {
         nextClassCountdown = `Tomorrow at ${timeStr}`;
       } else {
-        const dayStr = startsAt.toLocaleDateString("en-US", { weekday: "short", day: "numeric", month: "short" });
+        const dayStr = startsAt.toLocaleDateString("en-US", { timeZone: "Asia/Kolkata", weekday: "short", day: "numeric", month: "short" });
         nextClassCountdown = `${dayStr} at ${timeStr}`;
       }
     }
@@ -201,20 +202,20 @@ export default async function StudentDashboardPage() {
     const diffMs = dueAt.getTime() - now.getTime();
     const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
 
-    if (dueAt.toDateString() === now.toDateString()) {
+    if (sameIstDay(dueAt, now)) {
       return "Due Today";
     }
     const tomorrow = new Date(now.getTime() + 86400000);
-    if (dueAt.toDateString() === tomorrow.toDateString()) {
+    if (sameIstDay(dueAt, tomorrow)) {
       return "Due Tomorrow";
     }
 
     if (diffDays > 1 && diffDays <= 6) {
-      const dayOfWeek = dueAt.toLocaleDateString("en-US", { weekday: "long" });
+      const dayOfWeek = dueAt.toLocaleDateString("en-US", { timeZone: "Asia/Kolkata", weekday: "long" });
       return `Due ${dayOfWeek}`;
     }
 
-    return `Due ${dueAt.toLocaleDateString("en-US", { day: "numeric", month: "short" })}`;
+    return `Due ${dueAt.toLocaleDateString("en-US", { timeZone: "Asia/Kolkata", day: "numeric", month: "short" })}`;
   };
 
   // Progress metrics
@@ -314,7 +315,7 @@ export default async function StudentDashboardPage() {
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-ink-500 pt-2 border-t border-line/60">
                       <span className="flex items-center gap-1.5">
                         <Clock className="w-3.5 h-3.5 text-ink-500" />
-                        <span>{new Date(nextClass.startsAt).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}</span>
+                        <span>{new Date(nextClass.startsAt).toLocaleTimeString("en-GB", { timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit" })}</span>
                         <span className="text-ink-300">•</span>
                         <span>{Math.round((new Date(nextClass.endsAt).getTime() - new Date(nextClass.startsAt).getTime()) / 60000)} mins</span>
                       </span>
@@ -366,7 +367,7 @@ export default async function StudentDashboardPage() {
                     <p className="text-[11px] text-ink-500 line-clamp-2 leading-relaxed">{asm.instructions}</p>
                     <div className="flex items-center gap-1.5 text-[10px] text-ink-500 pt-1">
                       <Calendar className="w-3.5 h-3.5 text-ink-300" />
-                      <span>Due: {new Date(asm.dueAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}</span>
+                      <span>Due: {new Date(asm.dueAt).toLocaleDateString("en-GB", { timeZone: "Asia/Kolkata", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}</span>
                     </div>
                   </div>
                 ))}
@@ -412,11 +413,11 @@ export default async function StudentDashboardPage() {
                         <div className="flex items-center gap-3 text-[11px] text-ink-500">
                           <span className="flex items-center gap-1">
                             <Calendar className="w-3.5 h-3.5 text-ink-300" />
-                            {startsAt.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                            {startsAt.toLocaleDateString("en-GB", { timeZone: "Asia/Kolkata", day: "numeric", month: "short", year: "numeric" })}
                           </span>
                           <span className="flex items-center gap-1">
                             <Clock className="w-3.5 h-3.5 text-ink-300" />
-                            {startsAt.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })} ({durationMins}m)
+                            {startsAt.toLocaleTimeString("en-GB", { timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit" })} ({durationMins}m)
                           </span>
                         </div>
                       </div>
@@ -464,7 +465,7 @@ export default async function StudentDashboardPage() {
                         <span className="inline-block text-[9px] font-bold bg-paper-deep text-ink-500 px-2 py-0.5 rounded-md uppercase tracking-wider">
                           Completed
                         </span>
-                        <p className="text-[10px] text-ink-500 mt-1">{startsAt.toLocaleDateString("en-GB", { day: "numeric", month: "short" })}</p>
+                        <p className="text-[10px] text-ink-500 mt-1">{startsAt.toLocaleDateString("en-GB", { timeZone: "Asia/Kolkata", day: "numeric", month: "short" })}</p>
                       </div>
                     </div>
                   );

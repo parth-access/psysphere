@@ -8,6 +8,7 @@ import { classSessions } from "@/db/schema/academic/classSessions";
 import { batches } from "@/db/schema/core/batches";
 import { enrollments } from "@/db/schema/core/enrollments";
 import { cn } from "@/lib/utils";
+import { istDayStart, istHour } from "@/lib/ids";
 import { TodaysFocus } from "@/features/dashboard/ui/TodaysFocus";
 import Link from "next/link";
 import { 
@@ -85,7 +86,7 @@ export default async function TeacherDashboardPage() {
   // --- COMPUTE FIELDS ---
 
   // A. Determine greeting based on current local/server time
-  const currentHour = now.getHours();
+  const currentHour = istHour(now);
   let greeting = "Good Morning";
   if (currentHour >= 12 && currentHour < 17) {
     greeting = "Good Afternoon";
@@ -94,10 +95,8 @@ export default async function TeacherDashboardPage() {
   }
 
   // B. Filter for today's scheduled classes
-  const todayStart = new Date(now);
-  todayStart.setHours(0, 0, 0, 0);
-  const todayEnd = new Date(now);
-  todayEnd.setHours(23, 59, 59, 999);
+  const todayStart = istDayStart(now);
+  const todayEnd = new Date(todayStart.getTime() + 86_400_000 - 1);
 
   const todayLectures = allSessions.filter((cls) => {
     const start = new Date(cls.startsAt);
@@ -128,7 +127,7 @@ export default async function TeacherDashboardPage() {
       return start >= tomorrowStart && start <= tomorrowEnd;
     })();
 
-    const timeStr = start.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+    const timeStr = start.toLocaleTimeString("en-US", { timeZone: "Asia/Kolkata", hour: "numeric", minute: "2-digit" });
     const cohortCompletedCount = allSessions.filter(s => s.batchId === nextClass.batchId && (s.status === "completed" || new Date(s.endsAt) < now)).length;
 
     let timingInfo = "";
@@ -137,7 +136,7 @@ export default async function TeacherDashboardPage() {
     } else if (isTomorrow) {
       timingInfo = `tomorrow at ${timeStr}`;
     } else {
-      const dayOfWeek = start.toLocaleDateString("en-US", { weekday: "long" });
+      const dayOfWeek = start.toLocaleDateString("en-US", { timeZone: "Asia/Kolkata", weekday: "long" });
       timingInfo = `on ${dayOfWeek} at ${timeStr}`;
     }
 
@@ -174,7 +173,7 @@ export default async function TeacherDashboardPage() {
         return start >= tomorrowStart && start <= tomorrowEnd;
       })();
 
-      const timeString = start.toLocaleTimeString("en-US", {
+      const timeString = start.toLocaleTimeString("en-US", { timeZone: "Asia/Kolkata",
         hour: "numeric",
         minute: "2-digit"
       });
@@ -184,7 +183,7 @@ export default async function TeacherDashboardPage() {
       } else if (isTomorrow) {
         countdownText = `Tomorrow at ${timeString}`;
       } else {
-        const dateString = start.toLocaleDateString("en-GB", {
+        const dateString = start.toLocaleDateString("en-GB", { timeZone: "Asia/Kolkata",
           day: "numeric",
           month: "short"
         });
@@ -284,7 +283,7 @@ export default async function TeacherDashboardPage() {
                   <div className="flex flex-wrap gap-x-6 gap-y-3 pt-2 border-t border-line/80 text-xs font-medium text-ink-500">
                     <span className="flex items-center gap-2 bg-paper/50 px-2.5 py-1 rounded-lg border border-line">
                       <Calendar className="w-4 h-4 text-ink-500" />
-                      {new Date(nextClass.startsAt).toLocaleDateString("en-GB", {
+                      {new Date(nextClass.startsAt).toLocaleDateString("en-GB", { timeZone: "Asia/Kolkata",
                         weekday: "long",
                         day: "numeric",
                         month: "short"
@@ -292,10 +291,10 @@ export default async function TeacherDashboardPage() {
                     </span>
                     <span className="flex items-center gap-2 bg-paper/50 px-2.5 py-1 rounded-lg border border-line">
                       <Clock className="w-4 h-4 text-ink-500" />
-                      {new Date(nextClass.startsAt).toLocaleTimeString("en-GB", {
+                      {new Date(nextClass.startsAt).toLocaleTimeString("en-GB", { timeZone: "Asia/Kolkata",
                         hour: "2-digit",
                         minute: "2-digit"
-                      })} - {new Date(nextClass.endsAt).toLocaleTimeString("en-GB", {
+                      })} - {new Date(nextClass.endsAt).toLocaleTimeString("en-GB", { timeZone: "Asia/Kolkata",
                         hour: "2-digit",
                         minute: "2-digit"
                       })} ({Math.round((new Date(nextClass.endsAt).getTime() - new Date(nextClass.startsAt).getTime()) / (1000 * 60))} mins)
@@ -356,7 +355,7 @@ export default async function TeacherDashboardPage() {
                   <p className="text-sm font-serif font-bold text-ink-900">No lectures scheduled for today</p>
                   {nextClass ? (
                     <p className="text-xs text-ink-500 mt-1 max-w-xs mx-auto">
-                      Enjoy your preparation day! Your next lecture is on {new Date(nextClass.startsAt).toLocaleDateString("en-GB", { day: "numeric", month: "short" })} at {new Date(nextClass.startsAt).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}.
+                      Enjoy your preparation day! Your next lecture is on {new Date(nextClass.startsAt).toLocaleDateString("en-GB", { timeZone: "Asia/Kolkata", day: "numeric", month: "short" })} at {new Date(nextClass.startsAt).toLocaleTimeString("en-GB", { timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit" })}.
                     </p>
                   ) : (
                     <p className="text-xs text-ink-500 mt-1">Enjoy your teaching-free day!</p>
@@ -395,7 +394,7 @@ export default async function TeacherDashboardPage() {
                       dotStyle = "border-marigold-100 bg-marigold-100 text-gold-700";
                     }
 
-                    const timeString = startsAt.toLocaleTimeString("en-GB", {
+                    const timeString = startsAt.toLocaleTimeString("en-GB", { timeZone: "Asia/Kolkata",
                       hour: "2-digit",
                       minute: "2-digit"
                     });
@@ -550,13 +549,13 @@ export default async function TeacherDashboardPage() {
                       return bStart >= tStart && bStart <= tEnd;
                     })();
 
-                    const timeStr = bStart.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+                    const timeStr = bStart.toLocaleTimeString("en-US", { timeZone: "Asia/Kolkata", hour: "numeric", minute: "2-digit" });
                     if (isToday) {
                       nextLectureDateStr = `Today at ${timeStr}`;
                     } else if (isTomorrow) {
                       nextLectureDateStr = `Tomorrow at ${timeStr}`;
                     } else {
-                      nextLectureDateStr = `${bStart.toLocaleDateString("en-GB", { day: "numeric", month: "short" })} at ${timeStr}`;
+                      nextLectureDateStr = `${bStart.toLocaleDateString("en-GB", { timeZone: "Asia/Kolkata", day: "numeric", month: "short" })} at ${timeStr}`;
                     }
                   }
 

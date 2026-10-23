@@ -73,7 +73,7 @@ export default async function StudentDetailsPage({ params }: PageProps) {
   }
 
   const formattedEnrollmentDate = student.enrollmentDate
-    ? new Date(student.enrollmentDate).toLocaleDateString("en-GB", {
+    ? new Date(student.enrollmentDate).toLocaleDateString("en-GB", { timeZone: "Asia/Kolkata",
         day: "numeric",
         month: "short",
         year: "numeric",
@@ -81,7 +81,7 @@ export default async function StudentDetailsPage({ params }: PageProps) {
     : null;
 
   const formattedAccountCreatedDate = student.createdAt
-    ? new Date(student.createdAt).toLocaleDateString("en-GB", {
+    ? new Date(student.createdAt).toLocaleDateString("en-GB", { timeZone: "Asia/Kolkata",
         day: "numeric",
         month: "short",
         year: "numeric",

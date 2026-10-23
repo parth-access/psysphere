@@ -114,7 +114,7 @@ export async function provisionStudent(input: ProvisionStudentInput): Promise<Pr
         guardianPhone: input.parentPhone,
         guardianEmail: input.parentEmail ?? null,
         notes: `Student phone: ${input.phone}`,
-        enrollmentDate: new Date().toISOString().split("T")[0],
+        enrollmentDate: new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" }),
       });
     } else {
       studentId = sp.admissionNumber || (await generateStudentId(tx));

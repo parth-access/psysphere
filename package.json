@@ -13,6 +13,7 @@
     "typecheck": "tsc --noEmit",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
+    "db:seed:dev": "tsx db/seed-dev.ts",
     "clean": "rm -rf .next"
   },
   "dependencies": {
@@ -45,6 +46,7 @@
     "eslint": "9.39.1",
     "eslint-config-next": "16.0.8",
     "tailwindcss": "4.1.11",
+    "tsx": "^4.23.0",
     "typescript": "5.9.3"
   }
 }

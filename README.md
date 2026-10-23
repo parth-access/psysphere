@@ -32,6 +32,19 @@ In the Supabase dashboard, under Authentication > URL Configuration, add `https:
 
 The first admin has to be made by hand. Create the user in Supabase Auth, then insert a row in `profiles` with the same `id` and `role = 'admin'`. Admins add teachers from `/dashboard/teachers`. Student accounts are created when a payment goes through.
 
+### Local database
+
+To work without touching the Supabase database, use a local Postgres instead. `db/local-setup.sql` adds the one Supabase table the migrations depend on (`auth.users`).
+
+```bash
+createdb saarthi_dev
+psql -d saarthi_dev -f db/local-setup.sql
+```
+
+Set `DATABASE_URL=postgres://<your mac username>@localhost:5432/saarthi_dev` in `.env`, then run `npm run db:migrate`. Public pages work like this. Logging in still needs the Supabase values in `.env`.
+
+`npm run db:seed:dev` adds sample data: two Class 11 batches (one needs approval, one is open to pay straight away) and a free workshop on the coming Saturday. Running it again resets those rows. It refuses to run against anything but a local database.
+
 ## Scripts
 
 | Command | What it does |
@@ -42,6 +55,7 @@ The first admin has to be made by hand. Create the user in Supabase Auth, then i
 | `npm run typecheck` | TypeScript check |
 | `npm run db:generate` | Write a migration after changing `db/schema` |
 | `npm run db:migrate` | Apply migrations in `db/migrations` |
+| `npm run db:seed:dev` | Add sample batches and a workshop to a local database |
 
 ## Where things live
 

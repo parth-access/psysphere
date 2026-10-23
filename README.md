@@ -28,6 +28,8 @@ npm run dev
 
 Fill in `.env` before running migrations. `.env.example` says what each value is for. Use Razorpay `rzp_test_` keys until you go live.
 
+In the Supabase dashboard, under Authentication > URL Configuration, add `https://<your domain>/reset-password` to the Redirect URLs. Password setup and reset links send people there. If it isn't on the list, Supabase sends them to the Site URL instead and the link does nothing.
+
 The first admin has to be made by hand. Create the user in Supabase Auth, then insert a row in `profiles` with the same `id` and `role = 'admin'`. Admins add teachers from `/dashboard/teachers`. Student accounts are created when a payment goes through.
 
 ## Scripts

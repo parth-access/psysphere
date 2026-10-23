@@ -54,8 +54,9 @@ function ForgotForm({ onBack }: { onBack: () => void }) {
 
 function SignInForm() {
   const [state, formAction, isPending] = useActionState(signInAction, null);
-  const [forgot, setForgot] = useState(false);
-  const updated = useSearchParams().get("updated") === "true";
+  const params = useSearchParams();
+  const [forgot, setForgot] = useState(params.get("forgot") === "1");
+  const updated = params.get("updated") === "true";
 
   if (forgot) return <ForgotForm onBack={() => setForgot(false)} />;
 

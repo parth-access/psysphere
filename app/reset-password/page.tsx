@@ -3,6 +3,7 @@
 import * as React from "react";
 import { createClient } from "@/src/domains/auth/client";
 import { Logo } from "@/features/marketing/ui/Logo";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   KeyRound,
@@ -12,10 +13,12 @@ import {
   Loader2,
 } from "lucide-react";
 
+const EXPIRED = "This link has expired or has already been used. You can get a new one below.";
+
 export default function ResetPasswordPage() {
   const router = useRouter();
-  // We read the link's tokens ourselves. If the client also picked them up from the URL, it would
-  // sign in on load and our clean-up sign-out below would revoke the very session the link created.
+  // We read the link's tokens ourselves rather than letting the client pick them up on load,
+  // so a failed or reused link can't leave a half-made session behind.
   const [supabase] = React.useState(() =>
     createClient({ isSingleton: false, auth: { detectSessionInUrl: false } })
   );
@@ -57,29 +60,35 @@ export default function ResetPasswordPage() {
         const searchParams = new URLSearchParams(window.location.search);
         const code = searchParams.get("code");
         const tokenHash = searchParams.get("token_hash");
+        // Supabase sends people back with error_code when a link has expired or was already used.
+        const linkError = hashParams.get("error_code") || searchParams.get("error_code");
 
         // Keep the one-time tokens out of the address bar and browser history.
         if (window.location.hash || window.location.search) {
           window.history.replaceState(null, "", window.location.pathname);
         }
 
+        if (linkError) {
+          fail(EXPIRED);
+          return;
+        }
         if (!accessToken && !code && !tokenHash) {
-          fail("This password setup link is invalid or has expired. Please request a new invitation from the Saarthi Classes administrator.");
+          fail("This page only works from the link in your email. Open that link again, or get a new one below.");
           return;
         }
 
-        // Drop any session already in this browser (an admin testing the link, say) so the password
-        // change lands on the right account. "local" leaves that person's other devices signed in.
-        const { data: { session: existingSession } } = await supabase.auth.getSession();
-        if (existingSession) {
-          await supabase.auth.signOut({ scope: "local" });
-        }
-
+        // Each branch below stores the link's session in place of any session already in this
+        // browser, so the password change always lands on the account the link was sent to.
+        // Don't sign out first: that also deletes the PKCE code verifier the "code" branch needs.
         if (code) {
           const { data, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
           if (exchangeError || !data?.session) {
             console.error("[ResetPassword] PKCE exchange error:", exchangeError);
-            fail("The verification code is invalid or has expired.");
+            fail(
+              exchangeError?.code === "pkce_code_verifier_not_found"
+                ? "Open the link in the same browser you asked for it from. If that isn’t handy, get a new link here."
+                : EXPIRED
+            );
             return;
           }
           verified(data.session.user.email);
@@ -93,7 +102,7 @@ export default function ResetPasswordPage() {
           });
           if (otpError || !data?.session) {
             console.error("[ResetPassword] OTP verification error:", otpError);
-            fail("Verification via token failed or token has expired.");
+            fail(EXPIRED);
             return;
           }
           verified(data.session.user.email);
@@ -107,7 +116,7 @@ export default function ResetPasswordPage() {
           });
           if (setSessionError || !data?.session) {
             console.error("[ResetPassword] setSession failed:", setSessionError);
-            fail("We could not establish the secure session from your invitation link.");
+            fail(EXPIRED);
             return;
           }
           verified(data.session.user.email);
@@ -117,7 +126,7 @@ export default function ResetPasswordPage() {
         fail("We could not establish a secure session from the provided credentials.");
       } catch (err) {
         console.error("[ResetPassword] Recovery initialization failed:", err);
-        fail("We could not verify this password setup link. Please request a new invitation.");
+        fail("We couldn’t check this link. Try it again, or get a new one below.");
       }
     };
 
@@ -132,7 +141,7 @@ export default function ResetPasswordPage() {
 
     if (!recoveryVerified) {
       setError(
-        "Your password setup session is invalid or has expired. Please request a new invitation."
+        "This link has expired. Get a new one with Forgot password on the log in page."
       );
       return;
     }
@@ -161,7 +170,7 @@ export default function ResetPasswordPage() {
       if (sessionError || !session) {
         setRecoveryVerified(false);
         setError(
-          "Your password setup session has expired. Please request a new invitation."
+          "This link has expired. Get a new one with Forgot password on the log in page."
         );
         setIsLoading(false);
         return;
@@ -243,11 +252,11 @@ export default function ResetPasswordPage() {
         </div>
 
         <h2 className="mt-6 text-center text-3xl font-serif font-bold text-ink-900 tracking-tight">
-          Secure Your Account
+          Set your password
         </h2>
 
         <p className="mt-2 text-center text-sm text-ink-500">
-          Set your new access password to complete setup
+          Choose a password for your Saarthi Classes account.
         </p>
       </div>
 
@@ -258,7 +267,7 @@ export default function ResetPasswordPage() {
               <Loader2 className="w-8 h-8 text-ink-900 animate-spin" />
 
               <p className="text-sm text-ink-500 font-medium">
-                Verifying your secure invitation link...
+                Checking your link…
               </p>
             </div>
           ) : success ? (
@@ -268,12 +277,11 @@ export default function ResetPasswordPage() {
               </div>
 
               <h3 className="text-md font-serif text-sage-600">
-                Password Set Successfully
+                Password saved
               </h3>
 
               <p className="text-xs text-sage-600">
-                Your credentials have been updated. Redirecting
-                you to the sign-in portal...
+                Taking you to the log in page…
               </p>
             </div>
           ) : !recoveryVerified ? (
@@ -283,13 +291,21 @@ export default function ResetPasswordPage() {
               </div>
 
               <h3 className="text-center text-md font-serif text-rose-600">
-                Invalid or Expired Link
+                This link didn’t work
               </h3>
 
               <p className="text-center text-xs text-rose-600">
-                {error ||
-                  "This password setup link is invalid or has expired. Please request a new invitation from the Saarthi Classes administrator."}
+                {error || EXPIRED}
               </p>
+
+              <div className="flex justify-center pt-1">
+                <Link
+                  href="/sign-in?forgot=1"
+                  className="inline-flex min-h-11 items-center rounded-full bg-forest-800 px-5 text-sm font-bold text-paper hover:bg-forest-900"
+                >
+                  Get a new link
+                </Link>
+              </div>
             </div>
           ) : (
             <form
@@ -386,11 +402,11 @@ export default function ResetPasswordPage() {
                   {isLoading ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      Setting Password...
+                      Saving…
                     </>
                   ) : (
                     <>
-                      Confirm Password
+                      Save password
                       <ArrowRight className="w-4 h-4" />
                     </>
                   )}

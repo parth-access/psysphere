@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { createClient } from "@/src/domains/auth/client";
+import { clearLoginLockoutAction } from "@/src/domains/auth/actions";
 import { Logo } from "@/features/marketing/ui/Logo";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -60,6 +61,8 @@ export default function ResetPasswordPage() {
         const searchParams = new URLSearchParams(window.location.search);
         const code = searchParams.get("code");
         const tokenHash = searchParams.get("token_hash");
+        // Our own emails link here with type=invite for new accounts and type=recovery for resets.
+        const otpType = searchParams.get("type") === "invite" ? "invite" : "recovery";
         // Supabase sends people back with error_code when a link has expired or was already used.
         const linkError = hashParams.get("error_code") || searchParams.get("error_code");
 
@@ -98,7 +101,7 @@ export default function ResetPasswordPage() {
         if (tokenHash) {
           const { data, error: otpError } = await supabase.auth.verifyOtp({
             token_hash: tokenHash,
-            type: "recovery",
+            type: otpType,
           });
           if (otpError || !data?.session) {
             console.error("[ResetPassword] OTP verification error:", otpError);
@@ -208,6 +211,7 @@ export default function ResetPasswordPage() {
       /*
        * Password really has been changed at this point.
        */
+      await clearLoginLockoutAction().catch(() => {});
       setSuccess(true);
       setIsLoading(false);
 

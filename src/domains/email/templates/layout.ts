@@ -1,209 +1,124 @@
-export function renderBaseEmailLayout(title: string, contentHtml: string): string {
-  return `
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>${title}</title>
-      <style>
-        body {
-          margin: 0;
-          padding: 0;
-          width: 100% !important;
-          background-color: #FBF8F1;
-          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-          -webkit-font-smoothing: antialiased;
-          color: #15281D;
-        }
-        table {
-          border-collapse: collapse;
-          mso-table-lspace: 0pt;
-          mso-table-rspace: 0pt;
-        }
-        img {
-          border: 0;
-          height: auto;
-          line-height: 100%;
-          outline: none;
-          text-decoration: none;
-        }
-        .wrapper {
-          width: 100%;
-          table-layout: fixed;
-          background-color: #FBF8F1;
-          padding-top: 40px;
-          padding-bottom: 40px;
-        }
-        .container {
-          max-width: 600px;
-          margin: 0 auto;
-          background-color: #FFFFFF;
-          border: 1px solid #E6DFCF;
-          border-radius: 4px;
-          overflow: hidden;
-          box-shadow: 0 4px 12px rgba(31, 41, 55, 0.02);
-        }
-        .header {
-          padding: 32px 40px;
-          background-color: #FFFFFF;
-          border-bottom: 1px solid #FBF8F1;
-          text-align: center;
-        }
-        .logo-box {
-          display: inline-block;
-          width: 44px;
-          height: 44px;
-          line-height: 44px;
-          background-color: #1F5E3B;
-          color: #FFFFFF;
-          border-radius: 22px;
-          font-family: Georgia, serif;
-          font-style: italic;
-          font-size: 24px;
-          font-weight: bold;
-          text-align: center;
-          border-radius: 999px;
-        }
-        .brand-name {
-          font-family: Georgia, serif;
-          font-size: 18px;
-          font-weight: bold;
-          color: #15281D;
-          margin-top: 12px;
-          letter-spacing: 0.05em;
-        }
-        .body-content {
-          padding: 40px 40px;
-          background-color: #FFFFFF;
-        }
-        .footer {
-          padding: 32px 40px;
-          background-color: #FBF8F1;
-          border-top: 1px solid #E6DFCF;
-          text-align: center;
-          font-size: 12px;
-          color: #5A6B60;
-          line-height: 1.6;
-        }
-        .automated-notice {
-          margin-top: 24px;
-          padding-top: 24px;
-          border-top: 1px solid #E6DFCF;
-          font-size: 13px;
-          color: #5A6B60;
-        }
-        .automated-notice a {
-          color: #15281D;
-          font-weight: 600;
-          text-decoration: underline;
-        }
-        h1, h2, h3 {
-          font-family: Georgia, serif;
-          color: #15281D;
-          margin-top: 0;
-          font-weight: bold;
-        }
-        h1 {
-          font-size: 24px;
-          line-height: 1.3;
-          margin-bottom: 16px;
-        }
-        p {
-          font-size: 15px;
-          line-height: 1.6;
-          color: #15281D;
-          margin-top: 0;
-          margin-bottom: 20px;
-        }
-        .btn-container {
-          margin-top: 32px;
-          margin-bottom: 32px;
-          text-align: center;
-        }
-        .btn {
-          display: inline-block;
-          background-color: #1F5E3B;
-          color: #FFFFFF !important;
-          text-decoration: none;
-          font-size: 14px;
-          font-weight: 600;
-          padding: 12px 28px;
-          border-radius: 999px;
-          letter-spacing: 0.02em;
-          box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-          transition: background-color 0.2s ease;
-        }
-        .btn:hover {
-          background-color: #164A2E;
-        }
-        .bullet-list {
-          margin: 0 0 24px 0;
-          padding-left: 20px;
-        }
-        .bullet-item {
-          font-size: 14px;
-          line-height: 1.6;
-          color: #5A6B60;
-          margin-bottom: 8px;
-        }
-        .highlight-box {
-          background-color: #FBF8F1;
-          border: 1px solid #E6DFCF;
-          padding: 24px;
-          border-radius: 999px;
-          margin-bottom: 24px;
-        }
-        .highlight-item {
-          font-size: 14px;
-          line-height: 1.5;
-          margin-bottom: 12px;
-        }
-        .highlight-item:last-child {
-          margin-bottom: 0;
-        }
-        .highlight-label {
-          font-size: 11px;
-          text-transform: uppercase;
-          letter-spacing: 0.1em;
-          color: #5A6B60;
-          font-weight: 700;
-          margin-bottom: 4px;
-        }
-        .highlight-value {
-          font-size: 16px;
-          font-weight: 600;
-          color: #15281D;
-        }
-        .divider {
-          height: 1px;
-          background-color: #E6DFCF;
-          margin: 24px 0;
-        }
-      </style>
-    </head>
-    <body>
-      <div class="wrapper">
-        <div class="container">
-          <div class="header">
-            <img src="https://www.saarthilife.com/saarthi-logo.webp" alt="Saarthi" height="40" style="height:40px;width:auto;border:0;" />
-            <div class="brand-name">Saarthi Classes</div>
-          </div>
-          <div class="body-content">
-            ${contentHtml}
-          </div>
-          <div class="footer">
-            <div class="automated-notice">
-              <p style="margin-bottom: 8px;">This is an automated email from Saarthi Classes. This inbox is not monitored for replies.</p>
-              <p style="margin: 0;">Need help or have a question? Please use our <a href="https://classes.saarthilife.com/contact">Contact Form</a>.</p>
-            </div>
-            <div class="divider"></div>
-            <p style="margin-bottom: 8px; font-size: 12px; color: #5A6B60;">© 2026 Saarthi Classes. All rights reserved.</p>
-            <p style="margin: 0; font-size: 11px; color: #9CA3AF;">This is an administrative email regarding your academic enrollment. You cannot unsubscribe from system notifications.</p>
-          </div>
-        </div>
-      </div>
-    </body>
-    </html>
-  `;
+import { SITE, whatsappUrl } from "@/constants/site";
+import { EMAIL_DEFAULTS } from "../constants";
+
+/**
+ * Brand colours from app/globals.css. Emails can't use CSS variables, and most clients
+ * strip <style>, so every rule below is written inline on table-based markup.
+ */
+export const C = {
+  forest900: "#164A2E",
+  forest800: "#1F5E3B",
+  forest50: "#EFF6F0",
+  gold500: "#E6A520",
+  gold700: "#8C5E07",
+  gold100: "#FCF0D2",
+  ink900: "#15281D",
+  ink700: "#2C4235",
+  ink500: "#5A6B60",
+  paper: "#FBF8F1",
+  paperDeep: "#F3EDE0",
+  line: "#E6DFCF",
+  white: "#FFFFFF",
+  rose600: "#B3423A",
+};
+
+export const SERIF = `Georgia, 'Times New Roman', serif`;
+export const SANS = `-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif`;
+
+/**
+ * The frame every Saarthi Classes email sits in.
+ * `preheader` is the grey preview line inbox lists show next to the subject.
+ */
+export function renderBaseEmailLayout(title: string, contentHtml: string, preheader = ""): string {
+  const year = new Date().getFullYear();
+  const replyLine = EMAIL_DEFAULTS.REPLY_TO
+    ? `Questions? Just reply to this email, or message us on <a href="${whatsappUrl()}" style="color:${C.forest800};font-weight:600;text-decoration:underline;">WhatsApp</a>.`
+    : `Questions? Use our <a href="${SITE.url}/contact" style="color:${C.forest800};font-weight:600;text-decoration:underline;">contact form</a> or message us on <a href="${whatsappUrl()}" style="color:${C.forest800};font-weight:600;text-decoration:underline;">WhatsApp</a>.`;
+
+  return `<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="x-apple-disable-message-reformatting">
+  <meta name="color-scheme" content="light">
+  <meta name="supported-color-schemes" content="light">
+  <title>${title}</title>
+  <style>
+    @media (max-width: 620px) {
+      .card { border-radius: 0 !important; border-left: 0 !important; border-right: 0 !important; }
+      .pad { padding-left: 24px !important; padding-right: 24px !important; }
+      .h1 { font-size: 26px !important; }
+    }
+    a { color: ${C.forest800}; }
+  </style>
+</head>
+<body style="margin:0;padding:0;background-color:${C.paperDeep};-webkit-font-smoothing:antialiased;">
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;mso-hide:all;">${preheader}&#8203;&nbsp;&#8203;&nbsp;&#8203;&nbsp;&#8203;&nbsp;&#8203;&nbsp;&#8203;&nbsp;&#8203;&nbsp;</div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:${C.paperDeep};">
+    <tr>
+      <td align="center" style="padding:32px 12px;">
+        <table role="presentation" class="card" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:580px;background-color:${C.white};border:1px solid ${C.line};border-radius:24px;overflow:hidden;">
+          <!-- Header -->
+          <tr>
+            <td class="pad" style="background-color:${C.forest900};padding:26px 40px 22px 40px;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td style="vertical-align:middle;padding-right:12px;">
+                    <img src="${SITE.logoUrl}" alt="" width="40" height="40" style="display:block;width:40px;height:40px;border:0;border-radius:999px;background-color:${C.paper};">
+                  </td>
+                  <td style="vertical-align:middle;">
+                    <div style="font-family:${SERIF};font-size:22px;line-height:1;color:${C.paper};">Saarthi</div>
+                    <div style="font-family:${SANS};font-size:10px;line-height:1;margin-top:5px;letter-spacing:0.22em;font-weight:700;color:${C.gold500};">CLASSES</div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr><td style="height:4px;line-height:4px;font-size:0;background-color:${C.gold500};">&nbsp;</td></tr>
+          <!-- Body -->
+          <tr>
+            <td class="pad" style="padding:40px 40px 12px 40px;font-family:${SANS};font-size:16px;line-height:1.65;color:${C.ink700};">
+              ${contentHtml}
+            </td>
+          </tr>
+          <!-- Help -->
+          <tr>
+            <td class="pad" style="padding:8px 40px 36px 40px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:${C.forest50};border-radius:16px;">
+                <tr>
+                  <td style="padding:16px 20px;font-family:${SANS};font-size:14px;line-height:1.55;color:${C.ink700};">${replyLine}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+        <!-- Footer -->
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:580px;">
+          <tr>
+            <td align="center" style="padding:24px 24px 8px 24px;font-family:${SERIF};font-style:italic;font-size:15px;color:${C.ink700};">
+              Psychology for Class 11, 12 &amp; CUET-UG
+            </td>
+          </tr>
+          <tr>
+            <td align="center" style="padding:0 24px 8px 24px;font-family:${SANS};font-size:13px;color:${C.ink500};">
+              <a href="${SITE.url}" style="color:${C.ink700};text-decoration:none;font-weight:600;">classes.saarthilife.com</a>
+              &nbsp;·&nbsp;
+              <a href="${SITE.url}/workshops" style="color:${C.ink700};text-decoration:none;font-weight:600;">Free workshops</a>
+              &nbsp;·&nbsp;
+              <a href="${whatsappUrl()}" style="color:${C.ink700};text-decoration:none;font-weight:600;">WhatsApp</a>
+            </td>
+          </tr>
+          <tr>
+            <td align="center" style="padding:4px 24px 24px 24px;font-family:${SANS};font-size:11px;line-height:1.6;color:${C.ink500};">
+              © ${year} Saarthi Classes, part of <a href="${SITE.parent.url}" style="color:${C.ink500};">Saarthi</a>.<br>
+              You're getting this because of your account or a request on our website.
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
 }

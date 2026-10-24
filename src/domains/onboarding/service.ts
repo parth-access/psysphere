@@ -9,6 +9,7 @@ import * as schema from "@/db/schema";
 import type { PgTransaction } from "drizzle-orm/pg-core";
 import type { PostgresJsQueryResultHKT } from "drizzle-orm/postgres-js";
 import { appUrl } from "../joining/tokens";
+import { passwordLink } from "../auth/links";
 
 type DBTx = PgTransaction<PostgresJsQueryResultHKT, typeof schema, ExtractTablesWithRelations<typeof schema>>;
 
@@ -144,14 +145,12 @@ export async function provisionStudent(input: ProvisionStudentInput): Promise<Pr
 
   // 3. Password setup link
   let passwordSetupUrl = appUrl("/sign-in");
-  const redirectTo = appUrl("/reset-password");
   for (const type of (isNewUser ? ["invite", "recovery"] : ["recovery"]) as ("invite" | "recovery")[]) {
-    const { data, error } = await admin.auth.admin.generateLink({ type, email, options: { redirectTo } });
-    if (!error && data?.properties?.action_link) {
-      passwordSetupUrl = data.properties.action_link;
+    const link = await passwordLink(email, type);
+    if (link) {
+      passwordSetupUrl = link;
       break;
     }
-    console.error(`[onboarding] ${type} link failed for ${email}:`, error?.message);
   }
 
   return { userId: uid, studentId, passwordSetupUrl };

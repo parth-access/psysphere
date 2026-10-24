@@ -75,6 +75,11 @@ export interface PasswordSetupPayload {
   passwordSetupUrl: string;
 }
 
+export interface PasswordResetPayload {
+  name: string | null;
+  resetUrl: string;
+}
+
 export interface TeacherActivationPayload {
   teacherName: string;
   email: string;

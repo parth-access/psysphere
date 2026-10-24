@@ -14,6 +14,7 @@ import type {
   JoinRequestDeclinedPayload,
   EnrollmentConfirmedPayload,
   PasswordSetupPayload,
+  PasswordResetPayload,
   TeacherActivationPayload,
   WeeklyReportPayload,
 } from "./types";
@@ -28,6 +29,7 @@ import {
   getJoinRequestDeclinedTemplate,
   getEnrollmentConfirmedTemplate,
   getPasswordSetupTemplate,
+  getPasswordResetTemplate,
   getTeacherActivationTemplate,
   getWeeklyReportTemplate,
 } from "./templates";
@@ -78,6 +80,7 @@ export class EmailService {
       type: string;
       relatedEntityType?: string;
       relatedEntityId?: string;
+      replyTo?: string;
     }
   ): Promise<SendEmailResponse> {
     const resend = getResendClient();
@@ -130,7 +133,7 @@ export class EmailService {
         to: [to],
         subject,
         html: htmlContent,
-        replyTo: EMAIL_DEFAULTS.REPLY_TO,
+        replyTo: options?.replyTo || EMAIL_DEFAULTS.REPLY_TO,
       });
 
       if (error) {
@@ -242,9 +245,25 @@ export class EmailService {
     return this.send(to, "We've received your join request | Saarthi Classes", getJoinRequestReceivedTemplate(p), "join_request_received", "join_request", joinRequestId);
   }
 
+  /** Alerts for the team. Skipped with a warning when ADMIN_NOTIFICATION_EMAIL and EMAIL_REPLY_TO are both unset. */
+  async sendAdminAlert(
+    subject: string,
+    html: string,
+    options: { type: string; relatedEntityType?: string; relatedEntityId?: string; replyTo?: string }
+  ): Promise<SendEmailResponse> {
+    if (!EMAIL_DEFAULTS.ADMIN) {
+      console.warn(`[EmailService] Admin alert not sent, no ADMIN_NOTIFICATION_EMAIL or EMAIL_REPLY_TO set. Subject: ${subject}`);
+      return { success: false, error: "No admin email configured" };
+    }
+    return this.sendHtmlEmail(EMAIL_DEFAULTS.ADMIN, subject, html, EMAIL_DEFAULTS.FROM, options);
+  }
+
   sendNewJoinRequestInternal(p: NewJoinRequestInternalPayload, joinRequestId?: string) {
-    const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL || EMAIL_DEFAULTS.REPLY_TO;
-    return this.send(adminEmail, `[Join request] ${p.studentName} · ${p.batchName}`, getNewJoinRequestInternalTemplate(p), "join_request_internal", "join_request", joinRequestId);
+    return this.sendAdminAlert(`[Join request] ${p.studentName} · ${p.batchName}`, getNewJoinRequestInternalTemplate(p), {
+      type: "join_request_internal",
+      relatedEntityType: "join_request",
+      relatedEntityId: joinRequestId,
+    });
   }
 
   sendJoinRequestApproved(to: string, p: JoinRequestApprovedPayload, joinRequestId?: string) {
@@ -263,6 +282,10 @@ export class EmailService {
 
   sendPasswordSetup(to: string, p: PasswordSetupPayload, userId?: string) {
     return this.send(to, "Set your password | Saarthi Classes", getPasswordSetupTemplate(p), "password_setup", "profile", userId);
+  }
+
+  sendPasswordReset(to: string, p: PasswordResetPayload) {
+    return this.send(to, "Reset your Saarthi Classes password", getPasswordResetTemplate(p), "password_reset");
   }
 
   sendWeeklyReport(to: string, p: WeeklyReportPayload, studentId?: string) {

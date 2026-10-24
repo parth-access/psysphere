@@ -25,7 +25,7 @@ function Notice({ tone, children }: { tone: "ok" | "error"; children: React.Reac
   );
 }
 
-function ForgotForm({ onBack }: { onBack: () => void }) {
+function ForgotForm({ email, onBack }: { email: string; onBack: () => void }) {
   const [state, action, pending] = useActionState(forgotPasswordAction, null);
   if (state?.sent) {
     return (
@@ -41,7 +41,7 @@ function ForgotForm({ onBack }: { onBack: () => void }) {
       {state?.error && <Notice tone="error">{state.error}</Notice>}
       <div className="flex flex-col gap-1.5">
         <label htmlFor="reset-email" className="text-sm font-semibold text-ink-900">Email</label>
-        <input id="reset-email" name="email" type="email" autoComplete="email" required className={input} />
+        <input id="reset-email" name="email" type="email" autoComplete="email" required defaultValue={email} className={input} />
       </div>
       <button type="submit" disabled={pending} className={primary}>
         {pending && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}
@@ -56,9 +56,11 @@ function SignInForm() {
   const [state, formAction, isPending] = useActionState(signInAction, null);
   const params = useSearchParams();
   const [forgot, setForgot] = useState(params.get("forgot") === "1");
+  // Controlled, so a wrong password doesn't wipe it (React resets uncontrolled fields after every form action).
+  const [email, setEmail] = useState("");
   const updated = params.get("updated") === "true";
 
-  if (forgot) return <ForgotForm onBack={() => setForgot(false)} />;
+  if (forgot) return <ForgotForm email={email} onBack={() => setForgot(false)} />;
 
   return (
     <form action={formAction} className="flex flex-col gap-5">
@@ -66,7 +68,7 @@ function SignInForm() {
       {state?.error && <Notice tone="error">{state.error}</Notice>}
       <div className="flex flex-col gap-1.5">
         <label htmlFor="email" className="text-sm font-semibold text-ink-900">Email</label>
-        <input id="email" name="email" type="email" autoComplete="email" required disabled={isPending} className={input} />
+        <input id="email" name="email" type="email" autoComplete="email" required readOnly={isPending} value={email} onChange={(e) => setEmail(e.target.value)} className={input} />
       </div>
       <div className="flex flex-col gap-1.5">
         <div className="flex items-center justify-between">
@@ -75,7 +77,7 @@ function SignInForm() {
             Forgot password?
           </button>
         </div>
-        <input id="password" name="password" type="password" autoComplete="current-password" required disabled={isPending} className={input} />
+        <input id="password" name="password" type="password" autoComplete="current-password" required readOnly={isPending} className={input} />
       </div>
       <button type="submit" disabled={isPending} className={primary}>
         {isPending && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}

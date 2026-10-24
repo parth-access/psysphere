@@ -4,7 +4,6 @@ import { z } from "zod";
 import { db } from "@/db";
 import { contactMessages } from "@/db/schema/core/contactMessages";
 import { emailService } from "@/src/domains/email/service";
-import { EMAIL_DEFAULTS } from "@/src/domains/email/constants";
 
 const schema = z.object({
   name: z.string().trim().min(2, "Please enter your name").max(100),
@@ -38,12 +37,11 @@ export async function contactAction(_prev: ContactState, formData: FormData): Pr
       <h1>New message: ${esc(v.topic)}</h1>
       <p><strong>${esc(v.name)}</strong> · ${esc(v.email)}${v.phone ? ` · ${esc(v.phone)}` : ""}</p>
       <p style="white-space:pre-line">${esc(v.message)}</p>`;
-    await emailService.sendHtmlEmail(
-      process.env.ADMIN_NOTIFICATION_EMAIL || EMAIL_DEFAULTS.REPLY_TO,
+    await emailService.sendAdminAlert(
       `[Contact] ${v.topic} · ${v.name}`,
       html,
-      EMAIL_DEFAULTS.FROM,
-      { type: "contact_message", relatedEntityType: "contact_message", relatedEntityId: row.id }
+      // Hitting Reply answers the person who wrote in, not the no-reply address.
+      { type: "contact_message", relatedEntityType: "contact_message", relatedEntityId: row.id, replyTo: v.email }
     );
     return { status: "sent" };
   } catch (err) {

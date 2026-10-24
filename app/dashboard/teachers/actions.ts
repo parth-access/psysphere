@@ -5,6 +5,7 @@ import { db } from "@/db";
 import { profiles } from "@/db/schema/core/profiles";
 import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@/src/domains/auth/server";
+import { passwordLink } from "@/src/domains/auth/links";
 import { emailService } from "@/src/domains/email/service";
 import { requireRole } from "@/server/authorization/requireRole";
 import { z } from "zod";
@@ -117,31 +118,10 @@ export async function createTeacherAction(formData: FormData) {
     throw new Error(`Database persistence failed: ${dbError.message || dbError}`);
   }
 
-  // 5. Generate secure invitation / password setup link from Supabase
-  let passwordSetupUrl = "";
-  try {
-    const { data: linkData, error: linkError } = await supabaseAdmin.auth.admin.generateLink({
-      type: "recovery",
-      email: email,
-      options: {
-        redirectTo: `${process.env.APP_URL || "http://localhost:3000"}/reset-password`
-      }
-    });
-
-    if (linkError) {
-      console.error("Failed to generate secure teacher recovery link from Supabase:", linkError);
-      throw new Error(`Failed to generate secure password setup link: ${linkError.message}`);
-    }
-
-    if (!linkData?.properties?.action_link) {
-      throw new Error("Supabase generateLink did not return a valid action link.");
-    }
-
-    passwordSetupUrl = linkData.properties.action_link;
-    console.log("Successfully generated secure Supabase teacher recovery URL.");
-  } catch (error: any) {
-    console.error("Exception generating teacher recovery link from Supabase:", error);
-    throw new Error(error.message || "Failed to generate secure password setup link.");
+  // 5. Password setup link on our own domain
+  const passwordSetupUrl = await passwordLink(email, "recovery");
+  if (!passwordSetupUrl) {
+    throw new Error("Failed to generate secure password setup link.");
   }
 
   // 6. Send Invite Email via Resend - do not rollback if email fails, return success with warning!

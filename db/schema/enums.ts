@@ -36,6 +36,12 @@ export const attendanceStatusEnum = pgEnum("attendance_status", [
   "excused",
 ]);
 
+/** Who set an attendance mark: worked out from Google Meet, or chosen by a teacher (which Meet never overwrites). */
+export const attendanceSourceEnum = pgEnum("attendance_source", [
+  "meet",
+  "manual",
+]);
+
 export const assignmentAttemptStatusEnum = pgEnum(
   "assignment_attempt_status",
   [

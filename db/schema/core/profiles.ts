@@ -25,6 +25,11 @@ export const profiles = pgTable(
 
     phone: text("phone"),
 
+    /** The Google account a student joins Meet with (Google's account ID), so Meet attendance can be matched to them. */
+    googleUserId: text("google_user_id").unique(),
+
+    googleEmail: text("google_email"),
+
     isActive: boolean("is_active").default(true).notNull(),
 
     lastSeenAt: timestamp("last_seen_at", {

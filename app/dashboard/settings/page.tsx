@@ -4,7 +4,7 @@ import { DashboardCard } from "@/features/dashboard/ui/DashboardCard";
 import { SectionHeader } from "@/features/dashboard/ui/SectionHeader";
 import { enforcePageRole } from "@/server/authorization/requireRole";
 import { ROLES } from "@/server/authorization/roles";
-import { calendarAccount, getConnectedClient } from "@/server/integrations/google";
+import { calendarAccount, getConnectedClient, hasMeetScope } from "@/server/integrations/google";
 import { disconnectGoogleAction } from "./actions";
 import { Calendar as CalendarIcon, CheckCircle, AlertTriangle } from "lucide-react";
 
@@ -113,6 +113,12 @@ export default async function SettingsPage({ searchParams }: PageProps) {
                           <CheckCircle className="w-4 h-4 text-sage-600" />
                           <span>Connected as: <strong className="font-bold">{googleConnection.email}</strong></span>
                         </div>
+                        {!hasMeetScope(googleConnection.scopes) && (
+                          <div className="flex flex-wrap items-center gap-3 rounded-xl border border-marigold-100 bg-marigold-100 px-3.5 py-2.5 text-xs font-medium text-gold-700">
+                            <span>Reconnect once to turn on automatic attendance from Google Meet.</span>
+                            <a href="/api/integrations/google/connect" className="font-semibold underline underline-offset-2">Reconnect Google</a>
+                          </div>
+                        )}
                         <form action={disconnectGoogleAction} className="pt-1">
                           <SubmitButton
                             type="submit"

@@ -1,4 +1,5 @@
 import { and, asc, desc, eq, gt, inArray, lte } from "drizzle-orm";
+import Link from "next/link";
 import { Video } from "lucide-react";
 import { db } from "@/db";
 import { classSessions } from "@/db/schema/academic/classSessions";
@@ -54,6 +55,13 @@ export default async function MyClassesPage() {
   return (
     <div className="space-y-6">
       <PageHeader title="My classes" description="Join live classes and see your attendance." />
+      {!me.googleUserId && (
+        <p className="rounded-xl border border-marigold-100 bg-marigold-100 px-4 py-3 text-sm text-gold-700">
+          Your attendance is taken from Google Meet.{" "}
+          <Link href="/dashboard/profile" className="font-semibold underline underline-offset-2">Link the Google account you join with</Link>{" "}
+          so it’s always counted.
+        </p>
+      )}
       <DashboardCard title="Coming up">
         {upcoming.length === 0 ? <p className="text-sm text-ink-500">No classes scheduled yet.</p> : (
           <ul className="divide-y divide-line">

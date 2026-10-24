@@ -92,6 +92,13 @@
       "when": 1792856625936,
       "tag": "0012_profile_phone_email_changes",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1792857461637,
+      "tag": "0013_meet_attendance",
+      "breakpoints": true
     }
   ]
 }

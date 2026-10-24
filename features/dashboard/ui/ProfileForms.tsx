@@ -9,6 +9,7 @@ import {
   removeAvatarAction,
   requestEmailChangeAction,
   cancelEmailChangeAction,
+  unlinkGoogleAction,
   type ProfileState,
 } from "@/app/dashboard/profile/actions";
 import { Avatar } from "@/features/shared/ui/Avatar";
@@ -231,5 +232,39 @@ export function PasswordForm() {
         <Msg s={state} />
       </div>
     </form>
+  );
+}
+
+const LINK_MESSAGES: Record<string, { ok: boolean; text: string }> = {
+  ok: { ok: true, text: "Google account linked. Join classes with this account and your attendance is marked for you. You can also log in with Google now." },
+  cancelled: { ok: false, text: "Linking was cancelled. Nothing changed." },
+  taken: { ok: false, text: "That Google account is already linked to another student. Choose your own account." },
+  failed: { ok: false, text: "Google didn't finish linking. Try again." },
+  state: { ok: false, text: "That link expired. Try again." },
+  auth: { ok: false, text: "Log in again, then link your Google account." },
+};
+
+/** Students tell us which Google account they join Meet with, so their attendance can be taken automatically. */
+export function GoogleLinkCard({ googleEmail, linked, result }: { googleEmail: string | null; linked: boolean; result?: string }) {
+  const msg = result ? LINK_MESSAGES[result] : undefined;
+  return (
+    <div className="space-y-4">
+      <p className="text-sm text-ink-700">
+        Your attendance is taken from Google Meet. Link the Google account you join classes with, so we know it’s you even if your name looks different in Meet. Once linked, you can also log in with Google.
+      </p>
+      {linked ? (
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-forest-100 bg-forest-50 px-4 py-3">
+          <p className="min-w-0 text-sm text-forest-800">
+            Linked{googleEmail ? <> to <strong className="break-all">{googleEmail}</strong></> : null}. Always join classes signed in to this account. You can also use it to log in.
+          </p>
+          <form action={unlinkGoogleAction}>
+            <PendingButton className="text-sm font-semibold text-ink-700 underline underline-offset-2 hover:text-ink-900">Unlink</PendingButton>
+          </form>
+        </div>
+      ) : (
+        <a href="/api/integrations/google/link" className={`${primary} inline-flex items-center`}>Link Google account</a>
+      )}
+      {msg && <p role={msg.ok ? "status" : "alert"} className={`text-sm font-medium ${msg.ok ? "text-sage-600" : "text-rose-600"}`}>{msg.text}</p>}
+    </div>
   );
 }

@@ -31,5 +31,6 @@ export * from "./academic/assignments";
 export * from "./academic/assignmentAttempts";
 export * from "./academic/evaluations";
 export * from "./academic/studyMaterials";
+export * from "./academic/meetPresence";
 
 export * from "./academic/tests";

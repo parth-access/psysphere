@@ -49,9 +49,17 @@ export function getOAuth2Client() {
   return new google.auth.OAuth2(clientId, clientSecret, redirectUri);
 }
 
+/** Read-only access to the institute account's Meet calls: who joined each class and when. */
+export const MEET_SCOPE = "https://www.googleapis.com/auth/meetings.space.readonly";
+
+/** True when the stored connection was made with Meet access (older connections need reconnecting once). */
+export function hasMeetScope(scopes: string | null | undefined) {
+  return (scopes ?? "").split(/\s+/).includes(MEET_SCOPE);
+}
+
 /**
  * Generates the Google OAuth authorization URL.
- * Uses least privilege scopes: calendar.events instead of full calendar.
+ * Uses least privilege scopes: calendar.events instead of full calendar, and read-only Meet.
  */
 export function getAuthorizationUrl(state: string) {
   const oauth2Client = getOAuth2Client();
@@ -60,10 +68,35 @@ export function getAuthorizationUrl(state: string) {
     prompt: "consent",
     scope: [
       "https://www.googleapis.com/auth/calendar.events",
-      "https://www.googleapis.com/auth/userinfo.email"
+      "https://www.googleapis.com/auth/userinfo.email",
+      MEET_SCOPE,
     ],
     state,
   });
+}
+
+/**
+ * Google sign-in that only tells us who the person is (account ID and email). Used both to link a student's
+ * Google account and to log in with it; the state's prefix ("link." or "login.") tells the callback which.
+ */
+export function getIdentityUrl(state: string) {
+  return getOAuth2Client().generateAuthUrl({
+    access_type: "online",
+    prompt: "select_account",
+    scope: ["openid", "email"],
+    state,
+  });
+}
+
+/** Reads the Google account ID and email from a sign-in made with getIdentityUrl. */
+export async function identifyGoogleUser(code: string) {
+  const client = getOAuth2Client();
+  const { tokens } = await client.getToken(code);
+  if (!tokens.id_token) throw new GoogleIntegrationError("Google didn't say which account you chose. Try again.");
+  const ticket = await client.verifyIdToken({ idToken: tokens.id_token, audience: process.env.GOOGLE_CLIENT_ID });
+  const payload = ticket.getPayload();
+  if (!payload?.sub) throw new GoogleIntegrationError("Google didn't say which account you chose. Try again.");
+  return { id: payload.sub, email: payload.email?.toLowerCase() ?? null };
 }
 
 /**
@@ -171,6 +204,7 @@ export async function getConnectedClient() {
   return {
     client: oauth2Client,
     email: creds.accountEmail,
+    scopes: creds.scopes,
   };
 }
 

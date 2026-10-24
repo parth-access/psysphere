@@ -49,6 +49,11 @@ export const classSessions = pgTable(
 
     googleEventId: text("google_event_id"),
 
+    /** When join/leave times were last read from Google Meet, and why the last read failed, if it did. */
+    meetSyncedAt: timestamp("meet_synced_at", { withTimezone: true }),
+
+    meetSyncError: text("meet_sync_error"),
+
     ...timestamps,
 
     ...auditColumns,

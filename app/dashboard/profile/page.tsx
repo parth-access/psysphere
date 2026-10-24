@@ -3,7 +3,7 @@ import { db } from "@/db";
 import { studentProfiles } from "@/db/schema/core/studentProfiles";
 import { PageHeader } from "@/features/dashboard/ui/PageHeader";
 import { DashboardCard } from "@/features/dashboard/ui/DashboardCard";
-import { DetailsForm, EmailForm, PasswordForm, PhotoForm } from "@/features/dashboard/ui/ProfileForms";
+import { DetailsForm, EmailForm, GoogleLinkCard, PasswordForm, PhotoForm } from "@/features/dashboard/ui/ProfileForms";
 import { enforcePageRole } from "@/server/authorization/requireRole";
 import { ROLES } from "@/server/authorization/roles";
 import { pendingEmailChange } from "@/src/domains/profile/emailChange";
@@ -13,7 +13,8 @@ export const dynamic = "force-dynamic";
 
 const ROLE_LABEL: Record<string, string> = { admin: "Admin", teacher: "Teacher", student: "Student" };
 
-export default async function ProfilePage() {
+export default async function ProfilePage({ searchParams }: { searchParams: Promise<{ google_link?: string; reason?: string }> }) {
+  const { google_link, reason } = await searchParams;
   const me = await enforcePageRole([ROLES.ADMIN, ROLES.TEACHER, ROLES.STUDENT]);
   const [[sp], waiting] = await Promise.all([
     me.role === "student" ? db.select().from(studentProfiles).where(eq(studentProfiles.profileId, me.id)) : Promise.resolve([]),
@@ -63,9 +64,20 @@ export default async function ProfilePage() {
         </DashboardCard>
       </div>
 
-      <DashboardCard title="Password" className="lg:max-w-[calc(50%-1rem)]">
-        <PasswordForm />
-      </DashboardCard>
+      <div className="grid gap-8 lg:grid-cols-2">
+        {me.role === "student" && (
+          <DashboardCard title="Google account for classes">
+            <GoogleLinkCard
+              linked={!!me.googleUserId}
+              googleEmail={me.googleEmail}
+              result={google_link === "error" ? reason : google_link}
+            />
+          </DashboardCard>
+        )}
+        <DashboardCard title="Password">
+          <PasswordForm />
+        </DashboardCard>
+      </div>
     </div>
   );
 }

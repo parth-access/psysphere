@@ -12,6 +12,7 @@ import { createClient } from "@/src/domains/auth/server";
 import { checkCurrentPassword } from "@/src/domains/auth/password";
 import { AVATAR_TYPES, MAX_AVATAR_BYTES, deleteAvatar, uploadAvatar } from "@/src/domains/profile/avatars";
 import { cancelEmailChange, emailTaken, requestEmailChange } from "@/src/domains/profile/emailChange";
+import { unlinkGoogleAccount } from "@/src/domains/attendance/googleLink";
 
 /** `values` echoes what was typed when saving fails, so the form can show it again after React resets it. */
 export type ProfileState = { ok?: string; error?: string; values?: Record<string, string> };
@@ -148,4 +149,10 @@ export async function changePasswordAction(_p: ProfileState, formData: FormData)
   const { error } = await supabase.auth.updateUser({ password: parsed.data.password });
   if (error) return { error: error.message };
   return { ok: "Password changed." };
+}
+
+export async function unlinkGoogleAction() {
+  const me = await requireRole(["student"]);
+  await unlinkGoogleAccount(me.id);
+  revalidatePath("/dashboard/profile");
 }

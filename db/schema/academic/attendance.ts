@@ -2,6 +2,7 @@ import {
   pgTable,
   uuid,
   timestamp,
+  integer,
   index,
   unique,
 } from "drizzle-orm/pg-core";
@@ -10,7 +11,7 @@ import { classSessions } from "./classSessions";
 import { studentProfiles } from "../core/studentProfiles";
 import { profiles } from "../core/profiles";
 import { timestamps } from "../common";
-import { attendanceStatusEnum } from "../enums";
+import { attendanceStatusEnum, attendanceSourceEnum } from "../enums";
 
 export const attendance = pgTable(
   "attendance",
@@ -43,6 +44,13 @@ export const attendance = pgTable(
     })
       .defaultNow()
       .notNull(),
+
+    source: attendanceSourceEnum("source").default("manual").notNull(),
+
+    /** From Meet: minutes in the class, and the longest single stretch away (late joining and leaving early count). */
+    minutesPresent: integer("minutes_present"),
+
+    longestGapMinutes: integer("longest_gap_minutes"),
 
     ...timestamps,
   },

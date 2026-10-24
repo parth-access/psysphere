@@ -5,6 +5,7 @@ import { ArrowDown, ArrowUp, Check, Pencil, Trash2 } from "lucide-react";
 import type { TestOption } from "@/db/schema/academic/tests";
 import { deleteQuestionAction, moveQuestionAction, saveQuestionAction } from "@/app/dashboard/tests/actions";
 import { QuestionForm } from "./TestForms";
+import { PendingButton } from "@/features/shared/ui/PendingButton";
 
 const LETTERS = "ABCDEF";
 const iconBtn = "flex h-9 w-9 items-center justify-center rounded-full text-ink-500 hover:bg-paper hover:text-ink-900 disabled:opacity-30";
@@ -77,13 +78,13 @@ export function QuestionCard({
               <input type="hidden" name="testId" value={testId} />
               <input type="hidden" name="questionId" value={q.id} />
               <input type="hidden" name="dir" value="up" />
-              <button type="submit" disabled={number === 1} className={iconBtn} aria-label={`Move question ${number} up`}><ArrowUp className="h-4 w-4" /></button>
+              <PendingButton iconOnly disabled={number === 1} className={iconBtn} aria-label={`Move question ${number} up`}><ArrowUp className="h-4 w-4" /></PendingButton>
             </form>
             <form action={moveQuestionAction}>
               <input type="hidden" name="testId" value={testId} />
               <input type="hidden" name="questionId" value={q.id} />
               <input type="hidden" name="dir" value="down" />
-              <button type="submit" disabled={number === total} className={iconBtn} aria-label={`Move question ${number} down`}><ArrowDown className="h-4 w-4" /></button>
+              <PendingButton iconOnly disabled={number === total} className={iconBtn} aria-label={`Move question ${number} down`}><ArrowDown className="h-4 w-4" /></PendingButton>
             </form>
             <button type="button" onClick={() => setEditing(true)} className={iconBtn} aria-label={`Edit question ${number}`}><Pencil className="h-4 w-4" /></button>
             <form
@@ -94,7 +95,7 @@ export function QuestionCard({
             >
               <input type="hidden" name="testId" value={testId} />
               <input type="hidden" name="questionId" value={q.id} />
-              <button type="submit" className={`${iconBtn} hover:text-rose-600`} aria-label={`Delete question ${number}`}><Trash2 className="h-4 w-4" /></button>
+              <PendingButton iconOnly className={`${iconBtn} hover:text-rose-600`} aria-label={`Delete question ${number}`}><Trash2 className="h-4 w-4" /></PendingButton>
             </form>
           </div>
         )}

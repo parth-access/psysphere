@@ -18,6 +18,7 @@ import { testPhase, type TestPhase } from "@/src/domains/tests/logic";
 import { finalizeExpired, getAttempt, getManagedTest, getStudentTest, listQuestions, marking, testResults } from "@/src/domains/tests/service";
 import { signedTestImageUrls } from "@/src/domains/tests/storage";
 import { bulkAddQuestionsAction, deleteTestAction, publishTestAction, saveQuestionAction, updateTestAction } from "../actions";
+import { PendingButton } from "@/features/shared/ui/PendingButton";
 
 export const dynamic = "force-dynamic";
 
@@ -126,15 +127,15 @@ export default async function TestPage({
             {!started && (
               <form action={publishTestAction}>
                 <input type="hidden" name="testId" value={test.id} />
-                <button type="submit" className={`${btn} ${test.publishedAt ? "border border-line bg-white text-ink-900 hover:bg-paper" : "bg-forest-800 text-paper hover:bg-forest-900"}`}>
+                <PendingButton className={`${btn} ${test.publishedAt ? "border border-line bg-white text-ink-900 hover:bg-paper" : "bg-forest-800 text-paper hover:bg-forest-900"}`}>
                   {test.publishedAt ? "Hide (back to draft)" : "Publish to students"}
-                </button>
+                </PendingButton>
               </form>
             )}
             {!started && (
               <ConfirmForm action={deleteTestAction} message={`Delete “${test.title}” and all its questions? This can’t be undone.`}>
                 <input type="hidden" name="testId" value={test.id} />
-                <button type="submit" className={`${btn} text-rose-600 hover:bg-rose-100`}>Delete test</button>
+                <PendingButton className={`${btn} text-rose-600 hover:bg-rose-100`}>Delete test</PendingButton>
               </ConfirmForm>
             )}
           </div>

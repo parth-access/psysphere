@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { Plus_Jakarta_Sans, Newsreader, Caveat } from 'next/font/google';
 import './globals.css'; // Global styles
 import { SITE } from '@/constants/site';
+import { Suspense } from 'react';
+import { NavigationProgress } from '@/features/shared/ui/NavigationProgress';
 
 const sans = Plus_Jakarta_Sans({
   subsets: ['latin'],
@@ -48,6 +50,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${sans.variable} ${serif.variable} ${hand.variable}`}>
       <body suppressHydrationWarning className="min-h-screen bg-paper text-ink-900 antialiased">
+        <Suspense fallback={null}>
+          <NavigationProgress />
+        </Suspense>
         {children}
       </body>
     </html>

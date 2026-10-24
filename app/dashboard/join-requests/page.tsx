@@ -9,6 +9,7 @@ import { StatusBadge } from "@/features/dashboard/ui/StatusBadge";
 import { enforcePageRole } from "@/server/authorization/requireRole";
 import { ROLES } from "@/server/authorization/roles";
 import { approveAction, declineAction, retryEnrollAction } from "./actions";
+import { PendingButton } from "@/features/shared/ui/PendingButton";
 
 export const dynamic = "force-dynamic";
 
@@ -95,9 +96,9 @@ export default async function JoinRequestsPage({
                   {(r.status === "pending" || r.status === "approved") && (
                     <form action={approveAction}>
                       <input type="hidden" name="id" value={r.id} />
-                      <button type="submit" className={`${btn} bg-forest-800 text-paper hover:bg-forest-900`}>
+                      <PendingButton className={`${btn} bg-forest-800 text-paper hover:bg-forest-900`}>
                         {r.status === "pending" ? "Approve" : "Resend payment link"}
-                      </button>
+                      </PendingButton>
                     </form>
                   )}
                   {(r.status === "pending" || r.status === "approved") && (
@@ -106,13 +107,13 @@ export default async function JoinRequestsPage({
                       <input type="hidden" name="tab" value={tab} />
                       <label className="sr-only" htmlFor={`reason-${r.id}`}>Reason (optional)</label>
                       <input id={`reason-${r.id}`} name="reason" placeholder="Reason (optional)" className="min-h-9 w-40 rounded-lg border border-line px-2 text-xs" />
-                      <button type="submit" className={`${btn} border border-line text-rose-600 hover:bg-rose-100`}>Decline</button>
+                      <PendingButton className={`${btn} border border-line text-rose-600 hover:bg-rose-100`}>Decline</PendingButton>
                     </form>
                   )}
                   {r.status === "paid" && (
                     <form action={retryEnrollAction}>
                       <input type="hidden" name="id" value={r.id} />
-                      <button type="submit" className={`${btn} bg-forest-800 text-paper hover:bg-forest-900`}>Retry account setup</button>
+                      <PendingButton className={`${btn} bg-forest-800 text-paper hover:bg-forest-900`}>Retry account setup</PendingButton>
                     </form>
                   )}
                   {r.status === "enrolled" && r.studentProfileId && (

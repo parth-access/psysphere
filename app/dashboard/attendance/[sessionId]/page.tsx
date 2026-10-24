@@ -14,6 +14,7 @@ import { enforcePageRole, requireRole } from "@/server/authorization/requireRole
 import { ROLES } from "@/server/authorization/roles";
 import { canManageBatch } from "@/server/authorization/access";
 import { isUuid, formatIST } from "@/lib/ids";
+import { PendingButton } from "@/features/shared/ui/PendingButton";
 
 export const dynamic = "force-dynamic";
 
@@ -130,9 +131,9 @@ export default async function SessionAttendancePage({
                 );
               })}
             </ul>
-            <button type="submit" className="min-h-11 rounded-full bg-forest-800 px-6 text-sm font-semibold text-paper hover:bg-forest-900">
+            <PendingButton className="min-h-11 rounded-full bg-forest-800 px-6 text-sm font-semibold text-paper hover:bg-forest-900">
               Save attendance
-            </button>
+            </PendingButton>
           </form>
         )}
       </DashboardCard>

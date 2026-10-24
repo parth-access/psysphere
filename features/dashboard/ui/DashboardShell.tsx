@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { signOutAction } from "@/src/domains/auth/actions";
 import { Logo } from "@/features/marketing/ui/Logo";
+import { PendingButton } from "@/features/shared/ui/PendingButton";
 
 type Profile = { fullName: string; role: string } | null | undefined;
 
@@ -97,9 +98,9 @@ function SidebarContent({ profile, onNavigate }: { profile: Profile; onNavigate?
             <p className="text-xs capitalize">{profile.role}</p>
           </div>
           <form action={signOutAction}>
-            <button type="submit" aria-label="Log out" className="flex h-9 w-9 items-center justify-center rounded-full hover:bg-paper/10 hover:text-paper">
+            <PendingButton iconOnly aria-label="Log out" className="flex h-9 w-9 items-center justify-center rounded-full hover:bg-paper/10 hover:text-paper">
               <LogOut className="h-4 w-4" aria-hidden="true" />
-            </button>
+            </PendingButton>
           </form>
         </div>
       )}

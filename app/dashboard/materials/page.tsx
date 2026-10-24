@@ -10,6 +10,7 @@ import { ROLES } from "@/server/authorization/roles";
 import { visibleBatchIds } from "@/server/authorization/access";
 import { formatIST } from "@/lib/ids";
 import { uploadMaterialAction, deleteMaterialAction } from "./actions";
+import { PendingButton } from "@/features/shared/ui/PendingButton";
 
 export const dynamic = "force-dynamic";
 
@@ -64,7 +65,7 @@ export default async function MaterialsPage({ searchParams }: { searchParams: Pr
                     {canUpload && (
                       <form action={deleteMaterialAction}>
                         <input type="hidden" name="id" value={m.id} />
-                        <button type="submit" className="min-h-10 rounded-xl border border-line px-3 text-sm font-semibold text-rose-600 hover:bg-rose-100">Delete</button>
+                        <PendingButton className="min-h-10 rounded-xl border border-line px-3 text-sm font-semibold text-rose-600 hover:bg-rose-100">Delete</PendingButton>
                       </form>
                     )}
                   </li>
@@ -86,7 +87,7 @@ export default async function MaterialsPage({ searchParams }: { searchParams: Pr
                 </select></div>
               <div><label htmlFor="file" className={label}>File (PDF, image, Word, PowerPoint · max 20 MB)</label>
                 <input id="file" name="file" type="file" required accept=".pdf,.png,.jpg,.jpeg,.webp,.doc,.docx,.ppt,.pptx,.xlsx,.txt" className="block w-full text-sm text-ink-700 file:mr-3 file:min-h-10 file:rounded-lg file:border-0 file:bg-ink-100 file:px-4 file:font-semibold file:text-ink-900" /></div>
-              <button type="submit" className="w-full min-h-11 rounded-full bg-forest-800 text-sm font-semibold text-paper hover:bg-forest-900">Upload</button>
+              <PendingButton className="w-full min-h-11 rounded-full bg-forest-800 text-sm font-semibold text-paper hover:bg-forest-900">Upload</PendingButton>
             </form>
           </DashboardCard>
         )}

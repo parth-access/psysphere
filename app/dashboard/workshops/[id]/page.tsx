@@ -6,6 +6,7 @@ import { enforcePageRole } from "@/server/authorization/requireRole";
 import { ROLES } from "@/server/authorization/roles";
 import { getWorkshopWithRegistrations, formatWorkshopTime } from "@/src/domains/workshops/service";
 import { toggleAttendanceAction, togglePublishedAction, sendRemindersAction, sendJoinInvitesAction } from "../actions";
+import { PendingButton } from "@/features/shared/ui/PendingButton";
 
 export const dynamic = "force-dynamic";
 
@@ -53,9 +54,9 @@ export default async function WorkshopAdminPage({
             <form action={togglePublishedAction}>
               <input type="hidden" name="id" value={w.id} />
               <input type="hidden" name="publish" value={w.isPublished ? "0" : "1"} />
-              <button type="submit" className={`${btn} border border-line bg-white text-ink-900 hover:bg-paper`}>
+              <PendingButton className={`${btn} border border-line bg-white text-ink-900 hover:bg-paper`}>
                 {w.isPublished ? "Hide from website" : "Show on website"}
-              </button>
+              </PendingButton>
             </form>
           </div>
         </div>
@@ -92,14 +93,13 @@ export default async function WorkshopAdminPage({
                             <input type="hidden" name="workshopId" value={w.id} />
                             <input type="hidden" name="registrationId" value={r.id} />
                             <input type="hidden" name="attended" value={r.attended ? "0" : "1"} />
-                            <button
-                              type="submit"
+                            <PendingButton
                               aria-pressed={r.attended}
                               aria-label={`${r.studentName} attended`}
                               className={`min-h-9 rounded-lg px-3 text-xs font-semibold ${r.attended ? "bg-sage-600 text-white" : "border border-line text-ink-500 hover:bg-paper"}`}
                             >
                               {r.attended ? "Yes" : "No"}
-                            </button>
+                            </PendingButton>
                           </form>
                         </td>
                       </tr>
@@ -116,9 +116,9 @@ export default async function WorkshopAdminPage({
             <form action={sendRemindersAction} className="space-y-3">
               <input type="hidden" name="id" value={w.id} />
               <p className="text-sm text-ink-500">Email everyone the time and Meet link again.</p>
-              <button type="submit" disabled={registrations.length === 0} className={`${btn} w-full bg-forest-800 text-paper hover:bg-forest-900 disabled:opacity-50`}>
+              <PendingButton disabled={registrations.length === 0} className={`${btn} w-full bg-forest-800 text-paper hover:bg-forest-900 disabled:opacity-50`}>
                 Send reminder
-              </button>
+              </PendingButton>
               {w.remindersSentAt && <p className="text-xs text-ink-500">Last sent {fmt(w.remindersSentAt)}</p>}
             </form>
           </DashboardCard>
@@ -131,9 +131,9 @@ export default async function WorkshopAdminPage({
                 <input type="checkbox" name="onlyAttended" defaultChecked={attendedCount > 0} className="h-4 w-4 accent-ink-900" />
                 Only students marked as attended
               </label>
-              <button type="submit" disabled={registrations.length === 0} className={`${btn} w-full bg-marigold-500 text-ink-900 hover:bg-marigold-100 disabled:opacity-50`}>
+              <PendingButton disabled={registrations.length === 0} className={`${btn} w-full bg-marigold-500 text-ink-900 hover:bg-marigold-100 disabled:opacity-50`}>
                 Send join invitations
-              </button>
+              </PendingButton>
               {w.joinInvitesSentAt && <p className="text-xs text-ink-500">Last sent {fmt(w.joinInvitesSentAt)}</p>}
             </form>
           </DashboardCard>

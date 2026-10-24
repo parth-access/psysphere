@@ -7,6 +7,7 @@ import { PageHeader } from "@/features/dashboard/ui/PageHeader";
 import { DashboardCard } from "@/features/dashboard/ui/DashboardCard";
 import { enforcePageRole, requireRole } from "@/server/authorization/requireRole";
 import { ROLES } from "@/server/authorization/roles";
+import { PendingButton } from "@/features/shared/ui/PendingButton";
 
 export const dynamic = "force-dynamic";
 
@@ -52,9 +53,9 @@ export default async function MessagesPage() {
                 <form action={toggleHandled}>
                   <input type="hidden" name="id" value={m.id} />
                   <input type="hidden" name="handled" value={m.isHandled ? "0" : "1"} />
-                  <button type="submit" className="min-h-9 rounded-lg border border-line px-3 text-xs font-semibold text-ink-900 hover:bg-paper">
+                  <PendingButton className="min-h-9 rounded-lg border border-line px-3 text-xs font-semibold text-ink-900 hover:bg-paper">
                     {m.isHandled ? "Mark as open" : "Mark as replied"}
-                  </button>
+                  </PendingButton>
                 </form>
               </li>
             ))}

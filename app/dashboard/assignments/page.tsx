@@ -11,6 +11,7 @@ import { ROLES } from "@/server/authorization/roles";
 import { visibleBatchIds } from "@/server/authorization/access";
 import { formatIST } from "@/lib/ids";
 import { createAssignmentAction } from "./actions";
+import { PendingButton } from "@/features/shared/ui/PendingButton";
 
 export const dynamic = "force-dynamic";
 
@@ -96,7 +97,7 @@ export default async function AssignmentsPage() {
                   <div><label htmlFor="dueTime" className={label}>Time</label><input id="dueTime" type="time" name="dueTime" defaultValue="21:00" required className={input} /></div>
                 </div>
                 <div><label htmlFor="maxMarks" className={label}>Out of (marks)</label><input id="maxMarks" type="number" name="maxMarks" min={1} defaultValue={20} required className={input} /></div>
-                <button type="submit" className="w-full min-h-11 rounded-full bg-forest-800 text-sm font-semibold text-paper hover:bg-forest-900">Create and share</button>
+                <PendingButton className="w-full min-h-11 rounded-full bg-forest-800 text-sm font-semibold text-paper hover:bg-forest-900">Create and share</PendingButton>
               </form>
             )}
           </DashboardCard>

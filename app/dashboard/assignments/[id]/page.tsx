@@ -15,6 +15,7 @@ import { ROLES } from "@/server/authorization/roles";
 import { canAccessBatch, canManageBatch } from "@/server/authorization/access";
 import { isUuid, formatIST } from "@/lib/ids";
 import { submitAssignmentAction, gradeAction, publishResultsAction } from "../actions";
+import { PendingButton } from "@/features/shared/ui/PendingButton";
 
 export const dynamic = "force-dynamic";
 
@@ -87,9 +88,9 @@ export default async function AssignmentPage({
                 <label htmlFor="attachmentUrl" className="mb-1 block text-sm font-semibold text-ink-900">Link to a photo or document (optional)</label>
                 <input id="attachmentUrl" name="attachmentUrl" type="url" placeholder="https://drive.google.com/…" defaultValue={mine?.attempt.attachmentUrl ?? ""} className={input} />
               </div>
-              <button type="submit" className="min-h-11 rounded-full bg-forest-800 px-6 text-sm font-semibold text-paper hover:bg-forest-900">
+              <PendingButton className="min-h-11 rounded-full bg-forest-800 px-6 text-sm font-semibold text-paper hover:bg-forest-900">
                 {mine ? "Update submission" : "Submit"}
-              </button>
+              </PendingButton>
               {a.dueAt < new Date() && <p className="text-sm text-gold-700">This is past the due date. It will be marked as late.</p>}
             </form>
           )}
@@ -122,9 +123,9 @@ export default async function AssignmentPage({
         {canManage && (
           <form action={publishResultsAction}>
             <input type="hidden" name="id" value={a.id} />
-            <button type="submit" className={`min-h-11 rounded-xl px-5 text-sm font-semibold ${a.resultsPublishedAt ? "border border-line text-ink-900 hover:bg-paper" : "bg-marigold-500 text-ink-900 hover:bg-marigold-100"}`}>
+            <PendingButton className={`min-h-11 rounded-xl px-5 text-sm font-semibold ${a.resultsPublishedAt ? "border border-line text-ink-900 hover:bg-paper" : "bg-marigold-500 text-ink-900 hover:bg-marigold-100"}`}>
               {a.resultsPublishedAt ? "Hide results from students" : "Publish results to students"}
-            </button>
+            </PendingButton>
           </form>
         )}
       </div>
@@ -157,9 +158,9 @@ export default async function AssignmentPage({
                           <label htmlFor={`f-${x.attempt.id}`} className="mb-1 block text-xs font-semibold text-ink-500">Feedback</label>
                           <input id={`f-${x.attempt.id}`} name="feedback" defaultValue={x.ev?.teacherFeedback ?? ""} className={input} />
                         </div>
-                        <button type="submit" className="min-h-11 rounded-full bg-forest-800 px-5 text-sm font-semibold text-paper hover:bg-forest-900">
+                        <PendingButton className="min-h-11 rounded-full bg-forest-800 px-5 text-sm font-semibold text-paper hover:bg-forest-900">
                           {x.ev ? "Update" : "Save marks"}
-                        </button>
+                        </PendingButton>
                       </form>
                     )}
                   </>

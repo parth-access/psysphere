@@ -20,7 +20,10 @@ export const profiles = pgTable(
 
     email: text("email").notNull().unique(),
 
+    /** Path of the profile photo in the private "avatars" storage bucket (not a URL). */
     avatarUrl: text("avatar_url"),
+
+    phone: text("phone"),
 
     isActive: boolean("is_active").default(true).notNull(),
 

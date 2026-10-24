@@ -19,6 +19,7 @@ export * from "./core/emailDeliveries";
 export * from "./core/workshops";
 export * from "./core/joinRequests";
 export * from "./core/contactMessages";
+export * from "./core/emailChanges";
 
 /* ============================================================
  * Academic

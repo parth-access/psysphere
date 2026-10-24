@@ -99,6 +99,7 @@ export async function provisionStudent(input: ProvisionStudentInput): Promise<Pr
         role: "student",
         fullName: input.studentName,
         email,
+        phone: input.phone,
         isActive: true,
       });
     } else if (existingProfile.role !== "student") {

@@ -11,6 +11,8 @@ import type {
   EnrollmentConfirmedPayload,
   PasswordSetupPayload,
   PasswordResetPayload,
+  EmailChangeConfirmPayload,
+  EmailChangedNoticePayload,
   TeacherActivationPayload,
   WeeklyReportPayload,
 } from "../types";
@@ -254,6 +256,30 @@ export function getPasswordResetTemplate(x: PasswordResetPayload): string {
     ${fallbackLink(x.resetUrl)}
     ${signOff}`;
   return renderBaseEmailLayout("Reset your password | Saarthi Classes", content, `Choose a new password. The link expires in 1 hour.`);
+}
+
+export function getEmailChangeConfirmTemplate(x: EmailChangeConfirmPayload): string {
+  const content = `
+    ${eyebrow("New login email")}
+    ${h1("Confirm your new email")}
+    ${p(`Hi ${e(firstName(x.name))},`)}
+    ${p(`You asked to log in to Saarthi Classes with <strong style="color:${C.ink900};">${e(x.newEmail)}</strong> from now on. Tap the button to confirm it's yours.`)}
+    ${button(x.confirmUrl, "Confirm this email")}
+    ${small(`The link expires in 24 hours. Until you confirm, keep logging in with your old email. If you didn't ask for this, ignore this email and nothing changes.`)}
+    ${fallbackLink(x.confirmUrl)}
+    ${signOff}`;
+  return renderBaseEmailLayout("Confirm your new email | Saarthi Classes", content, `Confirm ${e(x.newEmail)} as your Saarthi Classes login.`);
+}
+
+export function getEmailChangedNoticeTemplate(x: EmailChangedNoticePayload): string {
+  const content = `
+    ${eyebrow("Account update")}
+    ${h1("Your login email has changed")}
+    ${p(`Hi ${e(firstName(x.name))},`)}
+    ${p(`Your Saarthi Classes account now logs in with <strong style="color:${C.ink900};">${e(x.newEmail)}</strong>. This address won't work for logging in any more.`)}
+    ${small(`If you didn't make this change, contact us straight away so we can secure your account.`)}
+    ${signOff}`;
+  return renderBaseEmailLayout("Your login email has changed | Saarthi Classes", content, `Your account now logs in with ${e(x.newEmail)}.`);
 }
 
 export function getTeacherActivationTemplate(x: TeacherActivationPayload): string {

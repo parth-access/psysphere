@@ -80,6 +80,17 @@ export interface PasswordResetPayload {
   resetUrl: string;
 }
 
+export interface EmailChangeConfirmPayload {
+  name: string | null;
+  newEmail: string;
+  confirmUrl: string;
+}
+
+export interface EmailChangedNoticePayload {
+  name: string | null;
+  newEmail: string;
+}
+
 export interface TeacherActivationPayload {
   teacherName: string;
   email: string;

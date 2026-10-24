@@ -26,8 +26,9 @@ import {
 import { signOutAction } from "@/src/domains/auth/actions";
 import { Logo } from "@/features/marketing/ui/Logo";
 import { PendingButton } from "@/features/shared/ui/PendingButton";
+import { Avatar } from "@/features/shared/ui/Avatar";
 
-type Profile = { fullName: string; role: string } | null | undefined;
+type Profile = { id: string; fullName: string; role: string; avatarUrl: string | null } | null | undefined;
 
 const NAV_ITEMS = [
   { label: "Today", href: "/dashboard", icon: LayoutDashboard, roles: ["admin"] },
@@ -50,10 +51,6 @@ const NAV_ITEMS = [
   { label: "Teachers", href: "/dashboard/teachers", icon: GraduationCap, roles: ["admin"] },
   { label: "Settings", href: "/dashboard/settings", icon: Settings, roles: ["admin"] },
 ];
-
-function initials(name?: string) {
-  return (name || "?").split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
-}
 
 function SidebarContent({ profile, onNavigate }: { profile: Profile; onNavigate?: () => void }) {
   const pathname = usePathname();
@@ -90,13 +87,13 @@ function SidebarContent({ profile, onNavigate }: { profile: Profile; onNavigate?
 
       {profile && (
         <div className="flex items-center gap-3 rounded-[20px] bg-paper/5 p-3">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gold-500 text-xs font-bold text-ink-900">
-            {initials(profile.fullName)}
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-semibold text-paper">{profile.fullName}</p>
-            <p className="text-xs capitalize">{profile.role}</p>
-          </div>
+          <Link href="/dashboard/profile" onClick={onNavigate} className="flex min-w-0 flex-1 items-center gap-3 rounded-full hover:text-paper" aria-label="Your profile">
+            <Avatar id={profile.id} photo={profile.avatarUrl} name={profile.fullName} size={36} />
+            <span className="min-w-0 flex-1">
+              <span className="block truncate text-sm font-semibold text-paper">{profile.fullName}</span>
+              <span className="block text-xs capitalize">{profile.role}</span>
+            </span>
+          </Link>
           <form action={signOutAction}>
             <PendingButton iconOnly aria-label="Log out" className="flex h-9 w-9 items-center justify-center rounded-full hover:bg-paper/10 hover:text-paper">
               <LogOut className="h-4 w-4" aria-hidden="true" />

@@ -15,6 +15,8 @@ import type {
   EnrollmentConfirmedPayload,
   PasswordSetupPayload,
   PasswordResetPayload,
+  EmailChangeConfirmPayload,
+  EmailChangedNoticePayload,
   TeacherActivationPayload,
   WeeklyReportPayload,
 } from "./types";
@@ -30,6 +32,8 @@ import {
   getEnrollmentConfirmedTemplate,
   getPasswordSetupTemplate,
   getPasswordResetTemplate,
+  getEmailChangeConfirmTemplate,
+  getEmailChangedNoticeTemplate,
   getTeacherActivationTemplate,
   getWeeklyReportTemplate,
 } from "./templates";
@@ -286,6 +290,14 @@ export class EmailService {
 
   sendPasswordReset(to: string, p: PasswordResetPayload) {
     return this.send(to, "Reset your Saarthi Classes password", getPasswordResetTemplate(p), "password_reset");
+  }
+
+  sendEmailChangeConfirm(to: string, p: EmailChangeConfirmPayload, userId?: string) {
+    return this.send(to, "Confirm your new email | Saarthi Classes", getEmailChangeConfirmTemplate(p), "email_change_confirm", "profile", userId);
+  }
+
+  sendEmailChangedNotice(to: string, p: EmailChangedNoticePayload, userId?: string) {
+    return this.send(to, "Your Saarthi Classes login email has changed", getEmailChangedNoticeTemplate(p), "email_changed_notice", "profile", userId);
   }
 
   sendWeeklyReport(to: string, p: WeeklyReportPayload, studentId?: string) {

@@ -11,6 +11,11 @@ export class GoogleIntegrationError extends Error {
   }
 }
 
+/** The one Google account allowed to connect; events and Meet links are created in its calendar. */
+export function calendarAccount(): string {
+  return (process.env.GOOGLE_CALENDAR_ACCOUNT || "classes.saarthilife@gmail.com").toLowerCase();
+}
+
 /**
  * Helper to generate a deterministic UUID (UUID v5 concept using SHA-256)
  * to establish stable identity across retries.
@@ -78,8 +83,8 @@ export async function exchangeCode(code: string) {
       throw new GoogleIntegrationError("Could not retrieve user email from Google.");
     }
 
-    const expectedAccount = process.env.GOOGLE_CALENDAR_ACCOUNT || "classes@saarthilife.com";
-    if (email.toLowerCase() !== expectedAccount.toLowerCase()) {
+    const expectedAccount = calendarAccount();
+    if (email.toLowerCase() !== expectedAccount) {
       throw new GoogleIntegrationError(
         `Unauthorized Google Account: This Saarthi Classes installation is strictly locked to "${expectedAccount}". Access denied for "${email}".`
       );
@@ -117,7 +122,7 @@ export async function exchangeCode(code: string) {
  * Accurately models the integration as a singleton institutional connection.
  */
 export async function getConnectedClient() {
-  const expectedEmail = process.env.GOOGLE_CALENDAR_ACCOUNT || "classes@saarthilife.com";
+  const expectedEmail = calendarAccount();
   const [creds] = await db
     .select()
     .from(googleCredentials)
@@ -330,7 +335,7 @@ export async function deleteCalendarEvent(eventId: string) {
  * Handles failures gracefully without exposing credentials.
  */
 export async function disconnectGoogle() {
-  const expectedEmail = process.env.GOOGLE_CALENDAR_ACCOUNT || "classes@saarthilife.com";
+  const expectedEmail = calendarAccount();
   const [creds] = await db
     .select()
     .from(googleCredentials)

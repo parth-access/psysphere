@@ -4,7 +4,7 @@ import { DashboardCard } from "@/features/dashboard/ui/DashboardCard";
 import { SectionHeader } from "@/features/dashboard/ui/SectionHeader";
 import { enforcePageRole } from "@/server/authorization/requireRole";
 import { ROLES } from "@/server/authorization/roles";
-import { getConnectedClient } from "@/server/integrations/google";
+import { calendarAccount, getConnectedClient } from "@/server/integrations/google";
 import { disconnectGoogleAction } from "./actions";
 import { Calendar as CalendarIcon, CheckCircle, AlertTriangle } from "lucide-react";
 
@@ -103,7 +103,7 @@ export default async function SettingsPage({ searchParams }: PageProps) {
                 <div className="flex-1 space-y-1">
                   <h4 className="text-sm font-semibold text-ink-900">Automatic Live Lectures scheduling</h4>
                   <p className="text-xs text-ink-700 leading-relaxed">
-                    Automatically create calendar events in your centralized institutional Google account (<strong>hello@classes.saarthilife.com</strong>) and dynamically attach interactive Google Meet video-conferencing access for student/educator dashboard joins.
+                    Automatically create calendar events in your centralized institutional Google account (<strong>{calendarAccount()}</strong>) and dynamically attach interactive Google Meet video-conferencing access for student/educator dashboard joins.
                   </p>
                   
                   <div className="pt-4">
@@ -135,6 +135,7 @@ export default async function SettingsPage({ searchParams }: PageProps) {
                           >
                             Connect Google Calendar
                           </a>
+                          <p className="mt-2 text-xs text-ink-500">Choose <strong>{calendarAccount()}</strong> when Google asks. Other accounts are refused.</p>
                         </div>
                       </div>
                     )}

@@ -3,6 +3,7 @@ import { db } from "@/db";
 import { googleCredentials } from "@/db/schema/system/googleCredentials";
 import { eq } from "drizzle-orm";
 import crypto from "crypto";
+import { appUrl } from "@/src/domains/joining/tokens";
 
 export class GoogleIntegrationError extends Error {
   constructor(message: string) {
@@ -37,7 +38,7 @@ export function generateDeterministicUuid(key: string): string {
 export function getOAuth2Client() {
   const clientId = process.env.GOOGLE_CLIENT_ID;
   const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
-  const redirectUri = process.env.GOOGLE_REDIRECT_URI || "http://localhost:3000/api/integrations/google/callback";
+  const redirectUri = process.env.GOOGLE_REDIRECT_URI || appUrl("/api/integrations/google/callback");
 
   if (!clientId || !clientSecret) {
     throw new GoogleIntegrationError(

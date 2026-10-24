@@ -124,8 +124,8 @@ export default async function SettingsPage({ searchParams }: PageProps) {
                       </div>
                     ) : (
                       <div className="space-y-3">
-                        <div className="inline-flex items-center gap-2 text-xs text-marigold-700 bg-marigold-100 border border-marigold-100 px-3.5 py-2 rounded-xl font-medium">
-                          <AlertTriangle className="w-4 h-4 text-marigold-700" />
+                        <div className="inline-flex items-center gap-2 text-xs text-gold-700 bg-marigold-100 border border-marigold-100 px-3.5 py-2 rounded-xl font-medium">
+                          <AlertTriangle className="w-4 h-4 text-gold-700" />
                           <span>Not Connected</span>
                         </div>
                         <div>

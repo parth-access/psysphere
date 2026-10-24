@@ -1,89 +1,97 @@
-import { Navbar } from '@/features/marketing/ui/Navbar';
-import { Footer } from '@/features/marketing/ui/Footer';
-import { Container } from '@/features/marketing/ui/Container';
-import { H1, H2, Body } from '@/features/marketing/ui/Typography';
+import type { Metadata } from 'next';
 import Link from 'next/link';
+import { LegalPage } from '@/features/marketing/ui/LegalPage';
+
+export const metadata: Metadata = {
+  title: 'Privacy Policy | Saarthi Classes',
+  description: 'What personal data Saarthi Classes collects, why, and who we share it with.',
+};
 
 export default function PrivacyPolicyPage() {
   return (
-    <main className="min-h-screen bg-brand-canvas flex flex-col">
-      <Navbar />
-      
-      <section className="pt-36 pb-20 bg-white border-b border-brand-border">
-        <Container>
-          <div className="max-w-3xl mx-auto">
-            <span className="inline-block py-1 px-3 rounded-full bg-brand-primary/10 text-brand-primary text-xs font-bold tracking-widest uppercase mb-6">
-              Legal Policy
-            </span>
-            <H1 className="mb-4">Privacy Policy</H1>
-            <p className="text-sm text-brand-text-muted">Last Updated: August 2, 2026</p>
-          </div>
-        </Container>
-      </section>
-
-      <section className="py-20 bg-brand-canvas flex-1">
-        <Container>
-          <div className="max-w-3xl mx-auto bg-white p-10 md:p-12 rounded-2xl border border-brand-border space-y-8 text-sm text-brand-text leading-relaxed">
-            <div>
-              <h3 className="font-serif text-lg font-semibold text-brand-text mb-3">1. Introduction</h3>
-              <p>
-                At Saarthi Classes, we respect your privacy and are committed to protecting any personal data we collect. This Privacy Policy outlines how we collect, use, process, and protect your information when you enroll in our coaching programs, access our portal, or visit our marketing website.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="font-serif text-lg font-semibold text-brand-text mb-3">2. Accounts & Onboarding</h3>
-              <p>
-                When you register for a student or teacher account with Saarthi Classes, we collect registration details including your full name, email address, school grade, parent/guardian contact info, and study preferences. This data is strictly used to provision your personalized learning dashboard, assign batches, and communicate important classroom updates.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="font-serif text-lg font-semibold text-brand-text mb-3">3. Data Collection & Usage</h3>
-              <p>
-                We collect information directly provided by you during registration or demo-booking, including contact emails, student answers, feedback, and performance tracking sheets. This information is processed to maintain academic tracking, provide comprehensive performance feedback, and personalize your educational path.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="font-serif text-lg font-semibold text-brand-text mb-3">4. Cookies & Analytics</h3>
-              <p>
-                We use small text files (cookies) to keep you securely signed in to your student dashboard and to collect anonymous usage metrics through modern web tools. You can customize your cookie preferences through your browser settings, although some features of the interactive student portal may not function fully if cookies are entirely disabled.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="font-serif text-lg font-semibold text-brand-text mb-3">5. Email Communications</h3>
-              <p>
-                We may use your email address to send academic materials, program newsletters, feedback reports, and notifications about upcoming class timings. You can opt-out of general promotional lists at any time, but transactional and academic-critical emails regarding active student accounts will continue to be sent.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="font-serif text-lg font-semibold text-brand-text mb-3">6. Data Security</h3>
-              <p>
-                We implement industry-standard administrative, electronic, and physical safeguards to defend your personal information from unauthorized access, loss, or disclosure. All interactive dashboards are secured using TLS encryption and hosted in secure, vetted cloud facilities.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="font-serif text-lg font-semibold text-brand-text mb-3">7. Third-Party Services</h3>
-              <p>
-                We never sell or trade student data to third-party ad brokers. We only share essential, scoped information with verified sub-processors such as email delivery networks, hosting environments, and database storage modules necessary to run the student experience.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="font-serif text-lg font-semibold text-brand-text mb-3">8. Contact & Compliance</h3>
-              <p>
-                If you have questions about how we treat your data, or if you would like to request file access, rectification, or complete erasure of your personal records from our databases, please contact us directly through our <Link href="/contact" className="font-semibold text-brand-primary hover:underline">Contact Form</Link>.
-              </p>
-            </div>
-          </div>
-        </Container>
-      </section>
-
-      <Footer />
-    </main>
+    <LegalPage
+      eyebrow="Legal"
+      title="Privacy Policy"
+      updated="23 October 2026"
+      sections={[
+        {
+          heading: 'Introduction',
+          body: (
+            <p>
+              This policy explains what personal data Saarthi Classes collects, how we use it and who we share it with. It
+              covers this website, the student dashboard and our classes.
+            </p>
+          ),
+        },
+        {
+          heading: 'Accounts',
+          body: (
+            <p>
+              When you join a batch or we create a teacher account, we record the student’s full name, email address, mobile
+              number and class, and a parent or guardian’s name and mobile number. We use these details to set up your
+              dashboard, place you in a batch and tell you about your classes.
+            </p>
+          ),
+        },
+        {
+          heading: 'What we collect and why',
+          body: (
+            <p>
+              You give us information when you register for a free workshop, request a seat in a batch, contact us or use the
+              dashboard. This covers your contact details, attendance, assignment submissions, test scores and teacher
+              feedback. We use it to track your progress, give you feedback and send the weekly report.
+            </p>
+          ),
+        },
+        {
+          heading: 'Cookies',
+          body: (
+            <p>
+              We use cookies to keep you signed in to the dashboard. You can block cookies in your browser settings, but you
+              won’t be able to sign in without them.
+            </p>
+          ),
+        },
+        {
+          heading: 'Emails',
+          body: (
+            <p>
+              We email you workshop confirmations, updates on your join request, payment confirmations, password links and
+              the weekly progress report. You can ask us to stop promotional emails at any time. We keep sending emails about
+              an active student account while it stays open.
+            </p>
+          ),
+        },
+        {
+          heading: 'Security',
+          body: (
+            <p>
+              We store your data with Supabase and host the site on Vercel. Your browser connects to the site over HTTPS.
+              Students see their own records; teachers and admins sign in with their own accounts to see the batches they
+              manage.
+            </p>
+          ),
+        },
+        {
+          heading: 'Who we share data with',
+          body: (
+            <p>
+              We don’t sell or trade student data. We share only what each service needs to run Saarthi Classes: Razorpay
+              (payments; we never see or store your card or bank details), Google (Calendar and Meet links for classes),
+              Resend (email delivery), Supabase (database, login and file storage) and Vercel (hosting).
+            </p>
+          ),
+        },
+        {
+          heading: 'Your rights and contact',
+          body: (
+            <p>
+              To see the data we hold about you, correct it or have it deleted, message us through the{' '}
+              <Link href="/contact">contact form</Link>.
+            </p>
+          ),
+        },
+      ]}
+    />
   );
 }

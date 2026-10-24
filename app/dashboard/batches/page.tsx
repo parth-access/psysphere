@@ -59,7 +59,7 @@ export default async function BatchesPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main Batches List */}
         <div className="lg:col-span-2 space-y-6">
-          <h2 className="text-lg font-serif font-semibold text-ink-900 flex items-center gap-2">
+          <h2 className="text-lg font-serif text-ink-900 flex items-center gap-2">
             <Layers className="w-5 h-5 text-brand-primary" />
             Active Batches ({batchesList.length})
           </h2>
@@ -126,7 +126,7 @@ export default async function BatchesPage() {
           <DashboardCard title="Launch New Batch">
             {activeTeachers.length === 0 ? (
               <div className="text-center py-6 text-sm text-ink-500">
-                <p className="font-medium text-marigold-700 bg-marigold-100 border border-marigold-100 p-3 rounded-xl">
+                <p className="font-medium text-gold-700 bg-marigold-100 border border-marigold-100 p-3 rounded-xl">
                   Please invite and activate at least one teacher first before launching any new batch cohorts.
                 </p>
               </div>

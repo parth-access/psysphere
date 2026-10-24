@@ -1,6 +1,8 @@
 import { Navbar } from '@/features/marketing/ui/Navbar';
 import { Hero } from '@/features/marketing/ui/Hero';
 import { TrustSection } from '@/features/marketing/ui/TrustSection';
+import { TopicMarquee } from '@/features/marketing/ui/TopicMarquee';
+import { Faq } from '@/features/marketing/ui/Faq';
 import { WhyUs } from '@/features/marketing/ui/WhyUs';
 import { Courses } from '@/features/marketing/ui/Courses';
 import { Pricing } from '@/features/marketing/ui/Pricing';
@@ -18,12 +20,14 @@ export default function HomePage() {
       <Navbar />
       <main id="main">
         <Hero />
+        <TopicMarquee />
         <TrustSection />
         <WhyUs />
-        <Pricing />
         <Courses />
         <TeacherProfile />
         <Testimonials />
+        <Pricing />
+        <Faq />
         <ClosingCta />
       </main>
       <Footer />

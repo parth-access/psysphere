@@ -34,6 +34,8 @@ export const joinRequests = pgTable(
     phone: text("phone").notNull(),
     parentName: text("parent_name").notNull(),
     parentPhone: text("parent_phone").notNull(),
+    /** Where weekly progress reports go. Optional. */
+    parentEmail: text("parent_email"),
 
     classLevel: classLevelEnum("class_level").notNull(),
     track: courseTrackEnum("track").notNull(),

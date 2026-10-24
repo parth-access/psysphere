@@ -3,6 +3,7 @@
 import * as React from "react";
 import { createClient } from "@/src/domains/auth/client";
 import { Logo } from "@/features/marketing/ui/Logo";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   KeyRound,
@@ -12,9 +13,16 @@ import {
   Loader2,
 } from "lucide-react";
 
+const EXPIRED = "This link has expired or has already been used. You can get a new one below.";
+
 export default function ResetPasswordPage() {
   const router = useRouter();
-  const [supabase] = React.useState<any>(() => createClient());
+  // We read the link's tokens ourselves rather than letting the client pick them up on load,
+  // so a failed or reused link can't leave a half-made session behind.
+  const [supabase] = React.useState(() =>
+    createClient({ isSingleton: false, auth: { detectSessionInUrl: false } })
+  );
+  const started = React.useRef(false);
 
   const [password, setPassword] = React.useState("");
   const [confirmPassword, setConfirmPassword] = React.useState("");
@@ -28,169 +36,101 @@ export default function ResetPasswordPage() {
   const [recoveryEmail, setRecoveryEmail] = React.useState<string | null>(null);
 
   React.useEffect(() => {
-    let mounted = true;
+    // A link can only be redeemed once, so never run this twice (Strict Mode re-runs effects in dev).
+    if (started.current) return;
+    started.current = true;
+
+    const fail = (message: string) => {
+      setError(message);
+      setRecoveryVerified(false);
+      setCheckingSession(false);
+    };
+    const verified = (email: string | undefined) => {
+      setRecoveryEmail(email ?? null);
+      setRecoveryVerified(true);
+      setCheckingSession(false);
+    };
 
     const initializeRecoverySession = async () => {
-      if (!supabase) {
-        if (mounted) {
-          setError("Authentication client could not be initialized.");
-          setCheckingSession(false);
-        }
-        return;
-      }
       try {
-        const hash = typeof window !== "undefined" ? window.location.hash : "";
-        const search = typeof window !== "undefined" ? window.location.search : "";
-
-        // Parse hash fragment
-        const hashParams = new URLSearchParams(hash.startsWith("#") ? hash.substring(1) : hash);
+        const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
         const accessToken = hashParams.get("access_token");
         const refreshToken = hashParams.get("refresh_token");
 
-        // Parse query params (PKCE flow or verification token)
-        const searchParams = new URLSearchParams(search);
+        const searchParams = new URLSearchParams(window.location.search);
         const code = searchParams.get("code");
         const tokenHash = searchParams.get("token_hash");
+        // Supabase sends people back with error_code when a link has expired or was already used.
+        const linkError = hashParams.get("error_code") || searchParams.get("error_code");
 
-        const hasRecoveryParams = !!(accessToken || code || tokenHash);
+        // Keep the one-time tokens out of the address bar and browser history.
+        if (window.location.hash || window.location.search) {
+          window.history.replaceState(null, "", window.location.pathname);
+        }
 
-        console.log("[ResetPassword] Checking URL tokens:", {
-          hasHashToken: !!accessToken,
-          hasCode: !!code,
-          hasTokenHash: !!tokenHash
-        });
-
-        // If we have no recovery parameters, reject access immediately to prevent direct navigation access
-        if (!hasRecoveryParams) {
-          if (mounted) {
-            setError("This password setup link is invalid or has expired. Please request a new invitation from the Saarthi Classes administrator.");
-            setRecoveryVerified(false);
-            setCheckingSession(false);
-          }
+        if (linkError) {
+          fail(EXPIRED);
+          return;
+        }
+        if (!accessToken && !code && !tokenHash) {
+          fail("This page only works from the link in your email. Open that link again, or get a new one below.");
           return;
         }
 
-        // Isolating the session: Sign out any pre-existing user (e.g. admin) to ensure clean credential state
-        const { data: { session: existingSession } } = await supabase.auth.getSession();
-        if (existingSession) {
-          console.log("[ResetPassword] Pre-existing session found. Signing out before processing recovery credentials...");
-          await supabase.auth.signOut();
-        }
-
-        // 1. Process PKCE Code
+        // Each branch below stores the link's session in place of any session already in this
+        // browser, so the password change always lands on the account the link was sent to.
+        // Don't sign out first: that also deletes the PKCE code verifier the "code" branch needs.
         if (code) {
-          console.log("[ResetPassword] Exchanging PKCE code...");
           const { data, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
-          if (exchangeError) {
+          if (exchangeError || !data?.session) {
             console.error("[ResetPassword] PKCE exchange error:", exchangeError);
-            if (mounted) {
-              setError("The verification code is invalid or has expired.");
-              setRecoveryVerified(false);
-              setCheckingSession(false);
-            }
+            fail(
+              exchangeError?.code === "pkce_code_verifier_not_found"
+                ? "Open the link in the same browser you asked for it from. If that isn’t handy, get a new link here."
+                : EXPIRED
+            );
             return;
           }
-
-          if (data?.session) {
-            console.log("[ResetPassword] Successfully established recovery session via PKCE.");
-            if (mounted) {
-              setRecoveryEmail(data.session.user.email ?? null);
-              setRecoveryVerified(true);
-              setCheckingSession(false);
-            }
-            return;
-          }
+          verified(data.session.user.email);
+          return;
         }
 
-        // 2. Process token_hash
         if (tokenHash) {
-          console.log("[ResetPassword] Verifying OTP token_hash...");
           const { data, error: otpError } = await supabase.auth.verifyOtp({
             token_hash: tokenHash,
             type: "recovery",
           });
-
-          if (otpError) {
+          if (otpError || !data?.session) {
             console.error("[ResetPassword] OTP verification error:", otpError);
-            if (mounted) {
-              setError("Verification via token failed or token has expired.");
-              setRecoveryVerified(false);
-              setCheckingSession(false);
-            }
+            fail(EXPIRED);
             return;
           }
-
-          if (data?.session) {
-            console.log("[ResetPassword] Successfully established recovery session via OTP verification.");
-            if (mounted) {
-              setRecoveryEmail(data.session.user.email ?? null);
-              setRecoveryVerified(true);
-              setCheckingSession(false);
-            }
-            return;
-          }
+          verified(data.session.user.email);
+          return;
         }
 
-        // 3. Process Hash/Implicit tokens
         if (accessToken && refreshToken) {
-          console.log("[ResetPassword] Initializing session via hash tokens...");
           const { data, error: setSessionError } = await supabase.auth.setSession({
             access_token: accessToken,
             refresh_token: refreshToken,
           });
-
-          if (setSessionError) {
+          if (setSessionError || !data?.session) {
             console.error("[ResetPassword] setSession failed:", setSessionError);
-            if (mounted) {
-              setError("We could not establish the secure session from your invitation link.");
-              setRecoveryVerified(false);
-              setCheckingSession(false);
-            }
+            fail(EXPIRED);
             return;
           }
-
-          if (data?.session) {
-            console.log("[ResetPassword] Successfully established recovery session via hash tokens.");
-            if (mounted) {
-              setRecoveryEmail(data.session.user.email ?? null);
-              setRecoveryVerified(true);
-              setCheckingSession(false);
-            }
-            return;
-          }
+          verified(data.session.user.email);
+          return;
         }
 
-        if (mounted) {
-          setError("We could not establish a secure session from the provided credentials.");
-          setRecoveryVerified(false);
-          setCheckingSession(false);
-        }
-
+        fail("We could not establish a secure session from the provided credentials.");
       } catch (err) {
         console.error("[ResetPassword] Recovery initialization failed:", err);
-        if (mounted) {
-          setRecoveryVerified(false);
-          setError("We could not verify this password setup link. Please request a new invitation.");
-          setCheckingSession(false);
-        }
+        fail("We couldn’t check this link. Try it again, or get a new one below.");
       }
     };
 
-    let cleanup: (() => void) | undefined;
-
-    initializeRecoverySession().then((result) => {
-      if (typeof result === "function") {
-        cleanup = result as any;
-      }
-    });
-
-    return () => {
-      mounted = false;
-
-      if (cleanup) {
-        cleanup();
-      }
-    };
+    initializeRecoverySession();
   }, [supabase]);
 
   const handleSubmit = async (
@@ -201,7 +141,7 @@ export default function ResetPasswordPage() {
 
     if (!recoveryVerified) {
       setError(
-        "Your password setup session is invalid or has expired. Please request a new invitation."
+        "This link has expired. Get a new one with Forgot password on the log in page."
       );
       return;
     }
@@ -213,11 +153,6 @@ export default function ResetPasswordPage() {
 
     if (password !== confirmPassword) {
       setError("Passwords do not match.");
-      return;
-    }
-
-    if (!supabase) {
-      setError("Authentication client not initialized.");
       return;
     }
 
@@ -235,7 +170,7 @@ export default function ResetPasswordPage() {
       if (sessionError || !session) {
         setRecoveryVerified(false);
         setError(
-          "Your password setup session has expired. Please request a new invitation."
+          "This link has expired. Get a new one with Forgot password on the log in page."
         );
         setIsLoading(false);
         return;
@@ -317,11 +252,11 @@ export default function ResetPasswordPage() {
         </div>
 
         <h2 className="mt-6 text-center text-3xl font-serif font-bold text-ink-900 tracking-tight">
-          Secure Your Account
+          Set your password
         </h2>
 
         <p className="mt-2 text-center text-sm text-ink-500">
-          Set your new access password to complete setup
+          Choose a password for your Saarthi Classes account.
         </p>
       </div>
 
@@ -332,7 +267,7 @@ export default function ResetPasswordPage() {
               <Loader2 className="w-8 h-8 text-ink-900 animate-spin" />
 
               <p className="text-sm text-ink-500 font-medium">
-                Verifying your secure invitation link...
+                Checking your link…
               </p>
             </div>
           ) : success ? (
@@ -341,13 +276,12 @@ export default function ResetPasswordPage() {
                 <CheckCircle className="h-10 w-10 text-sage-600" />
               </div>
 
-              <h3 className="text-md font-serif font-semibold text-sage-600">
-                Password Set Successfully
+              <h3 className="text-md font-serif text-sage-600">
+                Password saved
               </h3>
 
               <p className="text-xs text-sage-600">
-                Your credentials have been updated. Redirecting
-                you to the sign-in portal...
+                Taking you to the log in page…
               </p>
             </div>
           ) : !recoveryVerified ? (
@@ -356,14 +290,22 @@ export default function ResetPasswordPage() {
                 <AlertCircle className="h-10 w-10 text-rose-600" />
               </div>
 
-              <h3 className="text-center text-md font-serif font-semibold text-rose-600">
-                Invalid or Expired Link
+              <h3 className="text-center text-md font-serif text-rose-600">
+                This link didn’t work
               </h3>
 
               <p className="text-center text-xs text-rose-600">
-                {error ||
-                  "This password setup link is invalid or has expired. Please request a new invitation from the Saarthi Classes administrator."}
+                {error || EXPIRED}
               </p>
+
+              <div className="flex justify-center pt-1">
+                <Link
+                  href="/sign-in?forgot=1"
+                  className="inline-flex min-h-11 items-center rounded-full bg-forest-800 px-5 text-sm font-bold text-paper hover:bg-forest-900"
+                >
+                  Get a new link
+                </Link>
+              </div>
             </div>
           ) : (
             <form
@@ -414,7 +356,7 @@ export default function ResetPasswordPage() {
                     onChange={(e) =>
                       setPassword(e.target.value)
                     }
-                    className="block w-full min-h-12 pl-10 pr-3 text-[16px] bg-surface border border-line rounded-xl text-ink-900 placeholder:text-ink-500/70 focus:outline-none focus:ring-2 focus:ring-ink-700/30 focus:border-ink-700 disabled:opacity-50"
+                    className="block w-full min-h-12 pl-10 pr-3 text-[16px] bg-surface border border-line rounded-xl text-ink-900 placeholder:text-ink-500/70 focus:outline-none focus:ring-2 focus:ring-forest-800/25 focus:border-forest-800 disabled:opacity-50"
                     placeholder="Min 8 characters"
                   />
                 </div>
@@ -445,7 +387,7 @@ export default function ResetPasswordPage() {
                     onChange={(e) =>
                       setConfirmPassword(e.target.value)
                     }
-                    className="block w-full min-h-12 pl-10 pr-3 text-[16px] bg-surface border border-line rounded-xl text-ink-900 placeholder:text-ink-500/70 focus:outline-none focus:ring-2 focus:ring-ink-700/30 focus:border-ink-700 disabled:opacity-50"
+                    className="block w-full min-h-12 pl-10 pr-3 text-[16px] bg-surface border border-line rounded-xl text-ink-900 placeholder:text-ink-500/70 focus:outline-none focus:ring-2 focus:ring-forest-800/25 focus:border-forest-800 disabled:opacity-50"
                     placeholder="Repeat password"
                   />
                 </div>
@@ -455,16 +397,16 @@ export default function ResetPasswordPage() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full min-h-12 flex justify-center items-center gap-2 px-4 rounded-xl font-semibold text-paper bg-ink-900 hover:bg-ink-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-700/40 disabled:opacity-60 transition-colors cursor-pointer"
+                  className="w-full min-h-12 flex justify-center items-center gap-2 px-4 rounded-full font-bold text-paper bg-forest-800 hover:bg-forest-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-700/40 disabled:opacity-60 transition-colors cursor-pointer"
                 >
                   {isLoading ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      Setting Password...
+                      Saving…
                     </>
                   ) : (
                     <>
-                      Confirm Password
+                      Save password
                       <ArrowRight className="w-4 h-4" />
                     </>
                   )}

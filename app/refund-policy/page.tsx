@@ -1,74 +1,70 @@
-import { Navbar } from '@/features/marketing/ui/Navbar';
-import { Footer } from '@/features/marketing/ui/Footer';
-import { Container } from '@/features/marketing/ui/Container';
-import { H1, H2, Body } from '@/features/marketing/ui/Typography';
+import type { Metadata } from 'next';
 import Link from 'next/link';
+import { LegalPage } from '@/features/marketing/ui/LegalPage';
+
+export const metadata: Metadata = {
+  title: 'Refund Policy | Saarthi Classes',
+  description: 'When Saarthi Classes refunds fees, and how to ask for a refund.',
+};
 
 export default function RefundPolicyPage() {
   return (
-    <main className="min-h-screen bg-brand-canvas flex flex-col">
-      <Navbar />
-      
-      {/* Editorial Header */}
-      <section className="pt-36 pb-20 bg-white border-b border-brand-border">
-        <Container>
-          <div className="max-w-3xl mx-auto">
-            <span className="inline-block py-1 px-3 rounded-full bg-brand-primary/10 text-brand-primary text-xs font-bold tracking-widest uppercase mb-6">
-              Tuition Policy
-            </span>
-            <H1 className="mb-4">Refund Policy</H1>
-            <p className="text-sm text-brand-text-muted">Last Updated: August 2, 2026</p>
-          </div>
-        </Container>
-      </section>
-
-      {/* Policy Details */}
-      <section className="py-20 bg-brand-canvas flex-1">
-        <Container>
-          <div className="max-w-3xl mx-auto bg-white p-10 md:p-12 rounded-2xl border border-brand-border space-y-8 text-sm text-brand-text leading-relaxed">
-            <div>
-              <h3 className="font-serif text-lg font-semibold text-brand-text mb-3">1. Transparency &amp; Demos First</h3>
+    <LegalPage
+      eyebrow="Fees"
+      title="Refund Policy"
+      updated="23 October 2026"
+      sections={[
+        {
+          heading: 'Try a free workshop first',
+          body: (
+            <p>
+              Anyone can join a free live workshop with Dravina Gupta before paying. You see how she teaches, then decide
+              whether to join a batch. You pay all fees online through Razorpay, and we confirm your seat once the payment
+              succeeds.
+            </p>
+          ),
+        },
+        {
+          heading: 'Refund window',
+          body: (
+            <>
               <p>
-                We believe that every student deserves a learning environment that matches their pace. To guarantee transparency, Saarthi Classes provides a completely free, complimentary demo class with Dravina Gupta prior to any tuition payment. This ensures that you can experience our conceptual and compassionate teaching firsthand before making any financial commitment.
+                If you decide the course doesn’t suit you within <strong>7 calendar days</strong> of joining your batch and
+                paying the fee, you can ask for a full refund.
               </p>
-            </div>
-
-            <div>
-              <h3 className="font-serif text-lg font-semibold text-brand-text mb-3">2. Refund Timeline</h3>
-              <p>
-                If, within <span className="font-semibold text-brand-text">7 calendar days</span> of joining your formal batch and paying your fee, you decide that our program does not fit your requirements, you are eligible to request a full refund. 
-              </p>
-              <p className="mt-2">
-                After the 7-day period has elapsed, we cannot offer any refunds or class adjustments as academic slots and seats are strictly limited and curated.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="font-serif text-lg font-semibold text-brand-text mb-3">3. Non-Refundable Situations</h3>
-              <p>
-                Refunds will not be initiated under the following circumstances:
-              </p>
-              <ul className="list-disc list-inside mt-2 space-y-2 pl-2">
-                <li>If the request is received after 7 days of formal batch commencement.</li>
-                <li>If a student is suspended or removed from classes due to violations of our student code of conduct or disruptive behaviour.</li>
-                <li>If a student has already completed more than 50% of an intensive crash course.</li>
+              <p>After those 7 days we can’t refund fees or move you to another batch, because each batch has a fixed number of seats.</p>
+            </>
+          ),
+        },
+        {
+          heading: 'When we don’t refund',
+          body: (
+            <>
+              <p>We don’t refund fees if:</p>
+              <ul>
+                <li>we receive the request more than 7 days after the batch starts;</li>
+                <li>we suspend or remove a student for breaking the code of conduct in our Terms;</li>
+                <li>the student has completed more than 50% of a crash course.</li>
               </ul>
-            </div>
-
-            <div>
-              <h3 className="font-serif text-lg font-semibold text-brand-text mb-3">4. Processing Requests</h3>
+            </>
+          ),
+        },
+        {
+          heading: 'How to ask for a refund',
+          body: (
+            <>
               <p>
-                To request a refund, please send a simple, direct message through our <Link href="/contact" className="font-semibold text-brand-primary hover:underline">Contact Form</Link> with your full name, registered batch name, date of enrollment, and billing receipt. 
+                Send us a message through the <Link href="/contact">contact form</Link> with your full name, batch name, the
+                date you joined and your payment receipt.
               </p>
-              <p className="mt-2">
-                Our team handles these requests with utmost empathy and respect. Once approved, the refund will be credited back to your original payment mode within <span className="font-semibold text-brand-text">5 to 7 business days</span>.
+              <p>
+                Once we approve it, Razorpay returns the money to your original payment method (UPI, card, net banking or
+                wallet) within <strong>5 to 7 business days</strong>.
               </p>
-            </div>
-          </div>
-        </Container>
-      </section>
-
-      <Footer />
-    </main>
+            </>
+          ),
+        },
+      ]}
+    />
   );
 }

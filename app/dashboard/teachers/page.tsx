@@ -39,7 +39,7 @@ export default async function TeachersPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main List Column */}
         <div className="lg:col-span-2 space-y-6">
-          <h2 className="text-lg font-serif font-semibold text-ink-900 flex items-center gap-2">
+          <h2 className="text-lg font-serif text-ink-900 flex items-center gap-2">
             <UserCheck className="w-5 h-5 text-brand-primary" />
             Active Faculty ({teachersData.length})
           </h2>

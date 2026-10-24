@@ -280,7 +280,7 @@ export function StudentTodaysFocus({
         />
         <button
           type="submit"
-          className="p-2 bg-ink-900 hover:bg-ink-900 text-white rounded-xl transition-colors cursor-pointer shrink-0"
+          className="p-2 bg-forest-800 hover:bg-forest-900 text-paper rounded-full transition-colors cursor-pointer shrink-0"
         >
           <Plus className="w-4 h-4" />
         </button>

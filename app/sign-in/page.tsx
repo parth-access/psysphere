@@ -7,11 +7,13 @@ import { useSearchParams } from "next/navigation";
 import { AlertCircle, CheckCircle2, Loader2 } from "lucide-react";
 import { signInAction, forgotPasswordAction } from "@/src/domains/auth/actions";
 import { Logo } from "@/features/marketing/ui/Logo";
+import { Note } from "@/features/marketing/ui/Typography";
+import { Psi } from "@/features/marketing/ui/Doodles";
 
 const input =
-  "block w-full min-h-12 rounded-xl border border-line bg-surface px-4 text-[16px] text-ink-900 placeholder:text-ink-500/70 focus:outline-none focus:ring-2 focus:ring-ink-700/30 focus:border-ink-700 disabled:opacity-50";
+  "block w-full min-h-12 rounded-2xl border border-line bg-surface px-4 text-[16px] text-ink-900 placeholder:text-ink-500/70 focus:outline-none focus:ring-2 focus:ring-forest-800/25 focus:border-forest-800 disabled:opacity-50";
 const primary =
-  "flex w-full min-h-12 items-center justify-center gap-2 rounded-xl bg-ink-900 px-4 font-semibold text-paper hover:bg-ink-700 disabled:opacity-60";
+  "flex w-full min-h-12 items-center justify-center gap-2 rounded-full bg-forest-800 px-4 font-bold text-paper hover:bg-forest-900 disabled:opacity-60";
 
 function Notice({ tone, children }: { tone: "ok" | "error"; children: React.ReactNode }) {
   const Icon = tone === "ok" ? CheckCircle2 : AlertCircle;
@@ -52,8 +54,9 @@ function ForgotForm({ onBack }: { onBack: () => void }) {
 
 function SignInForm() {
   const [state, formAction, isPending] = useActionState(signInAction, null);
-  const [forgot, setForgot] = useState(false);
-  const updated = useSearchParams().get("updated") === "true";
+  const params = useSearchParams();
+  const [forgot, setForgot] = useState(params.get("forgot") === "1");
+  const updated = params.get("updated") === "true";
 
   if (forgot) return <ForgotForm onBack={() => setForgot(false)} />;
 
@@ -85,31 +88,30 @@ function SignInForm() {
 export default function SignInPage() {
   return (
     <div className="grid min-h-screen bg-paper lg:grid-cols-2">
-      <div className="hidden flex-col justify-between bg-ink-900 p-12 text-paper lg:flex">
-        <Link href="/" aria-label="Saarthi Classes home"><Logo tone="paper" /></Link>
-        <div className="flex flex-col gap-6">
-          <svg viewBox="0 0 520 120" className="w-full max-w-md" aria-hidden="true">
-            <path d="M8 96 C 120 96, 150 24, 260 24 S 420 90, 512 40" fill="none" stroke="#2E3A5F" strokeWidth="2.5" strokeLinecap="round" />
-            <path d="M8 96 C 120 96, 150 24, 260 24" fill="none" stroke="#FAF6EF" strokeWidth="2.5" strokeLinecap="round" />
-            <circle cx="260" cy="24" r="9" fill="#E3962B" />
-          </svg>
-          <p className="max-w-md font-serif text-4xl font-semibold leading-tight">Understand it once. Remember it for the exam.</p>
+      <div className="relative hidden flex-col justify-between overflow-hidden bg-forest-900 p-12 text-paper lg:flex">
+        <Psi className="pointer-events-none absolute -bottom-16 -right-10 h-[420px] w-[360px] text-paper/[0.06]" />
+        <Link href="/" aria-label="Saarthi Classes home" className="relative"><Logo tone="paper" /></Link>
+        <div className="relative flex flex-col gap-6">
+          <p className="max-w-md font-serif text-[52px] leading-[1.02]">
+            Understand it once. <em className="text-gold-400">Remember it for the exam.</em>
+          </p>
+          <Note className="text-gold-400">welcome back :)</Note>
         </div>
-        <p className="text-sm text-ink-300">Psychology for Class 11, 12 &amp; CUET-UG</p>
+        <p className="relative text-sm text-paper/60">Psychology for Class 11, 12 &amp; CUET-UG</p>
       </div>
 
       <main className="flex items-center justify-center px-4 py-16 sm:px-6">
         <div className="flex w-full max-w-sm flex-col gap-8">
           <Link href="/" className="lg:hidden" aria-label="Saarthi Classes home"><Logo /></Link>
           <div>
-            <h1 className="font-serif text-[32px] font-semibold text-ink-900">Log in</h1>
+            <h1 className="font-serif text-[44px] leading-none text-ink-900">Log in</h1>
             <p className="mt-1 text-[15px] text-ink-500">For students, teachers and admin.</p>
           </div>
           <React.Suspense fallback={<div className="h-64" />}>
             <SignInForm />
           </React.Suspense>
           <p className="text-sm text-ink-500">
-            Not a student yet? <Link href="/workshops" className="font-semibold text-ink-900 underline underline-offset-4">Join a free workshop</Link>
+            Not a student yet? <Link href="/workshops" className="font-bold text-forest-800 underline decoration-gold-500 decoration-2 underline-offset-4">Join a free workshop</Link>
           </p>
         </div>
       </main>

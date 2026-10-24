@@ -6,14 +6,19 @@ export function PersonFields({
   errors,
   defaultClass,
   showClass = true,
+  showParentEmail = false,
+  firstStep,
 }: {
   errors: FieldErrors;
   defaultClass?: string;
   showClass?: boolean;
+  showParentEmail?: boolean;
+  /** Number the two sections when they continue a numbered form. */
+  firstStep?: number;
 }) {
   return (
     <>
-      <FormSection title="Student">
+      <FormSection title="Student" step={firstStep}>
         <Field label="Full name" name="studentName" error={errors.studentName}>
           <TextInput name="studentName" autoComplete="name" required error={errors.studentName} />
         </Field>
@@ -36,7 +41,7 @@ export function PersonFields({
         )}
       </FormSection>
 
-      <FormSection title="Parent or guardian">
+      <FormSection title="Parent or guardian" step={firstStep !== undefined ? firstStep + 1 : undefined}>
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="Parent’s name" name="parentName" error={errors.parentName}>
             <TextInput name="parentName" required error={errors.parentName} />
@@ -45,6 +50,11 @@ export function PersonFields({
             <TextInput name="parentPhone" type="tel" inputMode="tel" placeholder="98765 43210" required error={errors.parentPhone} />
           </Field>
         </div>
+        {showParentEmail && (
+          <Field label="Parent’s email (optional)" name="parentEmail" error={errors.parentEmail} hint="We send a short progress report here every week">
+            <TextInput name="parentEmail" type="email" error={errors.parentEmail} />
+          </Field>
+        )}
       </FormSection>
 
       {/* Honeypot for bots, hidden from people and screen readers */}

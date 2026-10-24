@@ -103,6 +103,7 @@ export interface CreateJoinRequestInput {
   phone: string;
   parentName: string;
   parentPhone: string;
+  parentEmail?: string | null;
   classLevel: ClassLevel;
   track: Track;
   planId: string;
@@ -151,6 +152,7 @@ export async function createJoinRequest(input: CreateJoinRequestInput): Promise<
     phone: input.phone.trim(),
     parentName: input.parentName.trim(),
     parentPhone: input.parentPhone.trim(),
+    parentEmail: input.parentEmail || null,
     classLevel: input.classLevel,
     track: input.track,
     planId: plan.id,
@@ -358,6 +360,10 @@ export async function finalizePaidOrder(orderId: string, paymentId: string) {
       .from(joinRequests)
       .where(eq(joinRequests.razorpayOrderId, orderId));
     if (!current) throw new JoinError(`No join request for order ${orderId}.`);
+    if (current.status !== "paid" && current.status !== "enrolled") {
+      // Money was taken for a request that was declined (or reset) while the student was paying.
+      console.error(`[joining] Payment ${paymentId} captured for ${current.status} request ${current.id}; refund or enrol by hand.`);
+    }
     return { requestId: current.id, status: current.status };
   }
 
@@ -382,6 +388,7 @@ export async function enrollPaidRequest(id: string) {
       phone: r.phone,
       parentName: r.parentName,
       parentPhone: r.parentPhone,
+      parentEmail: r.parentEmail,
       batchId: r.batchId,
     });
 

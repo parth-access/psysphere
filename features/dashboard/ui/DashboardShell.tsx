@@ -15,8 +15,16 @@ import {
   UserPlus,
   Menu,
   X,
+  Inbox,
+  IndianRupee,
+  CalendarCheck,
+  ClipboardList,
+  FolderOpen,
+  UserRound,
+  Timer,
 } from "lucide-react";
 import { signOutAction } from "@/src/domains/auth/actions";
+import { Logo } from "@/features/marketing/ui/Logo";
 
 type Profile = { fullName: string; role: string } | null | undefined;
 
@@ -26,9 +34,18 @@ const NAV_ITEMS = [
   { label: "Today", href: "/dashboard/student", icon: LayoutDashboard, roles: ["student"] },
   { label: "Workshops", href: "/dashboard/workshops", icon: Sparkles, roles: ["admin"] },
   { label: "Join requests", href: "/dashboard/join-requests", icon: UserPlus, roles: ["admin"] },
+  { label: "Messages", href: "/dashboard/messages", icon: Inbox, roles: ["admin"] },
+  { label: "Payments", href: "/dashboard/payments", icon: IndianRupee, roles: ["admin"] },
   { label: "Students", href: "/dashboard/students", icon: Users, roles: ["admin"] },
   { label: "Batches", href: "/dashboard/batches", icon: Layers, roles: ["admin"] },
   { label: "Classes", href: "/dashboard/classes", icon: BookOpen, roles: ["admin", "teacher"] },
+  { label: "Attendance", href: "/dashboard/attendance", icon: CalendarCheck, roles: ["admin", "teacher"] },
+  { label: "Assignments", href: "/dashboard/assignments", icon: ClipboardList, roles: ["admin", "teacher", "student"] },
+  { label: "Tests", href: "/dashboard/tests", icon: Timer, roles: ["admin", "teacher", "student"] },
+  { label: "Study material", href: "/dashboard/materials", icon: FolderOpen, roles: ["admin", "teacher", "student"] },
+  { label: "My classes", href: "/dashboard/my-classes", icon: BookOpen, roles: ["student"] },
+  { label: "Fees & payments", href: "/dashboard/my-payments", icon: IndianRupee, roles: ["student"] },
+  { label: "Profile", href: "/dashboard/profile", icon: UserRound, roles: ["admin", "teacher", "student"] },
   { label: "Teachers", href: "/dashboard/teachers", icon: GraduationCap, roles: ["admin"] },
   { label: "Settings", href: "/dashboard/settings", icon: Settings, roles: ["admin"] },
 ];
@@ -43,14 +60,9 @@ function SidebarContent({ profile, onNavigate }: { profile: Profile; onNavigate?
   const items = NAV_ITEMS.filter((i) => i.roles.includes(role));
 
   return (
-    <div className="flex h-full flex-col gap-8 bg-ink-900 px-4 py-6 text-ink-300">
-      <Link href="/" className="flex items-center gap-2.5 px-2 font-serif text-xl font-semibold text-paper" onClick={onNavigate}>
-        <svg width="24" height="24" viewBox="0 0 28 28" aria-hidden="true">
-          <circle cx="14" cy="14" r="12" fill="none" stroke="#FAF6EF" strokeWidth="2" />
-          <path d="M6 18 C 11 18, 12 10, 18 10" fill="none" stroke="#FAF6EF" strokeWidth="2" strokeLinecap="round" />
-          <circle cx="19" cy="10" r="2.5" fill="#E3962B" />
-        </svg>
-        Saarthi Classes
+    <div className="flex h-full flex-col gap-8 bg-forest-950 px-4 py-6 text-paper/70">
+      <Link href="/" className="px-2" onClick={onNavigate} aria-label="Saarthi Classes home">
+        <Logo tone="paper" />
       </Link>
 
       <nav aria-label="Dashboard" className="flex flex-1 flex-col gap-1 overflow-y-auto">
@@ -64,11 +76,11 @@ function SidebarContent({ profile, onNavigate }: { profile: Profile; onNavigate?
               href={item.href}
               onClick={onNavigate}
               aria-current={active ? "page" : undefined}
-              className={`flex min-h-11 items-center gap-3 rounded-xl px-3 text-[15px] font-medium transition-colors ${
-                active ? "bg-ink-700 text-paper" : "hover:bg-ink-700/60 hover:text-paper"
+              className={`flex min-h-11 items-center gap-3 rounded-full px-4 text-[15px] font-semibold transition-colors ${
+                active ? "bg-forest-800 text-paper shadow-[inset_0_1px_0_rgb(255_255_255/0.08)]" : "hover:bg-paper/5 hover:text-paper"
               }`}
             >
-              <item.icon className={`h-[18px] w-[18px] ${active ? "text-marigold-500" : ""}`} aria-hidden="true" />
+              <item.icon className={`h-[18px] w-[18px] ${active ? "text-gold-400" : ""}`} aria-hidden="true" />
               {item.label}
             </Link>
           );
@@ -76,8 +88,8 @@ function SidebarContent({ profile, onNavigate }: { profile: Profile; onNavigate?
       </nav>
 
       {profile && (
-        <div className="flex items-center gap-3 rounded-xl bg-ink-700/50 p-3">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-marigold-500 text-xs font-bold text-ink-900">
+        <div className="flex items-center gap-3 rounded-[20px] bg-paper/5 p-3">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gold-500 text-xs font-bold text-ink-900">
             {initials(profile.fullName)}
           </div>
           <div className="min-w-0 flex-1">
@@ -85,7 +97,7 @@ function SidebarContent({ profile, onNavigate }: { profile: Profile; onNavigate?
             <p className="text-xs capitalize">{profile.role}</p>
           </div>
           <form action={signOutAction}>
-            <button type="submit" aria-label="Log out" className="flex h-9 w-9 items-center justify-center rounded-lg hover:bg-ink-700 hover:text-paper">
+            <button type="submit" aria-label="Log out" className="flex h-9 w-9 items-center justify-center rounded-full hover:bg-paper/10 hover:text-paper">
               <LogOut className="h-4 w-4" aria-hidden="true" />
             </button>
           </form>
@@ -119,7 +131,7 @@ export function DashboardShell({ profile, children }: { profile: Profile; childr
 
       {open && (
         <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true" aria-label="Menu">
-          <button type="button" aria-label="Close menu" className="absolute inset-0 bg-ink-900/50" onClick={() => setOpen(false)} />
+          <button type="button" aria-label="Close menu" className="absolute inset-0 bg-forest-950/60 backdrop-blur-sm" onClick={() => setOpen(false)} />
           <div className="relative h-full w-72 max-w-[85vw]">
             <SidebarContent profile={profile} onNavigate={() => setOpen(false)} />
           </div>
@@ -137,7 +149,7 @@ export function DashboardShell({ profile, children }: { profile: Profile; childr
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
-          <span className="font-serif text-lg font-semibold">Saarthi Classes</span>
+          <Logo />
         </header>
         <main id="main" className="flex-1 px-4 py-8 sm:px-6 lg:px-10 lg:py-10">
           <div className="mx-auto max-w-6xl">{children}</div>

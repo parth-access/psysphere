@@ -14,14 +14,14 @@ export interface ButtonProps extends Omit<HTMLMotionProps<'button'>, 'children'>
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'primary', size = 'md', isLoading, disabled, children, id, ...props }, ref) => {
-    const baseStyles = 'inline-flex items-center justify-center font-sans font-medium transition-all focus:outline-none focus:ring-1 focus:ring-brand-charcoal/20 disabled:opacity-50 disabled:pointer-events-none rounded-xl cursor-pointer border';
+    const baseStyles = 'inline-flex items-center justify-center font-sans font-medium transition-all focus:outline-none focus:ring-2 focus:ring-forest-800/30 disabled:opacity-50 disabled:pointer-events-none rounded-full cursor-pointer border';
     
     const variants = {
-      primary: 'bg-brand-accent text-brand-cream hover:bg-brand-accent-hover active:bg-brand-accent/90 border-brand-accent shadow-2xs',
+      primary: 'bg-forest-800 text-paper hover:bg-forest-900 border-forest-800 font-semibold',
       secondary: 'bg-brand-beige text-brand-charcoal hover:bg-brand-stone-soft border-brand-stone-soft/60',
       outline: 'bg-transparent border-brand-stone-soft hover:bg-brand-cream/80 text-brand-charcoal',
       ghost: 'bg-transparent border-transparent hover:bg-brand-cream text-brand-charcoal',
-      link: 'bg-transparent border-transparent text-brand-accent hover:underline p-0 underline-offset-4',
+      link: 'bg-transparent border-transparent text-forest-800 hover:underline p-0 underline-offset-4',
     };
 
     const sizes = {

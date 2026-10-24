@@ -24,7 +24,7 @@ function Segmented<T extends string>({
   onChange: (v: T) => void;
 }) {
   return (
-    <div role="radiogroup" aria-label={label} className="inline-flex gap-1 rounded-xl bg-paper-deep p-1">
+    <div role="radiogroup" aria-label={label} className="inline-flex gap-1 rounded-full border border-line bg-surface p-1">
       {options.map((o) => (
         <button
           key={o.value}
@@ -32,8 +32,8 @@ function Segmented<T extends string>({
           role="radio"
           aria-checked={value === o.value}
           onClick={() => onChange(o.value)}
-          className={`min-h-11 rounded-[9px] px-4 text-[15px] font-semibold transition-colors ${
-            value === o.value ? 'bg-ink-900 text-paper' : 'text-ink-900 hover:bg-surface'
+          className={`min-h-10 rounded-full px-5 text-[14px] font-bold transition-colors ${
+            value === o.value ? 'bg-forest-800 text-paper' : 'text-ink-700 hover:bg-ink-100'
           }`}
         >
           {o.label}
@@ -60,12 +60,14 @@ function PricingContent() {
   const classLevel = cls === 'class11' ? 'class_11' : 'class_12';
 
   return (
-    <section id="pricing" className="border-y border-line bg-surface py-20 sm:py-24">
+    <section id="pricing" className="relative overflow-hidden bg-paper-deep py-24 sm:py-32">
       <Container>
-        <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
-          <div className="max-w-xl">
-            <Eyebrow className="mb-3">Fees</Eyebrow>
-            <H2 className="mb-3">Fees, upfront</H2>
+        <div className="mb-12 flex flex-wrap items-end justify-between gap-8">
+          <div className="flex max-w-xl flex-col gap-4">
+            <Eyebrow>Fees</Eyebrow>
+            <H2>
+              Fees, <em>listed upfront.</em>
+            </H2>
             <Body>Every plan includes live classes, study material and doubt support. Longer plans cost less per class.</Body>
           </div>
           <div className="flex flex-wrap gap-3">
@@ -90,40 +92,48 @@ function PricingContent() {
           </div>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {tiers.map((t) => {
             const featured = t.popular;
+            const perClass = Math.round(t.price / t.classes);
             return (
               <div
                 key={t.id}
-                className={`relative flex flex-col gap-4 rounded-2xl p-7 ${featured ? 'border-2 border-ink-900' : 'border border-line'}`}
+                className={`relative flex flex-col gap-5 rounded-[32px] p-7 ${
+                  featured ? 'bg-forest-900 text-paper shadow-lift lg:-my-3 lg:py-10' : 'border border-line bg-surface text-ink-900'
+                }`}
               >
-                {featured && (
-                  <span className="absolute -top-3.5 left-6 rounded-full bg-marigold-500 px-3 py-1 text-[13px] font-semibold text-ink-900">
-                    Most popular
-                  </span>
-                )}
-                {t.bestValue && !featured && (
-                  <span className="absolute -top-3.5 left-6 rounded-full bg-ink-900 px-3 py-1 text-[13px] font-semibold text-paper">
-                    Best value
-                  </span>
-                )}
-                <h3 className="font-semibold text-ink-900">{t.name}</h3>
-                <p className="font-serif text-4xl font-semibold text-ink-900">{inr(t.price)}</p>
-                <p className={`text-sm font-semibold ${t.save ? 'text-sage-600' : 'text-ink-500'}`}>
-                  {t.classes} classes{t.save ? ` · save ${inr(t.save)}` : ''}
-                </p>
-                <ul className="flex flex-col gap-2.5 text-[15px] text-ink-500">
+                <div className="flex items-center justify-between gap-2">
+                  <h3 className="text-[15px] font-bold uppercase tracking-[0.12em]">{t.name}</h3>
+                  {featured && (
+                    <span className="rounded-full bg-gold-500 px-3 py-1 text-[12px] font-bold text-ink-900">Most popular</span>
+                  )}
+                  {t.bestValue && !featured && (
+                    <span className="rounded-full bg-mint px-3 py-1 text-[12px] font-bold text-forest-900">Best value</span>
+                  )}
+                </div>
+                <div>
+                  <p className="font-serif text-[44px] leading-none xl:text-[52px]">{inr(t.price)}</p>
+                  <p className={`mt-2 text-sm ${featured ? 'text-paper/70' : 'text-ink-500'}`}>
+                    {t.classes} classes · about {inr(perClass)} per class
+                  </p>
+                </div>
+                {t.save ? (
+                  <p className={`w-fit rounded-full px-3 py-1 text-[13px] font-bold ${featured ? 'bg-paper/10 text-gold-400' : 'bg-forest-50 text-forest-800'}`}>
+                    You save {inr(t.save)}
+                  </p>
+                ) : null}
+                <ul className={`flex flex-col gap-3 border-t pt-5 text-[15px] ${featured ? 'border-paper/15 text-paper/85' : 'border-line text-ink-700'}`}>
                   {t.features.map((f) => (
-                    <li key={f} className="flex items-start gap-2">
-                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-sage-600" aria-hidden="true" />
+                    <li key={f} className="flex items-start gap-2.5">
+                      <Check className={`mt-0.5 h-4 w-4 shrink-0 ${featured ? 'text-gold-400' : 'text-forest-700'}`} strokeWidth={3} aria-hidden="true" />
                       {f}
                     </li>
                   ))}
                 </ul>
                 <Button
                   href={`${NAVIGATION.join}?class=${classLevel}&track=${track}&plan=${t.id}`}
-                  variant={featured ? 'primary' : 'outline'}
+                  variant={featured ? 'accent' : 'outline'}
                   className="mt-auto w-full"
                 >
                   Choose {t.name.toLowerCase()}
@@ -133,9 +143,9 @@ function PricingContent() {
           })}
         </div>
 
-        <p className="mt-8 text-[15px] text-ink-500">
+        <p className="mt-10 text-center text-[15px] text-ink-500">
           Not sure yet?{' '}
-          <a href={NAVIGATION.workshops} className="font-semibold text-ink-900 underline underline-offset-4">
+          <a href={NAVIGATION.workshops} className="font-bold text-forest-800 underline decoration-gold-500 decoration-2 underline-offset-4">
             Try a free workshop first
           </a>
           .
@@ -147,7 +157,7 @@ function PricingContent() {
 
 export function Pricing() {
   return (
-    <Suspense fallback={<div className="h-[640px] bg-surface" />}>
+    <Suspense fallback={<div className="h-[720px] bg-paper-deep" />}>
       <PricingContent />
     </Suspense>
   );

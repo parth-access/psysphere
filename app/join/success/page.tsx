@@ -1,23 +1,12 @@
-import Link from "next/link";
-import { PartyPopper } from "lucide-react";
 import { PublicShell } from "@/features/joining/ui/PublicShell";
+import { SuccessView } from "@/features/joining/ui/JoinStatusViews";
 
 export const metadata = { title: "Welcome | Saarthi Classes", robots: { index: false } };
 
 export default function JoinSuccessPage() {
   return (
     <PublicShell>
-      <div role="status" className="mx-auto flex max-w-xl flex-col items-start gap-4 rounded-2xl border border-line bg-surface p-8">
-        <PartyPopper className="h-10 w-10 text-marigold-500" aria-hidden="true" />
-        <h1 className="font-serif text-3xl font-semibold">Payment received. Welcome!</h1>
-        <p className="text-ink-500">
-          Your seat is confirmed. We’ve emailed you a link to set your password. Once that’s done, sign in to see your
-          class timings and Google Meet links.
-        </p>
-        <Link href="/sign-in" className="inline-flex min-h-12 items-center rounded-xl bg-ink-900 px-6 font-semibold text-paper hover:bg-ink-700">
-          Go to sign in
-        </Link>
-      </div>
+      <SuccessView />
     </PublicShell>
   );
 }

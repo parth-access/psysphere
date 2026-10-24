@@ -187,7 +187,7 @@ export default async function BatchDetailsPage({ params }: PageProps) {
                   </thead>
                   <tbody className="divide-y divide-line">
                     {enrolledStudents.map((student) => {
-                      const formattedDate = new Date(student.enrolledAt).toLocaleDateString("en-GB", {
+                      const formattedDate = new Date(student.enrolledAt).toLocaleDateString("en-GB", { timeZone: "Asia/Kolkata",
                         day: "numeric",
                         month: "short",
                         year: "numeric",

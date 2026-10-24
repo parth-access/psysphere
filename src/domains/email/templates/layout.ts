@@ -11,10 +11,10 @@ export function renderBaseEmailLayout(title: string, contentHtml: string): strin
           margin: 0;
           padding: 0;
           width: 100% !important;
-          background-color: #FAF6EF;
+          background-color: #FBF8F1;
           font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
           -webkit-font-smoothing: antialiased;
-          color: #1C2541;
+          color: #15281D;
         }
         table {
           border-collapse: collapse;
@@ -31,7 +31,7 @@ export function renderBaseEmailLayout(title: string, contentHtml: string): strin
         .wrapper {
           width: 100%;
           table-layout: fixed;
-          background-color: #FAF6EF;
+          background-color: #FBF8F1;
           padding-top: 40px;
           padding-bottom: 40px;
         }
@@ -39,7 +39,7 @@ export function renderBaseEmailLayout(title: string, contentHtml: string): strin
           max-width: 600px;
           margin: 0 auto;
           background-color: #FFFFFF;
-          border: 1px solid #E7E1D6;
+          border: 1px solid #E6DFCF;
           border-radius: 4px;
           overflow: hidden;
           box-shadow: 0 4px 12px rgba(31, 41, 55, 0.02);
@@ -47,7 +47,7 @@ export function renderBaseEmailLayout(title: string, contentHtml: string): strin
         .header {
           padding: 32px 40px;
           background-color: #FFFFFF;
-          border-bottom: 1px solid #FAF6EF;
+          border-bottom: 1px solid #FBF8F1;
           text-align: center;
         }
         .logo-box {
@@ -55,20 +55,21 @@ export function renderBaseEmailLayout(title: string, contentHtml: string): strin
           width: 44px;
           height: 44px;
           line-height: 44px;
-          background-color: #1C2541;
+          background-color: #1F5E3B;
           color: #FFFFFF;
+          border-radius: 22px;
           font-family: Georgia, serif;
           font-style: italic;
           font-size: 24px;
           font-weight: bold;
           text-align: center;
-          border-radius: 2px;
+          border-radius: 999px;
         }
         .brand-name {
           font-family: Georgia, serif;
           font-size: 18px;
           font-weight: bold;
-          color: #1C2541;
+          color: #15281D;
           margin-top: 12px;
           letter-spacing: 0.05em;
         }
@@ -78,28 +79,28 @@ export function renderBaseEmailLayout(title: string, contentHtml: string): strin
         }
         .footer {
           padding: 32px 40px;
-          background-color: #FAF6EF;
-          border-top: 1px solid #E7E1D6;
+          background-color: #FBF8F1;
+          border-top: 1px solid #E6DFCF;
           text-align: center;
           font-size: 12px;
-          color: #5B6478;
+          color: #5A6B60;
           line-height: 1.6;
         }
         .automated-notice {
           margin-top: 24px;
           padding-top: 24px;
-          border-top: 1px solid #E7E1D6;
+          border-top: 1px solid #E6DFCF;
           font-size: 13px;
-          color: #5B6478;
+          color: #5A6B60;
         }
         .automated-notice a {
-          color: #1C2541;
+          color: #15281D;
           font-weight: 600;
           text-decoration: underline;
         }
         h1, h2, h3 {
           font-family: Georgia, serif;
-          color: #1C2541;
+          color: #15281D;
           margin-top: 0;
           font-weight: bold;
         }
@@ -111,7 +112,7 @@ export function renderBaseEmailLayout(title: string, contentHtml: string): strin
         p {
           font-size: 15px;
           line-height: 1.6;
-          color: #1C2541;
+          color: #15281D;
           margin-top: 0;
           margin-bottom: 20px;
         }
@@ -122,19 +123,19 @@ export function renderBaseEmailLayout(title: string, contentHtml: string): strin
         }
         .btn {
           display: inline-block;
-          background-color: #1C2541;
+          background-color: #1F5E3B;
           color: #FFFFFF !important;
           text-decoration: none;
           font-size: 14px;
           font-weight: 600;
           padding: 12px 28px;
-          border-radius: 2px;
+          border-radius: 999px;
           letter-spacing: 0.02em;
           box-shadow: 0 2px 4px rgba(0,0,0,0.05);
           transition: background-color 0.2s ease;
         }
         .btn:hover {
-          background-color: #2E3A5F;
+          background-color: #164A2E;
         }
         .bullet-list {
           margin: 0 0 24px 0;
@@ -143,14 +144,14 @@ export function renderBaseEmailLayout(title: string, contentHtml: string): strin
         .bullet-item {
           font-size: 14px;
           line-height: 1.6;
-          color: #5B6478;
+          color: #5A6B60;
           margin-bottom: 8px;
         }
         .highlight-box {
-          background-color: #FAF6EF;
-          border: 1px solid #E7E1D6;
+          background-color: #FBF8F1;
+          border: 1px solid #E6DFCF;
           padding: 24px;
-          border-radius: 2px;
+          border-radius: 999px;
           margin-bottom: 24px;
         }
         .highlight-item {
@@ -165,18 +166,18 @@ export function renderBaseEmailLayout(title: string, contentHtml: string): strin
           font-size: 11px;
           text-transform: uppercase;
           letter-spacing: 0.1em;
-          color: #5B6478;
+          color: #5A6B60;
           font-weight: 700;
           margin-bottom: 4px;
         }
         .highlight-value {
           font-size: 16px;
           font-weight: 600;
-          color: #1C2541;
+          color: #15281D;
         }
         .divider {
           height: 1px;
-          background-color: #E7E1D6;
+          background-color: #E6DFCF;
           margin: 24px 0;
         }
       </style>
@@ -185,7 +186,7 @@ export function renderBaseEmailLayout(title: string, contentHtml: string): strin
       <div class="wrapper">
         <div class="container">
           <div class="header">
-            <div class="logo-box">S</div>
+            <img src="https://www.saarthilife.com/saarthi-logo.webp" alt="Saarthi" height="40" style="height:40px;width:auto;border:0;" />
             <div class="brand-name">Saarthi Classes</div>
           </div>
           <div class="body-content">
@@ -197,7 +198,7 @@ export function renderBaseEmailLayout(title: string, contentHtml: string): strin
               <p style="margin: 0;">Need help or have a question? Please use our <a href="https://classes.saarthilife.com/contact">Contact Form</a>.</p>
             </div>
             <div class="divider"></div>
-            <p style="margin-bottom: 8px; font-size: 12px; color: #5B6478;">© 2026 Saarthi Classes. All rights reserved.</p>
+            <p style="margin-bottom: 8px; font-size: 12px; color: #5A6B60;">© 2026 Saarthi Classes. All rights reserved.</p>
             <p style="margin: 0; font-size: 11px; color: #9CA3AF;">This is an administrative email regarding your academic enrollment. You cannot unsubscribe from system notifications.</p>
           </div>
         </div>

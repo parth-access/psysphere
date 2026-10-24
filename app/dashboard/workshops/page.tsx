@@ -34,7 +34,7 @@ export default async function WorkshopsAdminPage() {
                         </div>
                         <div className="flex items-center gap-3 text-sm">
                           <span className="text-ink-500">{registrations}{w.capacity ? ` / ${w.capacity}` : ""} registered</span>
-                          <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${past ? "bg-paper-deep text-ink-500" : w.isPublished ? "bg-sage-100 text-sage-600" : "bg-marigold-100 text-marigold-700"}`}>
+                          <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${past ? "bg-paper-deep text-ink-500" : w.isPublished ? "bg-sage-100 text-sage-600" : "bg-marigold-100 text-gold-700"}`}>
                             {past ? "Done" : w.isPublished ? "Live" : "Hidden"}
                           </span>
                         </div>

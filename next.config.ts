@@ -9,31 +9,13 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: false,
   },
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'picsum.photos',
-        port: '',
-        pathname: '/**', // This allows any path under the hostname
-      },
-      {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-        port: '',
-        pathname: '/**',
-      },
-    ],
+    // Dravina's photo (constants/testimonials.ts) is served from the main Saarthi site
+    remotePatterns: [{ protocol: 'https', hostname: 'www.saarthilife.com', pathname: '/**' }],
   },
   transpilePackages: ['motion'],
-  webpack: (config, {dev}) => {
-    // HMR is disabled in AI Studio via DISABLE_HMR env var.
-    // Do not modifyâfile watching is disabled to prevent flickering during agent edits.
-    if (dev && process.env.DISABLE_HMR === 'true') {
-      config.watchOptions = {
-        ignored: /.*/,
-      };
-    }
-    return config;
+  experimental: {
+    // Study material uploads go through a server action
+    serverActions: { bodySizeLimit: '25mb' },
   },
 };
 

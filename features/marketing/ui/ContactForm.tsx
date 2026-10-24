@@ -1,150 +1,58 @@
 'use client';
 
-import { useState } from 'react';
-import { Button } from '@/features/marketing/ui/Button';
-import { MessageSquare, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
+import { useActionState } from 'react';
+import { CheckCircle2 } from 'lucide-react';
+import { contactAction, type ContactState } from '@/app/contact/actions';
+import { Field, TextInput, inputClass, primaryButtonClass } from '@/features/joining/ui/Field';
+
+const TOPICS = ['Joining a batch', 'Free workshops', 'Fees and payments', 'Something else'];
 
 export function ContactForm() {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
-  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [state, action, pending] = useActionState<ContactState, FormData>(contactAction, { status: 'idle' });
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!firstName.trim() || !email.trim() || !message.trim()) {
-      setStatus('error');
-      setErrorMessage('Please fill in your name, email, and message.');
-      return;
-    }
-
-    setStatus('submitting');
-    setErrorMessage('');
-
-    try {
-      // Direct submission / client handler with smooth feedback
-      await new Promise((resolve) => setTimeout(resolve, 600));
-      setStatus('success');
-    } catch {
-      setStatus('error');
-      setErrorMessage('Something went wrong sending your message. Please try again or email us directly.');
-    }
-  };
-
-  if (status === 'success') {
+  if (state.status === 'sent') {
     return (
-      <div className="p-8 text-center bg-brand-canvas rounded-2xl border border-brand-border space-y-4">
-        <div className="h-12 w-12 rounded-full bg-sage-100 text-sage-600 flex items-center justify-center mx-auto">
-          <CheckCircle2 className="h-6 w-6" />
-        </div>
-        <h3 className="font-serif text-xl font-semibold text-brand-text">Message Received</h3>
-        <p className="text-sm text-brand-text-muted max-w-sm mx-auto">
-          Thank you, {firstName}. Our academic counselling team at Saarthi Classes has received your enquiry and will respond within 12–24 hours.
-        </p>
-        <button
-          type="button"
-          onClick={() => {
-            setStatus('idle');
-            setFirstName('');
-            setLastName('');
-            setEmail('');
-            setMessage('');
-          }}
-          className="text-xs font-semibold text-brand-primary underline hover:text-brand-text mt-2 cursor-pointer"
-        >
-          Send another message
-        </button>
+      <div role="status" className="flex flex-col gap-3 rounded-[28px] border border-line bg-surface p-8">
+        <CheckCircle2 className="h-8 w-8 text-sage-600" aria-hidden="true" />
+        <h2 className="font-serif text-2xl text-ink-900">Message sent</h2>
+        <p className="text-ink-500">Thank you. We usually reply within a day.</p>
       </div>
     );
   }
 
+  const errors = state.status === 'error' ? state.errors : {};
   return (
-    <form className="space-y-4" onSubmit={handleSubmit}>
-      {status === 'error' && errorMessage && (
-        <div className="p-3 rounded-xl bg-rose-100 border border-rose-100 text-rose-600 text-xs flex items-center gap-2">
-          <AlertCircle className="h-4 w-4 shrink-0" />
-          <span>{errorMessage}</span>
-        </div>
+    <form action={action} noValidate className="relative flex flex-col gap-5 rounded-[28px] border border-line bg-surface p-6 sm:p-8">
+      <div className="grid gap-5 sm:grid-cols-2">
+        <Field label="Your name" name="name" error={errors.name}>
+          <TextInput name="name" autoComplete="name" required error={errors.name} />
+        </Field>
+        <Field label="Phone (optional)" name="phone" error={errors.phone}>
+          <TextInput name="phone" type="tel" autoComplete="tel" error={errors.phone} />
+        </Field>
+      </div>
+      <Field label="Email" name="email" error={errors.email}>
+        <TextInput name="email" type="email" autoComplete="email" required error={errors.email} />
+      </Field>
+      <Field label="What’s it about?" name="topic" error={errors.topic}>
+        <select id="topic" name="topic" defaultValue={TOPICS[0]} className={inputClass}>
+          {TOPICS.map((t) => (
+            <option key={t}>{t}</option>
+          ))}
+        </select>
+      </Field>
+      <Field label="Message" name="message" error={errors.message}>
+        <textarea id="message" name="message" rows={5} required aria-invalid={errors.message ? true : undefined} className={`${inputClass} py-3`} />
+      </Field>
+      <div aria-hidden="true" className="absolute left-[-9999px] h-0 w-0 overflow-hidden">
+        <input name="website" tabIndex={-1} autoComplete="off" />
+      </div>
+      {state.status === 'error' && state.message && (
+        <p role="alert" className="rounded-xl bg-rose-100 px-4 py-3 text-sm font-medium text-rose-600">{state.message}</p>
       )}
-
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-1.5">
-          <label htmlFor="contact-first-name" className="text-xs font-semibold text-brand-text">
-            First Name <span className="text-rose-600">*</span>
-          </label>
-          <input
-            id="contact-first-name"
-            type="text"
-            required
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-            className="w-full px-3 py-2 border border-brand-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 bg-white"
-            placeholder="John"
-          />
-        </div>
-        <div className="space-y-1.5">
-          <label htmlFor="contact-last-name" className="text-xs font-semibold text-brand-text">
-            Last Name
-          </label>
-          <input
-            id="contact-last-name"
-            type="text"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-            className="w-full px-3 py-2 border border-brand-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 bg-white"
-            placeholder="Doe"
-          />
-        </div>
-      </div>
-
-      <div className="space-y-1.5">
-        <label htmlFor="contact-email" className="text-xs font-semibold text-brand-text">
-          Email Address <span className="text-rose-600">*</span>
-        </label>
-        <input
-          id="contact-email"
-          type="email"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full px-3 py-2 border border-brand-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 bg-white"
-          placeholder="john@example.com"
-        />
-      </div>
-
-      <div className="space-y-1.5">
-        <label htmlFor="contact-message" className="text-xs font-semibold text-brand-text">
-          Your Message <span className="text-rose-600">*</span>
-        </label>
-        <textarea
-          id="contact-message"
-          rows={4}
-          required
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          className="w-full px-3 py-2 border border-brand-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 resize-none bg-white"
-          placeholder="How can we help you regarding Class 11 & 12 Psychology or CUET-UG?"
-        />
-      </div>
-
-      <Button
-        type="submit"
-        variant="primary"
-        disabled={status === 'submitting'}
-        className="w-full flex items-center justify-center gap-2 mt-2"
-      >
-        {status === 'submitting' ? (
-          <>
-            <Loader2 className="h-4 w-4 animate-spin" /> Sending...
-          </>
-        ) : (
-          <>
-            <MessageSquare className="h-4 w-4" /> Send Message
-          </>
-        )}
-      </Button>
+      <button type="submit" disabled={pending} className={primaryButtonClass}>
+        {pending ? 'Sending…' : 'Send message'}
+      </button>
     </form>
   );
 }

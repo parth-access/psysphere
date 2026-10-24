@@ -131,8 +131,8 @@ export default async function ClassesPage() {
               } else if (diffMinsFeatured > 0 && diffMinsFeatured <= 60) {
                 featuredCountdownText = `Starts in ${diffMinsFeatured} mins`;
               } else {
-                const dayStr = startsAtFeatured.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" });
-                const timeStr = startsAtFeatured.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+                const dayStr = startsAtFeatured.toLocaleDateString("en-GB", { timeZone: "Asia/Kolkata", weekday: "short", day: "numeric", month: "short" });
+                const timeStr = startsAtFeatured.toLocaleTimeString("en-GB", { timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit" });
                 featuredCountdownText = `${dayStr} at ${timeStr}`;
               }
 
@@ -151,7 +151,7 @@ export default async function ClassesPage() {
                             "px-2.5 py-1 text-[9px] font-bold rounded-md border uppercase tracking-wider",
                             isLive 
                               ? "bg-rose-50 text-rose-600 border-rose-200 animate-pulse" 
-                              : "bg-marigold-100 text-marigold-700 border-marigold-100"
+                              : "bg-marigold-100 text-gold-700 border-marigold-100"
                           )}>
                             {featuredCountdownText}
                           </span>
@@ -200,7 +200,7 @@ export default async function ClassesPage() {
 
                           if (clsDiffMins > 0 && clsDiffMins <= 15) {
                             contextualStatus = "Starts Soon";
-                            badgeStyle = "bg-marigold-100 text-marigold-700 border-marigold-100 font-semibold";
+                            badgeStyle = "bg-marigold-100 text-gold-700 border-marigold-100 font-semibold";
                           }
 
                           const clsDurationMins = Math.round((clsEndsAt.getTime() - clsStartsAt.getTime()) / (1000 * 60));
@@ -226,11 +226,11 @@ export default async function ClassesPage() {
                                   <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-ink-500 pt-1 border-t border-line">
                                     <span className="flex items-center gap-1">
                                       <CalendarIcon className="w-3.5 h-3.5 text-ink-500" />
-                                      {clsStartsAt.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                                      {clsStartsAt.toLocaleDateString("en-GB", { timeZone: "Asia/Kolkata", day: "numeric", month: "short", year: "numeric" })}
                                     </span>
                                     <span className="flex items-center gap-1">
                                       <Clock className="w-3.5 h-3.5 text-ink-500" />
-                                      {clsStartsAt.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })} ({clsDurationMins}m)
+                                      {clsStartsAt.toLocaleTimeString("en-GB", { timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit" })} ({clsDurationMins}m)
                                     </span>
                                   </div>
                                 </div>
@@ -314,12 +314,12 @@ export default async function ClassesPage() {
                             <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-ink-500">
                               <span className="flex items-center gap-1">
                                 <CalendarIcon className="w-3.5 h-3.5" />
-                                {startsAt.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                                {startsAt.toLocaleDateString("en-GB", { timeZone: "Asia/Kolkata", day: "numeric", month: "short", year: "numeric" })}
                               </span>
                               <span>•</span>
                               <span className="flex items-center gap-1">
                                 <Clock className="w-3.5 h-3.5" />
-                                {startsAt.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })} ({durationMins}m)
+                                {startsAt.toLocaleTimeString("en-GB", { timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit" })} ({durationMins}m)
                               </span>
                             </div>
                           </div>
@@ -350,7 +350,7 @@ export default async function ClassesPage() {
           <DashboardCard title="Schedule Lecture">
             {batchesList.length === 0 ? (
               <div className="text-center py-6 text-sm text-ink-500 p-2">
-                <p className="font-medium text-marigold-700 bg-marigold-100 border border-marigold-100 p-4 rounded-xl">
+                <p className="font-medium text-gold-700 bg-marigold-100 border border-marigold-100 p-4 rounded-xl">
                   {profile.role === "admin"
                     ? "Please create an active batch cohort and assign an instructor before scheduling any live lectures."
                     : "You are not currently assigned to any active batch cohorts. Please contact the administrator to assign you to a batch."
@@ -412,7 +412,7 @@ export default async function ClassesPage() {
                       type="date" 
                       name="date" 
                       required 
-                      defaultValue={new Date().toISOString().split('T')[0]}
+                      defaultValue={new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" })}
                       className="w-full px-3 py-2 border border-line rounded-lg text-sm bg-white focus:outline-none"
                     />
                   </div>
@@ -444,13 +444,13 @@ export default async function ClassesPage() {
                 <div className="pt-2">
                   {!googleConnection ? (
                     <div className="space-y-3">
-                      <div className="p-3.5 bg-marigold-100 border border-marigold-100 rounded-xl text-xs text-marigold-700 font-medium leading-relaxed flex items-start gap-2">
-                        <AlertTriangle className="w-4 h-4 text-marigold-700 shrink-0 mt-0.5" />
+                      <div className="p-3.5 bg-marigold-100 border border-marigold-100 rounded-xl text-xs text-gold-700 font-medium leading-relaxed flex items-start gap-2">
+                        <AlertTriangle className="w-4 h-4 text-gold-700 shrink-0 mt-0.5" />
                         <div>
                           {profile.role === "admin" ? (
                             <>
                               <strong>Google integration is not connected.</strong> Please connect and authorize the system Google account first in the{" "}
-                              <a href="/dashboard/settings" className="underline hover:text-marigold-700 font-bold">
+                              <a href="/dashboard/settings" className="underline hover:text-gold-700 font-bold">
                                 Settings page
                               </a>{" "}
                               before scheduling live lectures.

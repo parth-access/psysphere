@@ -1,14 +1,24 @@
-/** Wordmark: a small chariot-path mark plus the name. */
-export function Logo({ tone = 'ink' }: { tone?: 'ink' | 'paper' }) {
-  const stroke = tone === 'ink' ? '#1C2541' : '#FAF6EF';
+/* eslint-disable @next/next/no-img-element */
+import { SITE } from '@/constants/site';
+
+/**
+ * Saarthi Ψ logo plus the "Saarthi Classes" wordmark.
+ * On dark backgrounds the logo sits on a light disc so it stays legible.
+ */
+export function Logo({ tone = 'ink', compact = false }: { tone?: 'ink' | 'paper'; compact?: boolean }) {
+  const img = <img src={SITE.logoUrl} alt="" width={40} height={40} className="h-10 w-10 object-contain" />;
   return (
-    <span className={`flex items-center gap-2.5 font-serif text-[22px] font-semibold tracking-tight ${tone === 'ink' ? 'text-ink-900' : 'text-paper'}`}>
-      <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true">
-        <circle cx="14" cy="14" r="12" fill="none" stroke={stroke} strokeWidth="2" />
-        <path d="M6 18 C 11 18, 12 10, 18 10" fill="none" stroke={stroke} strokeWidth="2" strokeLinecap="round" />
-        <circle cx="19" cy="10" r="2.5" fill="#E3962B" />
-      </svg>
-      Saarthi Classes
+    <span className="flex items-center gap-2.5">
+      {tone === 'paper' ? <span className="rounded-full bg-paper p-1">{img}</span> : img}
+      {!compact && (
+        <span className={`flex flex-col leading-none ${tone === 'ink' ? 'text-ink-900' : 'text-paper'}`}>
+          <span className="font-serif text-[22px]">Saarthi</span>
+          <span className={`text-[10px] font-bold uppercase tracking-[0.22em] ${tone === 'ink' ? 'text-forest-800' : 'text-gold-400'}`}>
+            Classes
+          </span>
+        </span>
+      )}
+      {compact && <span className="sr-only">Saarthi Classes</span>}
     </span>
   );
 }

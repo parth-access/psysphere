@@ -32,6 +32,7 @@ export interface ProvisionStudentInput {
   phone: string;
   parentName: string;
   parentPhone: string;
+  parentEmail?: string | null;
   batchId: string;
 }
 
@@ -111,9 +112,9 @@ export async function provisionStudent(input: ProvisionStudentInput): Promise<Pr
         admissionNumber: studentId,
         guardianName: input.parentName,
         guardianPhone: input.parentPhone,
-        guardianEmail: null,
+        guardianEmail: input.parentEmail ?? null,
         notes: `Student phone: ${input.phone}`,
-        enrollmentDate: new Date().toISOString().split("T")[0],
+        enrollmentDate: new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" }),
       });
     } else {
       studentId = sp.admissionNumber || (await generateStudentId(tx));
@@ -123,6 +124,7 @@ export async function provisionStudent(input: ProvisionStudentInput): Promise<Pr
           admissionNumber: studentId,
           guardianName: input.parentName,
           guardianPhone: input.parentPhone,
+          ...(input.parentEmail ? { guardianEmail: input.parentEmail } : {}),
           updatedAt: new Date(),
         })
         .where(eq(studentProfiles.profileId, uid));

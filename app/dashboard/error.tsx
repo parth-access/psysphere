@@ -20,13 +20,16 @@ export default function DashboardError({
   return (
     <div className="min-h-screen flex items-center justify-center bg-brand-cream/30">
       <div className="max-w-md p-8 bg-white border border-brand-stone-soft rounded-lg text-center">
-        <h2 className="text-xl font-serif font-semibold text-brand-charcoal mb-4">
+        <h2 className="text-xl font-serif text-brand-charcoal mb-4">
           {error.message?.toLowerCase().includes("permission") || error.message?.toLowerCase().includes("role") ? "Access Denied" : "Action Failed"}
         </h2>
         <p className="text-sm text-brand-charcoal-muted mb-6">
           {error.message || "An unexpected error occurred while processing your request."}
         </p>
         <div className="flex justify-center gap-4">
+          <Button variant="outline" onClick={() => reset()}>
+            Try again
+          </Button>
           <Button onClick={() => router.push('/dashboard')}>
             Go to My Dashboard
           </Button>

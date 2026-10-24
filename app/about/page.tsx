@@ -1,98 +1,111 @@
+import type { Metadata } from 'next';
+import { Brain, Heart, Compass, Eye } from 'lucide-react';
 import { Navbar } from '@/features/marketing/ui/Navbar';
 import { TeacherProfile } from '@/features/marketing/ui/TeacherProfile';
+import { ClosingCta } from '@/features/marketing/ui/ClosingCta';
 import { Footer } from '@/features/marketing/ui/Footer';
 import { Container } from '@/features/marketing/ui/Container';
-import { H1, H2, Body } from '@/features/marketing/ui/Typography';
-import { Brain, Heart, Compass, Eye } from 'lucide-react';
+import { H1, H2, Body, Eyebrow } from '@/features/marketing/ui/Typography';
+import { Scribble } from '@/features/marketing/ui/Doodles';
+
+export const metadata: Metadata = {
+  title: 'About | Saarthi Classes',
+  description: 'Why Saarthi Classes teaches psychology concept-first, and the teacher behind it, Dravina Gupta.',
+};
+
+const principles = [
+  { icon: Brain, title: 'Concept first', desc: 'Students meet each theory through an experiment or an everyday example before they learn the definition.', tint: 'bg-mint' },
+  { icon: Heart, title: 'A calm classroom', desc: 'Board year brings enough stress. Dravina keeps class calm, so you can ask the “silly” question.', tint: 'bg-peach' },
+];
+
+const missionVision = [
+  {
+    icon: Compass,
+    title: 'Our mission',
+    desc: 'To simplify psychology, build real understanding, and help Class 11 and 12 students do well in their exams with a calm mind.',
+  },
+  {
+    icon: Eye,
+    title: 'Our vision',
+    desc: 'To be a learning home for school psychology students in India, nurturing analytical thinkers and future mental health professionals.',
+  },
+];
 
 export default function AboutPage() {
   return (
-    <main className="min-h-screen bg-brand-canvas flex flex-col">
+    <div className="flex min-h-screen flex-col bg-paper">
       <Navbar />
-      
-      {/* Editorial Header */}
-      <section className="pt-36 pb-20 bg-white border-b border-brand-border">
-        <Container>
-          <div className="max-w-3xl mx-auto text-center">
-            <div className="inline-block py-1 px-3 rounded-full bg-brand-primary/10 text-brand-primary text-xs font-bold tracking-widest uppercase mb-6">
-              Our Story
-            </div>
-            <H1 className="mb-6">About Saarthi Classes</H1>
-            <p className="font-sans text-xl text-brand-text leading-relaxed">
-              We believe psychology is not just a syllabus—it is the language of life. Saarthi Classes is dedicated to changing how high school students study and understand the human mind.
-            </p>
-          </div>
-        </Container>
-      </section>
+      <main id="main">
+        <section className="relative overflow-hidden pb-20 pt-36 sm:pt-44">
+          <div className="bg-grid pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_top,black_30%,transparent_75%)]" aria-hidden="true" />
+          <Container className="relative flex max-w-4xl flex-col items-center gap-6 text-center">
+            <Eyebrow>Our story</Eyebrow>
+            <H1>
+              Psychology, taught through{' '}
+              <span className="relative inline-block">
+                <em>real life.</em>
+                <Scribble className="absolute -bottom-2 left-0 h-4 w-full text-gold-500" />
+              </span>
+            </H1>
+            <Body className="max-w-2xl text-[19px]">
+              Saarthi Classes teaches school students how the mind works, with examples they recognise from their own
+              lives.
+            </Body>
+          </Container>
+        </section>
 
-      {/* Philosophy Callout */}
-      <section className="py-20 bg-brand-canvas border-b border-brand-border">
-        <Container>
-          <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <div>
-              <H2 className="mb-6">Why Psychology Deserves Better Learning</H2>
-              <p className="text-brand-text mb-4 leading-relaxed text-sm">
-                Too often, psychology is reduced to heavy definitions and dry rote memorization. Students memorize terms like &quot;conditioning&quot; or &quot;cognitive appraisal&quot; without observing them in action.
-              </p>
-              <p className="text-brand-text leading-relaxed text-sm">
-                At Saarthi Classes, founded by Dravina Gupta, we do things differently. We map every theory to real human experiences, classic experiments, and case studies. This turns a complex syllabus into an engaging exploration, naturally leading to excellent marks in boards and CUET-UG.
-              </p>
+        <section className="bg-paper-deep py-24 sm:py-28">
+          <Container className="grid items-center gap-12 lg:grid-cols-2">
+            <div className="flex flex-col gap-5">
+              <Eyebrow>Why we teach differently</Eyebrow>
+              <H2>
+                Psychology you can <em>see around you.</em>
+              </H2>
+              <Body>
+                Most students meet psychology as a list of definitions. They memorise “conditioning” or “cognitive
+                appraisal” and can’t point to either one in their own lives.
+              </Body>
+              <Body>
+                Dravina Gupta founded Saarthi Classes to teach it the other way round. She starts with a classic
+                experiment or a case study, and the definition comes after. Students who understand the idea write
+                better answers in boards and CUET-UG.
+              </Body>
             </div>
-            <div className="bg-white p-8 rounded-2xl border border-brand-border space-y-6">
-              <div className="flex gap-4">
-                <div className="h-10 w-10 bg-brand-primary/10 rounded-xl flex items-center justify-center shrink-0">
-                  <Brain className="h-5 w-5 text-brand-primary" />
+            <div className="flex flex-col gap-5">
+              {principles.map(({ icon: Icon, ...p }) => (
+                <div key={p.title} className="flex gap-5 rounded-[28px] bg-surface p-7 shadow-soft">
+                  <span className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${p.tint} text-forest-800`}>
+                    <Icon className="h-6 w-6" aria-hidden="true" />
+                  </span>
+                  <div>
+                    <h3 className="mb-1.5 text-lg font-bold text-ink-900">{p.title}</h3>
+                    <p className="text-[15px] leading-relaxed text-ink-500">{p.desc}</p>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="font-serif font-semibold text-brand-text mb-1 text-sm">Concept First</h4>
-                  <p className="text-xs text-brand-text-muted leading-relaxed">Build strong visual models and understand underlying mechanisms deeply.</p>
-                </div>
-              </div>
-              <div className="flex gap-4">
-                <div className="h-10 w-10 bg-brand-primary/10 rounded-xl flex items-center justify-center shrink-0">
-                  <Heart className="h-5 w-5 text-brand-primary" />
-                </div>
-                <div>
-                  <h4 className="font-serif font-semibold text-brand-text mb-1 text-sm">Compassionate Support</h4>
-                  <p className="text-xs text-brand-text-muted leading-relaxed">Dissolve academic stress and anxiety with supportive, student-first teaching.</p>
-                </div>
-              </div>
+              ))}
             </div>
-          </div>
-        </Container>
-      </section>
+          </Container>
+        </section>
 
-      {/* Mission & Vision */}
-      <section className="py-20 bg-white border-b border-brand-border">
-        <Container>
-          <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="p-8 rounded-2xl bg-brand-canvas border border-brand-border">
-              <div className="h-12 w-12 bg-brand-primary/10 rounded-2xl flex items-center justify-center mb-6">
-                <Compass className="h-6 w-6 text-brand-primary" />
+        <section className="py-24 sm:py-28">
+          <Container className="grid gap-5 md:grid-cols-2">
+            {missionVision.map(({ icon: Icon, ...m }, i) => (
+              <div
+                key={m.title}
+                className={`flex flex-col gap-5 rounded-[32px] p-8 sm:p-10 ${i === 0 ? 'bg-forest-900 text-paper' : 'bg-lilac text-ink-900'}`}
+              >
+                <Icon className={`h-8 w-8 ${i === 0 ? 'text-gold-400' : 'text-forest-800'}`} aria-hidden="true" />
+                <h2 className="font-serif text-[40px] leading-none">{m.title}</h2>
+                <p className={`text-[17px] leading-relaxed ${i === 0 ? 'text-paper/80' : 'text-ink-700'}`}>{m.desc}</p>
               </div>
-              <h3 className="font-serif text-xl font-semibold text-brand-text mb-4">Our Mission</h3>
-              <p className="text-sm text-brand-text-muted leading-relaxed">
-                To simplify psychology, inspire conceptual understanding, and equip Class 11 and 12 students with the tools to master their academics and perform brilliantly in exams with calm, relaxed minds.
-              </p>
-            </div>
-            
-            <div className="p-8 rounded-2xl bg-brand-canvas border border-brand-border">
-              <div className="h-12 w-12 bg-brand-primary/10 rounded-2xl flex items-center justify-center mb-6">
-                <Eye className="h-6 w-6 text-brand-primary" />
-              </div>
-              <h3 className="font-serif text-xl font-semibold text-brand-text mb-4">Our Vision</h3>
-              <p className="text-sm text-brand-text-muted leading-relaxed">
-                To become the premier learning home for high-school psychology students in India, nurturing analytical minds, critical thinkers, and future mental health professionals.
-              </p>
-            </div>
-          </div>
-        </Container>
-      </section>
+            ))}
+          </Container>
+        </section>
 
-      {/* Teacher Profile Section embedded */}
-      <TeacherProfile />
-
+        <TeacherProfile />
+        <ClosingCta />
+      </main>
       <Footer />
-    </main>
+    </div>
   );
 }

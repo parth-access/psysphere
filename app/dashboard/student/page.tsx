@@ -11,6 +11,7 @@ import { assignments } from "@/db/schema/academic/assignments";
 import { attendance } from "@/db/schema/academic/attendance";
 import { assignmentAttempts } from "@/db/schema/academic/assignmentAttempts";
 import { StudentTodaysFocus } from "@/features/dashboard/ui/StudentTodaysFocus";
+import { StudentTestsPanel } from "@/features/tests/ui/StudentTestsPanel";
 import { 
   Calendar, 
   Clock, 
@@ -342,6 +343,8 @@ export default async function StudentDashboardPage() {
               </div>
             )}
           </div>
+
+          <StudentTestsPanel student={profile} />
 
           {/* 4. UPCOMING DEADLINES */}
           <div className="space-y-4">

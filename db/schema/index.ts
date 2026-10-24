@@ -30,3 +30,4 @@ export * from "./academic/assignmentAttempts";
 export * from "./academic/evaluations";
 export * from "./academic/studyMaterials";
 
+export * from "./academic/tests";

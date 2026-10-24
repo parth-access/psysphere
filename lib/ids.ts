@@ -18,3 +18,8 @@ export const istHour = (d: Date) => new Date(d.getTime() + IST_OFFSET).getUTCHou
 
 /** True when both instants fall on the same calendar day in India. */
 export const sameIstDay = (a: Date, b: Date) => istDayStart(a).getTime() === istDayStart(b).getTime();
+
+/** "YYYY-MM-DD" and "HH:MM" in India time, for date and time inputs. */
+export const istDateInput = (d: Date) => d.toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" });
+export const istTimeInput = (d: Date) =>
+  d.toLocaleTimeString("en-GB", { timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit", hour12: false });

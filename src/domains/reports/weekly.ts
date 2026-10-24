@@ -1,4 +1,4 @@
-import { and, eq, gte, lt, inArray, isNotNull } from "drizzle-orm";
+import { and, eq, gte, lt, inArray, isNotNull, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { enrollments } from "@/db/schema/core/enrollments";
 import { profiles } from "@/db/schema/core/profiles";
@@ -9,6 +9,8 @@ import { attendance } from "@/db/schema/academic/attendance";
 import { assignments } from "@/db/schema/academic/assignments";
 import { assignmentAttempts } from "@/db/schema/academic/assignmentAttempts";
 import { evaluations } from "@/db/schema/academic/evaluations";
+import { tests, testQuestions, testAttempts } from "@/db/schema/academic/tests";
+import { finalizeExpiredFor } from "../tests/service";
 import { emailService } from "../email/service";
 import { appUrl } from "../joining/tokens";
 
@@ -71,6 +73,31 @@ export async function sendWeeklyReports(now = new Date()) {
         .orderBy(classSessions.startsAt)
         .limit(5);
 
+      // Tests that closed this week (marks are only shown once a test closes) and ones opening next week.
+      const closedTests = await db
+        .select({ id: tests.id, title: tests.title, marksPerCorrect: tests.marksPerCorrect })
+        .from(tests)
+        .where(and(eq(tests.batchId, st.batchId), isNotNull(tests.publishedAt), gte(tests.closesAt, weekAgo), lt(tests.closesAt, now)));
+      await finalizeExpiredFor(closedTests.map((t) => t.id), now);
+      const testResults = [];
+      for (const t of closedTests) {
+        const [a] = await db
+          .select({ score: testAttempts.score, total: sql<number>`jsonb_array_length(${testAttempts.questionOrder})` })
+          .from(testAttempts)
+          .where(and(eq(testAttempts.testId, t.id), eq(testAttempts.studentProfileId, st.id), isNotNull(testAttempts.submittedAt)));
+        if (a) {
+          testResults.push({ title: `Test: ${t.title}`, marks: Number(a.score), max: Number(a.total) * Number(t.marksPerCorrect), feedback: null });
+        } else {
+          const [q] = await db.select({ n: sql<number>`count(*)::int` }).from(testQuestions).where(eq(testQuestions.testId, t.id));
+          testResults.push({ title: `Test: ${t.title} (not taken)`, marks: 0, max: (q?.n ?? 0) * Number(t.marksPerCorrect), feedback: null });
+        }
+      }
+      const nextTests = await db
+        .select({ title: tests.title, opensAt: tests.opensAt })
+        .from(tests)
+        .where(and(eq(tests.batchId, st.batchId), isNotNull(tests.publishedAt), gte(tests.opensAt, now), lt(tests.opensAt, weekAhead)))
+        .orderBy(tests.opensAt);
+
       const r = await emailService.sendWeeklyReport(
         st.parentEmail || st.email,
         {
@@ -79,9 +106,17 @@ export async function sendWeeklyReports(now = new Date()) {
           weekLabel,
           attended: att.filter((a) => a.status === "present").length,
           totalClasses: sessions.length,
-          results: results.map((x) => ({ title: x.title, marks: Number(x.marks ?? 0), max: Number(x.max), feedback: x.feedback })),
+          results: [
+            ...results.map((x) => ({ title: x.title, marks: Number(x.marks ?? 0), max: Number(x.max), feedback: x.feedback })),
+            ...testResults,
+          ],
           pendingWork: open.filter((o) => !submitted.has(o.id)).map((o) => ({ title: o.title, dueText: fmt(o.dueAt, { weekday: "short", day: "numeric", month: "short" }) })),
-          upcoming: upcoming.map((u) => ({ title: u.title, whenText: fmt(u.startsAt, { weekday: "short", day: "numeric", month: "short", hour: "numeric", minute: "2-digit" }) })),
+          upcoming: [
+            ...upcoming.map((u) => ({ title: u.title, startsAt: u.startsAt })),
+            ...nextTests.map((t) => ({ title: `Test: ${t.title}`, startsAt: t.opensAt })),
+          ]
+            .sort((a, b) => a.startsAt.getTime() - b.startsAt.getTime())
+            .map((u) => ({ title: u.title, whenText: fmt(u.startsAt, { weekday: "short", day: "numeric", month: "short", hour: "numeric", minute: "2-digit" }) })),
           dashboardUrl: appUrl("/dashboard/student"),
         },
         st.id

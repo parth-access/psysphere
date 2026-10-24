@@ -21,6 +21,7 @@ import {
   ClipboardList,
   FolderOpen,
   UserRound,
+  Timer,
 } from "lucide-react";
 import { signOutAction } from "@/src/domains/auth/actions";
 import { Logo } from "@/features/marketing/ui/Logo";
@@ -40,6 +41,7 @@ const NAV_ITEMS = [
   { label: "Classes", href: "/dashboard/classes", icon: BookOpen, roles: ["admin", "teacher"] },
   { label: "Attendance", href: "/dashboard/attendance", icon: CalendarCheck, roles: ["admin", "teacher"] },
   { label: "Assignments", href: "/dashboard/assignments", icon: ClipboardList, roles: ["admin", "teacher", "student"] },
+  { label: "Tests", href: "/dashboard/tests", icon: Timer, roles: ["admin", "teacher", "student"] },
   { label: "Study material", href: "/dashboard/materials", icon: FolderOpen, roles: ["admin", "teacher", "student"] },
   { label: "My classes", href: "/dashboard/my-classes", icon: BookOpen, roles: ["student"] },
   { label: "Fees & payments", href: "/dashboard/my-payments", icon: IndianRupee, roles: ["student"] },

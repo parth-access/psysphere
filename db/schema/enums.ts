@@ -82,3 +82,15 @@ export const joinRequestStatusEnum = pgEnum("join_request_status", [
 ]);
 
 export const courseTrackEnum = pgEnum("course_track", ["standard", "cuet"]);
+
+export const testSubmitReasonEnum = pgEnum("test_submit_reason", [
+  "manual", // student pressed Submit
+  "time_up", // their time limit ran out
+  "closed", // the test window closed before they submitted
+]);
+
+export const testExitReasonEnum = pgEnum("test_exit_reason", [
+  "hidden", // switched tab or app, minimised, locked the phone
+  "blur", // focus moved to another window
+  "fullscreen", // left full screen
+]);

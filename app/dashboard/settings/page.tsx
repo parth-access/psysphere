@@ -6,9 +6,20 @@ import { enforcePageRole } from "@/server/authorization/requireRole";
 import { ROLES } from "@/server/authorization/roles";
 import { calendarAccount, getConnectedClient, hasMeetScope } from "@/server/integrations/google";
 import { disconnectGoogleAction } from "./actions";
+import { getSettings } from "@/src/domains/settings/service";
+import { EMAIL_DEFAULTS } from "@/src/domains/email/constants";
+import { ContactSettingsForm, ClassDefaultsForm, NotificationsForm } from "@/features/dashboard/ui/SettingsForms";
+import { formatIST } from "@/lib/ids";
 import { Calendar as CalendarIcon, CheckCircle, AlertTriangle } from "lucide-react";
 
 export const dynamic = "force-dynamic";
+
+const SECTIONS = [
+  { id: "contact", label: "Contact details" },
+  { id: "classes", label: "Class defaults" },
+  { id: "notifications", label: "Notifications" },
+  { id: "google", label: "Google" },
+];
 
 interface PageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -21,13 +32,13 @@ export default async function SettingsPage({ searchParams }: PageProps) {
   const googleConnect = resolvedParams.google_connect;
   const errorMessage = resolvedParams.error_message;
 
-  const googleConnection = await getConnectedClient();
+  const [googleConnection, settings] = await Promise.all([getConnectedClient(), getSettings()]);
 
   return (
     <div className="space-y-8">
       <PageHeader 
         title="Settings" 
-        description="Manage your institute preferences and system configurations." 
+        description="Contact details, class defaults, notifications and Google." 
       />
 
       {/* Connection Status Alerts */}
@@ -48,52 +59,40 @@ export default async function SettingsPage({ searchParams }: PageProps) {
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        <div className="lg:col-span-1 space-y-1">
-          <button className="w-full text-left px-4 py-2 text-sm font-medium text-brand-primary bg-brand-surface rounded-lg">Institute Profile</button>
-          <button className="w-full text-left px-4 py-2 text-sm font-medium text-ink-700 hover:bg-paper rounded-lg">Working Hours</button>
-          <button className="w-full text-left px-4 py-2 text-sm font-medium text-ink-700 hover:bg-paper rounded-lg">Integrations</button>
-          <button className="w-full text-left px-4 py-2 text-sm font-medium text-ink-700 hover:bg-paper rounded-lg">Billing</button>
-        </div>
-        
-        <div className="lg:col-span-3 space-y-6">
-          <DashboardCard>
-            <SectionHeader title="Institute Profile" />
-            <div className="space-y-6 max-w-2xl mt-6">
-              <div className="grid gap-2">
-                <label className="text-sm font-medium text-ink-900">Institute Name</label>
-                <input 
-                  type="text" 
-                  defaultValue="Saarthi Classes" 
-                  className="w-full px-4 py-2 border border-line rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
-                />
-              </div>
-              <div className="grid gap-2">
-                <label className="text-sm font-medium text-ink-900">Contact Email</label>
-                <input 
-                  type="email" 
-                  defaultValue="contact@classes.saarthilife.com" 
-                  className="w-full px-4 py-2 border border-line rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
-                />
-              </div>
-              <div className="grid gap-2">
-                <label className="text-sm font-medium text-ink-900">Support Phone</label>
-                <input 
-                  type="tel" 
-                  defaultValue="+91 9876543210" 
-                  className="w-full px-4 py-2 border border-line rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
-                />
-              </div>
-              <div className="pt-4 flex justify-end">
-                <button className="bg-brand-primary text-white px-6 py-2 rounded-xl text-sm font-medium hover:bg-brand-primary-hover transition-colors">
-                  Save Changes
-                </button>
-              </div>
-            </div>
-          </DashboardCard>
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
+        <nav aria-label="Settings sections" className="lg:col-span-1">
+          <ul className="flex gap-1 overflow-x-auto lg:sticky lg:top-6 lg:flex-col">
+            {SECTIONS.map((sct) => (
+              <li key={sct.id}>
+                <a href={`#${sct.id}`} className="block whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium text-ink-700 hover:bg-paper-deep hover:text-ink-900">
+                  {sct.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
 
-          {/* Google Integration Section */}
-          <DashboardCard>
+        <div className="space-y-6 lg:col-span-3">
+          <section id="contact" className="scroll-mt-6">
+            <DashboardCard title="Contact details">
+              <ContactSettingsForm settings={settings} />
+            </DashboardCard>
+          </section>
+
+          <section id="classes" className="scroll-mt-6">
+            <DashboardCard title="Class defaults">
+              <ClassDefaultsForm settings={settings} />
+            </DashboardCard>
+          </section>
+
+          <section id="notifications" className="scroll-mt-6">
+            <DashboardCard title="Notifications">
+              <NotificationsForm settings={settings} envAlertEmail={EMAIL_DEFAULTS.ADMIN ?? null} />
+            </DashboardCard>
+          </section>
+
+          <section id="google" className="scroll-mt-6">
+          <DashboardCard className="scroll-mt-6" >
             <SectionHeader title="Google Calendar & Meet Integration" />
             <div className="space-y-6 max-w-2xl mt-6">
               <div className="flex items-start gap-4 p-5 bg-paper border border-line rounded-2xl">
@@ -150,32 +149,11 @@ export default async function SettingsPage({ searchParams }: PageProps) {
               </div>
             </div>
           </DashboardCard>
+          </section>
 
-          <DashboardCard>
-            <SectionHeader title="System Defaults" />
-            <div className="space-y-6 max-w-2xl mt-6">
-              <div className="grid gap-2">
-                <label className="text-sm font-medium text-ink-900">Timezone</label>
-                <select className="w-full px-4 py-2 border border-line rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary bg-white">
-                  <option>Asia/Kolkata (IST)</option>
-                  <option>UTC</option>
-                </select>
-              </div>
-              <div className="grid gap-2">
-                <label className="text-sm font-medium text-ink-900">Default Batch Size</label>
-                <input 
-                  type="number" 
-                  defaultValue="50" 
-                  className="w-full px-4 py-2 border border-line rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
-                />
-              </div>
-              <div className="pt-4 flex justify-end">
-                <button className="bg-brand-primary text-white px-6 py-2 rounded-xl text-sm font-medium hover:bg-brand-primary-hover transition-colors">
-                  Save Defaults
-                </button>
-              </div>
-            </div>
-          </DashboardCard>
+          {settings.updatedAt && (
+            <p className="text-[13px] text-ink-500">Last saved {formatIST(new Date(settings.updatedAt))}.</p>
+          )}
         </div>
       </div>
     </div>

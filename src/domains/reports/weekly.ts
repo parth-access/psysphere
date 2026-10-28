@@ -12,12 +12,14 @@ import { evaluations } from "@/db/schema/academic/evaluations";
 import { tests, testQuestions, testAttempts } from "@/db/schema/academic/tests";
 import { finalizeExpiredFor } from "../tests/service";
 import { emailService } from "../email/service";
+import { getSettings } from "../settings/service";
 import { appUrl } from "../joining/tokens";
 
 const fmt = (d: Date, o: Intl.DateTimeFormatOptions) => d.toLocaleString("en-IN", { timeZone: "Asia/Kolkata", ...o });
 
 /** Emails every active student's parent (or the student) a summary of the past 7 days. */
 export async function sendWeeklyReports(now = new Date()) {
+  if (!(await getSettings()).weeklyReports) return { skipped: "Weekly reports are turned off in Settings." };
   const weekAgo = new Date(now.getTime() - 7 * 86_400_000);
   const weekAhead = new Date(now.getTime() + 7 * 86_400_000);
   const weekLabel = `${fmt(weekAgo, { day: "numeric", month: "short" })} – ${fmt(now, { day: "numeric", month: "short" })}`;

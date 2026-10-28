@@ -2,9 +2,10 @@ import { ArrowRight } from 'lucide-react';
 import { Container } from './Container';
 import { Button } from './Button';
 import { Psi, Sparkle } from './Doodles';
-import { whatsappUrl } from '@/constants/site';
+import { getSettings, whatsappLink } from '@/src/domains/settings/service';
 
-export function ClosingCta() {
+export async function ClosingCta() {
+  const settings = await getSettings();
   return (
     <section className="pb-24 sm:pb-32">
       <Container>
@@ -23,7 +24,7 @@ export function ClosingCta() {
                 See free workshops <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Button>
               <Button
-                href={whatsappUrl()}
+                href={whatsappLink(settings)}
                 target="_blank"
                 rel="noopener noreferrer"
                 variant="ghost"

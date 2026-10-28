@@ -2,7 +2,8 @@ import Link from 'next/link';
 import { Container } from './Container';
 import { Logo } from './Logo';
 import { WhatsAppButton } from './WhatsAppButton';
-import { SITE, whatsappUrl } from '@/constants/site';
+import { SITE } from '@/constants/site';
+import { getSettings, telLink, whatsappLink } from '@/src/domains/settings/service';
 
 const columns = [
   {
@@ -34,7 +35,8 @@ const columns = [
   },
 ];
 
-export function Footer() {
+export async function Footer() {
+  const settings = await getSettings();
   return (
     <footer className="overflow-hidden bg-forest-950 text-paper/70">
       <Container className="grid gap-12 pb-12 pt-20 md:grid-cols-[1.4fr_repeat(3,1fr)]">
@@ -47,10 +49,10 @@ export function Footer() {
             <a href={SITE.parent.url} className="text-paper underline underline-offset-4">Saarthi</a>.
           </p>
           <address className="flex flex-col gap-1.5 text-[15px] not-italic">
-            <a href={`mailto:${SITE.email}`} className="hover:text-paper">{SITE.email}</a>
-            <a href={`tel:+${SITE.phoneDigits}`} className="hover:text-paper">{SITE.phone}</a>
-            <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="hover:text-paper">WhatsApp</a>
-            <span>{SITE.address}</span>
+            <a href={`mailto:${settings.contactEmail}`} className="hover:text-paper">{settings.contactEmail}</a>
+            <a href={telLink(settings.phone)} className="hover:text-paper">{settings.phone}</a>
+            <a href={whatsappLink(settings)} target="_blank" rel="noopener noreferrer" className="hover:text-paper">WhatsApp</a>
+            <span>{settings.address}</span>
           </address>
           <ul className="flex flex-wrap gap-x-4 gap-y-2 text-[15px]" aria-label="Social media">
             {SITE.social.map((s) => (

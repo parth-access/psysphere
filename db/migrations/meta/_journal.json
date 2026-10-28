@@ -99,6 +99,13 @@
       "when": 1792857461637,
       "tag": "0013_meet_attendance",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1793205928106,
+      "tag": "0014_institute_settings",
+      "breakpoints": true
     }
   ]
 }

@@ -6,6 +6,7 @@ export * from "./enums";
 export * from "./common";
 export * from "./system/googleCredentials";
 export * from "./system/rateLimits";
+export * from "./system/instituteSettings";
 
 /* ============================================================
  * Core

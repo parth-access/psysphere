@@ -5,13 +5,14 @@ import { enforcePageRole } from "@/server/authorization/requireRole";
 import { ROLES } from "@/server/authorization/roles";
 import { listPayments } from "@/src/domains/joining/payments";
 import { formatIST } from "@/lib/ids";
-import { whatsappUrl } from "@/constants/site";
+import { getSettings, whatsappLink } from "@/src/domains/settings/service";
 
 export const dynamic = "force-dynamic";
 const inr = (n: number) => `₹${n.toLocaleString("en-IN")}`;
 
 export default async function MyPaymentsPage() {
   const me = await enforcePageRole([ROLES.STUDENT]);
+  const renewLink = whatsappLink(await getSettings(), "Hi, I'd like to renew my Saarthi Classes plan.");
   const payments = await listPayments({ profileId: me.id, email: me.email });
 
   return (
@@ -38,7 +39,7 @@ export default async function MyPaymentsPage() {
         )}
       </DashboardCard>
       <p className="text-sm text-ink-500">
-        Need to renew or change your plan? <a className="font-semibold text-ink-900 underline" href={whatsappUrl("Hi, I'd like to renew my Saarthi Classes plan.")} target="_blank" rel="noopener noreferrer">Message us on WhatsApp</a> or choose a new plan on the <Link className="font-semibold text-ink-900 underline" href="/join">Join page</Link>.
+        Need to renew or change your plan? <a className="font-semibold text-ink-900 underline" href={renewLink} target="_blank" rel="noopener noreferrer">Message us on WhatsApp</a> or choose a new plan on the <Link className="font-semibold text-ink-900 underline" href="/join">Join page</Link>.
       </p>
     </div>
   );

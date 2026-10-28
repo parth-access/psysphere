@@ -1,10 +1,11 @@
-import { whatsappUrl } from '@/constants/site';
+import { getSettings, whatsappLink } from '@/src/domains/settings/service';
 
 /** Floating "Chat on WhatsApp" button for public pages. */
-export function WhatsAppButton() {
+export async function WhatsAppButton() {
+  const settings = await getSettings();
   return (
     <a
-      href={whatsappUrl()}
+      href={whatsappLink(settings)}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Chat with us on WhatsApp"

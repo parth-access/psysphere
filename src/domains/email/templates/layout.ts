@@ -1,4 +1,7 @@
-import { SITE, whatsappUrl } from "@/constants/site";
+import { SITE } from "@/constants/site";
+
+/** Stands in for the WhatsApp link; EmailService swaps in the number saved in Settings when it sends. */
+export const WHATSAPP_URL_TOKEN = "{{WHATSAPP_URL}}";
 import { EMAIL_DEFAULTS } from "../constants";
 
 /**
@@ -32,8 +35,8 @@ export const SANS = `-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Hel
 export function renderBaseEmailLayout(title: string, contentHtml: string, preheader = ""): string {
   const year = new Date().getFullYear();
   const replyLine = EMAIL_DEFAULTS.REPLY_TO
-    ? `Questions? Just reply to this email, or message us on <a href="${whatsappUrl()}" style="color:${C.forest800};font-weight:600;text-decoration:underline;">WhatsApp</a>.`
-    : `Questions? Use our <a href="${SITE.url}/contact" style="color:${C.forest800};font-weight:600;text-decoration:underline;">contact form</a> or message us on <a href="${whatsappUrl()}" style="color:${C.forest800};font-weight:600;text-decoration:underline;">WhatsApp</a>.`;
+    ? `Questions? Just reply to this email, or message us on <a href="${WHATSAPP_URL_TOKEN}" style="color:${C.forest800};font-weight:600;text-decoration:underline;">WhatsApp</a>.`
+    : `Questions? Use our <a href="${SITE.url}/contact" style="color:${C.forest800};font-weight:600;text-decoration:underline;">contact form</a> or message us on <a href="${WHATSAPP_URL_TOKEN}" style="color:${C.forest800};font-weight:600;text-decoration:underline;">WhatsApp</a>.`;
 
   return `<!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
@@ -106,7 +109,7 @@ export function renderBaseEmailLayout(title: string, contentHtml: string, prehea
               &nbsp;·&nbsp;
               <a href="${SITE.url}/workshops" style="color:${C.ink700};text-decoration:none;font-weight:600;">Free workshops</a>
               &nbsp;·&nbsp;
-              <a href="${whatsappUrl()}" style="color:${C.ink700};text-decoration:none;font-weight:600;">WhatsApp</a>
+              <a href="${WHATSAPP_URL_TOKEN}" style="color:${C.ink700};text-decoration:none;font-weight:600;">WhatsApp</a>
             </td>
           </tr>
           <tr>

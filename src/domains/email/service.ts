@@ -1,5 +1,7 @@
 import { Resend } from "resend";
 import { EMAIL_DEFAULTS } from "./constants";
+import { WHATSAPP_URL_TOKEN } from "./templates/layout";
+import { getSettings, whatsappLink } from "../settings/service";
 import { db } from "@/db";
 import { emailDeliveries } from "@/db/schema";
 
@@ -88,6 +90,7 @@ export class EmailService {
     }
   ): Promise<SendEmailResponse> {
     const resend = getResendClient();
+    htmlContent = htmlContent.replaceAll(WHATSAPP_URL_TOKEN, whatsappLink(await getSettings()));
 
     const type = options?.type || "unknown";
     const relatedEntityType = options?.relatedEntityType || null;
@@ -249,17 +252,18 @@ export class EmailService {
     return this.send(to, "We've received your join request | Saarthi Classes", getJoinRequestReceivedTemplate(p), "join_request_received", "join_request", joinRequestId);
   }
 
-  /** Alerts for the team. Skipped with a warning when ADMIN_NOTIFICATION_EMAIL and EMAIL_REPLY_TO are both unset. */
+  /** Alerts for the team: to the alert email in Settings, else ADMIN_NOTIFICATION_EMAIL or EMAIL_REPLY_TO. */
   async sendAdminAlert(
     subject: string,
     html: string,
     options: { type: string; relatedEntityType?: string; relatedEntityId?: string; replyTo?: string }
   ): Promise<SendEmailResponse> {
-    if (!EMAIL_DEFAULTS.ADMIN) {
-      console.warn(`[EmailService] Admin alert not sent, no ADMIN_NOTIFICATION_EMAIL or EMAIL_REPLY_TO set. Subject: ${subject}`);
+    const to = (await getSettings()).alertEmail || EMAIL_DEFAULTS.ADMIN;
+    if (!to) {
+      console.warn(`[EmailService] Admin alert not sent, no alert email in Settings or ADMIN_NOTIFICATION_EMAIL/EMAIL_REPLY_TO. Subject: ${subject}`);
       return { success: false, error: "No admin email configured" };
     }
-    return this.sendHtmlEmail(EMAIL_DEFAULTS.ADMIN, subject, html, EMAIL_DEFAULTS.FROM, options);
+    return this.sendHtmlEmail(to, subject, html, EMAIL_DEFAULTS.FROM, options);
   }
 
   sendNewJoinRequestInternal(p: NewJoinRequestInternalPayload, joinRequestId?: string) {

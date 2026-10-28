@@ -14,6 +14,7 @@ import { getConnectedClient } from "@/server/integrations/google";
 import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
+import { getSettings } from "@/src/domains/settings/service";
 
 export default async function ClassesPage() {
   const profile = await enforcePageRole([ROLES.ADMIN, ROLES.TEACHER]);
@@ -62,7 +63,7 @@ export default async function ClassesPage() {
     .where(and(...batchesConditions));
 
   // 3. Query centralized Google integration status
-  const googleConnection = await getConnectedClient();
+  const [googleConnection, settings] = await Promise.all([getConnectedClient(), getSettings()]);
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto">
@@ -422,7 +423,7 @@ export default async function ClassesPage() {
                       type="time" 
                       name="time" 
                       required 
-                      defaultValue="18:00"
+                      defaultValue={settings.defaultClassTime}
                       className="w-full px-3 py-2 border border-line rounded-lg text-sm bg-white focus:outline-none"
                     />
                   </div>
@@ -432,12 +433,12 @@ export default async function ClassesPage() {
                   <label className="text-xs font-semibold text-ink-700 uppercase tracking-wider block mb-1">Duration (Minutes)</label>
                   <select 
                     name="duration" 
+                    defaultValue={String(settings.defaultClassMinutes)}
                     className="w-full px-4 py-2 border border-line rounded-xl text-sm bg-white focus:outline-none"
                   >
-                    <option value="60">60 Minutes</option>
-                    <option value="45">45 Minutes</option>
-                    <option value="90">90 Minutes</option>
-                    <option value="120">120 Minutes</option>
+                    {[...new Set([45, 60, 75, 90, 120, settings.defaultClassMinutes])].sort((a, b) => a - b).map((m) => (
+                      <option key={m} value={m}>{m} Minutes</option>
+                    ))}
                   </select>
                 </div>
 

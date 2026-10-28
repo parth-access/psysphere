@@ -7,6 +7,7 @@ import { enforcePageRole } from "@/server/authorization/requireRole";
 import { ROLES } from "@/server/authorization/roles";
 import { isUuid, formatIST } from "@/lib/ids";
 import { SITE } from "@/constants/site";
+import { getSettings } from "@/src/domains/settings/service";
 import { PrintButton } from "@/features/dashboard/ui/PrintButton";
 
 export const dynamic = "force-dynamic";
@@ -15,6 +16,7 @@ const inr = (n: number) => `₹${n.toLocaleString("en-IN")}`;
 export default async function ReceiptPage({ params }: { params: Promise<{ id: string }> }) {
   const me = await enforcePageRole([ROLES.STUDENT, ROLES.ADMIN]);
   const { id } = await params;
+  const settings = await getSettings();
   if (!isUuid(id)) notFound();
   const [row] = await db
     .select({ r: joinRequests, batchName: batches.name })
@@ -32,7 +34,7 @@ export default async function ReceiptPage({ params }: { params: Promise<{ id: st
         <header className="flex flex-wrap items-start justify-between gap-4 border-b border-line pb-6">
           <div>
             <p className="font-serif text-2xl text-ink-900">Payment receipt</p>
-            <p className="text-sm text-ink-500">{SITE.name} · {SITE.email} · {SITE.phone}</p>
+            <p className="text-sm text-ink-500">{SITE.name} · {settings.contactEmail} · {settings.phone}</p>
           </div>
           <p className="text-sm text-ink-500">Receipt no. {r.id.slice(0, 8).toUpperCase()}</p>
         </header>

@@ -10,11 +10,13 @@ import { createBatchAction } from "./actions";
 import { enforcePageRole } from "@/server/authorization/requireRole";
 import { ROLES } from "@/server/authorization/roles";
 import Link from "next/link";
+import { getSettings } from "@/src/domains/settings/service";
 import { SubmitButton } from "@/features/shared/ui/SubmitButton";
 
 export const dynamic = "force-dynamic";
 
 export default async function BatchesPage() {
+  const settings = await getSettings();
   await enforcePageRole([ROLES.ADMIN]);
 
   // Fetch active teachers for the assignment dropdown
@@ -198,6 +200,7 @@ export default async function BatchesPage() {
                       type="number"
                       name="capacity"
                       min={1}
+                      defaultValue={settings.defaultBatchSeats ?? undefined}
                       placeholder="No limit"
                       className="w-full px-4 py-2 border border-line rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
                     />

@@ -59,6 +59,11 @@ const GOOGLE_ERRORS: Record<string, string> = {
   failed: "Google didn’t finish signing you in. Try again, or log in with your email and password.",
 };
 
+const ACCOUNT_ERRORS: Record<string, string> = {
+  missing: "Your account isn’t fully set up yet, so we logged you out. Contact us and we’ll sort it out.",
+  inactive: "This account has been switched off, so we logged you out. Contact us if you think that’s a mistake.",
+};
+
 function GoogleButton() {
   const [going, setGoing] = useState(false);
   return (
@@ -91,6 +96,7 @@ function SignInForm() {
   const [email, setEmail] = useState("");
   const updated = params.get("updated") === "true";
   const googleError = GOOGLE_ERRORS[params.get("google") ?? ""];
+  const accountError = ACCOUNT_ERRORS[params.get("account") ?? ""];
 
   if (forgot) return <ForgotForm email={email} onBack={() => setForgot(false)} />;
 
@@ -98,6 +104,7 @@ function SignInForm() {
     <form action={formAction} className="flex flex-col gap-5">
       {updated && <Notice tone="ok">Password set. Log in with your new password.</Notice>}
       {googleError && <Notice tone="error">{googleError}</Notice>}
+      {accountError && <Notice tone="error">{accountError}</Notice>}
       {state?.error && <Notice tone="error">{state.error}</Notice>}
       <div className="flex flex-col gap-1.5">
         <label htmlFor="email" className="text-sm font-semibold text-ink-900">Email</label>

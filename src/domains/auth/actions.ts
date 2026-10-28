@@ -44,6 +44,18 @@ export async function signInAction(_prev: { error?: string } | null, formData: F
     return { error: "That email and password don't match. Check them and try again, or reset your password." };
   }
 
+  // A correct password isn't enough: the account must have an active profile here, or the dashboard can't open.
+  const { data: { user } } = await supabase.auth.getUser();
+  const [p] = user ? await db.select({ isActive: profiles.isActive }).from(profiles).where(eq(profiles.id, user.id)).limit(1) : [];
+  if (!p?.isActive) {
+    await supabase.auth.signOut();
+    return {
+      error: p
+        ? "This account has been switched off. Contact us if you think that's a mistake."
+        : "Your account isn't fully set up yet. Contact us and we'll sort it out.",
+    };
+  }
+
   await clear(limits[0].key);
   revalidatePath("/", "layout");
   redirect("/dashboard");

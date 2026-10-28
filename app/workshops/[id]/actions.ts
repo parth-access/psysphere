@@ -2,6 +2,7 @@
 
 import { workshopRegistrationSchema, fieldErrors, type FieldErrors } from "@/src/domains/joining/validation";
 import { registerForWorkshop, WorkshopError } from "@/src/domains/workshops/service";
+import { formAllowed } from "@/server/security/rateLimit";
 
 export type RegisterState =
   | { status: "idle" }
@@ -14,6 +15,8 @@ export async function registerAction(_prev: RegisterState, formData: FormData): 
 
   const parsed = workshopRegistrationSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) return { status: "error", errors: fieldErrors(parsed.error) };
+  const tooMany = await formAllowed("workshop", parsed.data.email, { perEmail: 5, perIp: 30 });
+  if (tooMany) return { status: "error", errors: {}, message: tooMany };
 
   try {
     const result = await registerForWorkshop(parsed.data);

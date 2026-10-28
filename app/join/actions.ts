@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { joinRequestSchema, fieldErrors, type FieldErrors } from "@/src/domains/joining/validation";
 import { createJoinRequest, JoinError } from "@/src/domains/joining/service";
+import { formAllowed } from "@/server/security/rateLimit";
 
 export type JoinState = { status: "idle" } | { status: "error"; errors: FieldErrors; message?: string };
 
@@ -11,6 +12,8 @@ export async function joinAction(_prev: JoinState, formData: FormData): Promise<
 
   const parsed = joinRequestSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) return { status: "error", errors: fieldErrors(parsed.error) };
+  const tooMany = await formAllowed("join", parsed.data.email, { perEmail: 3, perIp: 20 });
+  if (tooMany) return { status: "error", errors: {}, message: tooMany };
 
   let result;
   try {

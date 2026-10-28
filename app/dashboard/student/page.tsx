@@ -630,7 +630,7 @@ export default async function StudentDashboardPage() {
                 )}
 
                 <Link 
-                  href="/dashboard/classes" 
+                  href="/dashboard/my-classes" 
                   className="flex items-center justify-between px-4 py-3 bg-paper hover:bg-paper-deep/80 border border-line rounded-xl transition-all group text-left font-sans text-xs font-bold text-ink-900 cursor-pointer"
                 >
                   <span className="flex items-center gap-2">

@@ -49,3 +49,19 @@ export function waitText(ms: number) {
   const min = Math.ceil(ms / 60_000);
   return min <= 1 ? "a minute" : `${min} minutes`;
 }
+
+/**
+ * For public forms: up to `perEmail` sends an hour for one email address (so nobody can flood someone's inbox
+ * through us) and `perIp` from one network (kept generous, as mobile networks share addresses).
+ * Counts this send and returns null when it may go ahead, or a message to show when it may not.
+ */
+export async function formAllowed(form: string, email: string, { perEmail, perIp }: { perEmail: number; perIp: number }) {
+  const limits: Limit[] = [
+    { key: `${form}:email:${email.toLowerCase()}`, max: perEmail, windowMs: 60 * 60_000 },
+    { key: `${form}:ip:${await clientIp()}`, max: perIp, windowMs: 60 * 60_000 },
+  ];
+  const wait = await blockedFor(limits);
+  if (wait > 0) return `We've had a lot of these from you just now. Please try again in ${waitText(wait)}, or message us on WhatsApp.`;
+  await hit(limits);
+  return null;
+}

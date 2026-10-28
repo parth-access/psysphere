@@ -1,4 +1,4 @@
-import { requireProfile } from "./getProfile";
+import { getProfile, getSessionUser, requireProfile } from "./getProfile";
 import { Role } from "./roles";
 import { UnauthorizedRoleError } from "../errors";
 import { redirect } from "next/navigation";
@@ -16,10 +16,11 @@ export const requireRole = async (allowedRoles: Role[]) => {
 };
 
 export const enforcePageRole = async (allowedRoles: Role[]) => {
-  let profile;
-  try {
-    profile = await requireProfile();
-  } catch (err) {
+  const profile = await getProfile();
+  if (!profile || !profile.isActive) {
+    // Logged in to Supabase but with no usable profile: sending them to /sign-in alone would loop, as the
+    // middleware sends logged-in people from /sign-in back to /dashboard. End the session first.
+    if (await getSessionUser()) redirect(`/api/auth/end-session?reason=${profile ? "inactive" : "missing"}`);
     redirect("/sign-in");
   }
 

@@ -10,6 +10,20 @@ import { findPlan, type ClassLevel, type Track } from "./plans";
 import { newPayToken, hashToken, appUrl } from "./tokens";
 import { createRazorpayOrder, getRazorpayKeyId } from "@/server/integrations/razorpay";
 
+const esc = (v: string) => v.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
+
+/** Tells the team about money that needs a person: a refund, or an account to finish by hand. */
+async function alertPaymentProblem(subject: string, lines: string[], requestId: string) {
+  const html = `<h1>${esc(subject)}</h1>${lines.map((l) => `<p>${esc(l)}</p>`).join("")}
+    <p><a href="${appUrl("/dashboard/join-requests")}">Open join requests</a></p>`;
+  const r = await emailService.sendAdminAlert(`[Payment] ${subject}`, html, {
+    type: "payment_problem",
+    relatedEntityType: "join_request",
+    relatedEntityId: requestId,
+  });
+  if (!r.success) console.error("[joining] payment alert not sent:", r.error);
+}
+
 export class JoinError extends Error {
   constructor(message: string) {
     super(message);
@@ -363,6 +377,14 @@ export async function finalizePaidOrder(orderId: string, paymentId: string) {
     if (current.status !== "paid" && current.status !== "enrolled") {
       // Money was taken for a request that was declined (or reset) while the student was paying.
       console.error(`[joining] Payment ${paymentId} captured for ${current.status} request ${current.id}; refund or enrol by hand.`);
+      await alertPaymentProblem(
+        "Paid for a request that isn't open",
+        [
+          `Razorpay payment ${paymentId} came in for join request ${current.id}, which is "${current.status}".`,
+          "Either refund it in the Razorpay dashboard, or approve the request and enrol the student by hand.",
+        ],
+        current.id
+      );
     }
     return { requestId: current.id, status: current.status };
   }
@@ -424,5 +446,10 @@ export async function enrollPaidRequest(id: string) {
       .update(joinRequests)
       .set({ provisioningError: message, updatedAt: new Date() })
       .where(eq(joinRequests.id, id));
+    await alertPaymentProblem(
+      `${r.studentName} paid, but their account wasn't created`,
+      [`Payment ${r.razorpayPaymentId ?? "(unknown)"} for ${r.email}.`, `Error: ${message}`, "Retry the enrolment from the join request."],
+      id
+    );
   }
 }

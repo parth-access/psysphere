@@ -17,6 +17,22 @@ const nextConfig: NextConfig = {
     // Study material uploads go through a server action
     serverActions: { bodySizeLimit: '25mb' },
   },
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          // No other site may show these pages in a frame (stops click-tricking a logged-in user).
+          { key: 'X-Frame-Options', value: 'DENY' },
+          { key: 'Content-Security-Policy', value: "frame-ancestors 'none'" },
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+          // Fullscreen (tests) and payment (Razorpay) stay allowed; nothing here uses camera, mic or location.
+          { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;

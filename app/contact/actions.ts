@@ -4,6 +4,7 @@ import { z } from "zod";
 import { db } from "@/db";
 import { contactMessages } from "@/db/schema/core/contactMessages";
 import { emailService } from "@/src/domains/email/service";
+import { formAllowed } from "@/server/security/rateLimit";
 
 const schema = z.object({
   name: z.string().trim().min(2, "Please enter your name").max(100),
@@ -30,6 +31,8 @@ export async function contactAction(_prev: ContactState, formData: FormData): Pr
     return { status: "error", errors };
   }
   const v = parsed.data;
+  const tooMany = await formAllowed("contact", v.email, { perEmail: 3, perIp: 20 });
+  if (tooMany) return { status: "error", errors: {}, message: tooMany };
 
   try {
     const [row] = await db.insert(contactMessages).values(v).returning({ id: contactMessages.id });

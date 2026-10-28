@@ -4,9 +4,15 @@ import { profiles } from "../../db/schema";
 import { eq } from "drizzle-orm";
 import { cache } from "react";
 
-export const getProfile = cache(async () => {
+/** The logged-in Supabase user for this request, or null. */
+export const getSessionUser = cache(async () => {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
+  return user;
+});
+
+export const getProfile = cache(async () => {
+  const user = await getSessionUser();
   const userId = user?.id;
   if (!userId) {
     return null;

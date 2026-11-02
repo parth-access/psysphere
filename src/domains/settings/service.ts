@@ -37,36 +37,33 @@ export const DEFAULT_SETTINGS: Settings = {
 
 const TAG = "institute-settings";
 
+/** Throws if the database can't be read, so a failed read never ends up in the cache. */
 async function readSettings(): Promise<Settings> {
-  try {
-    const [row] = await db.select().from(instituteSettings).where(eq(instituteSettings.id, 1));
-    if (!row) return DEFAULT_SETTINGS;
-    const d = DEFAULT_SETTINGS;
-    return {
-      contactEmail: row.contactEmail || d.contactEmail,
-      phone: row.phone || d.phone,
-      whatsappNumber: row.whatsappNumber || d.whatsappNumber,
-      whatsappMessage: row.whatsappMessage || d.whatsappMessage,
-      hours: row.hours || d.hours,
-      address: row.address || d.address,
-      defaultClassTime: row.defaultClassTime || d.defaultClassTime,
-      defaultClassMinutes: row.defaultClassMinutes || d.defaultClassMinutes,
-      defaultBatchSeats: row.defaultBatchSeats ?? d.defaultBatchSeats,
-      alertEmail: row.alertEmail || null,
-      weeklyReports: row.weeklyReports,
-      updatedAt: row.updatedAt.toISOString(),
-    };
-  } catch (err) {
-    console.error("[settings] using defaults, could not read settings:", err);
-    return DEFAULT_SETTINGS;
-  }
+  const [row] = await db.select().from(instituteSettings).where(eq(instituteSettings.id, 1));
+  if (!row) return DEFAULT_SETTINGS;
+  const d = DEFAULT_SETTINGS;
+  return {
+    contactEmail: row.contactEmail || d.contactEmail,
+    phone: row.phone || d.phone,
+    whatsappNumber: row.whatsappNumber || d.whatsappNumber,
+    whatsappMessage: row.whatsappMessage || d.whatsappMessage,
+    hours: row.hours || d.hours,
+    address: row.address || d.address,
+    defaultClassTime: row.defaultClassTime || d.defaultClassTime,
+    defaultClassMinutes: row.defaultClassMinutes || d.defaultClassMinutes,
+    defaultBatchSeats: row.defaultBatchSeats ?? d.defaultBatchSeats,
+    alertEmail: row.alertEmail || null,
+    weeklyReports: row.weeklyReports,
+    updatedAt: row.updatedAt.toISOString(),
+  };
 }
 
 const cachedSettings = unstable_cache(readSettings, [TAG], { tags: [TAG] });
 
 /**
  * The saved settings, with defaults for anything never set. Cached until an admin saves (which clears it),
- * so the public pages stay fast. If the database can't be reached, the defaults keep the site working.
+ * so the public pages stay fast. If the database can't be reached, the defaults keep the site working,
+ * and the next read tries the database again.
  * Outside the app (scripts), where the cache isn't available, it reads the database directly.
  */
 export async function getSettings(): Promise<Settings> {

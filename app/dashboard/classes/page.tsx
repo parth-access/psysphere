@@ -10,14 +10,26 @@ import { Plus, Video, Calendar as CalendarIcon, Clock, BookOpen, AlertTriangle, 
 import { createClassSessionAction } from "./actions";
 import { enforcePageRole } from "@/server/authorization/requireRole";
 import { ROLES } from "@/server/authorization/roles";
-import { getConnectedClient } from "@/server/integrations/google";
+import { getConnectedClient, hasDriveScope } from "@/server/integrations/google";
+import { RecordingPanel, type RecordingSummary } from "@/features/recordings/ui/RecordingPanel";
+import { recordingsFor, settleRecordings, type Recording } from "@/src/domains/recordings/service";
+import { isWatchable } from "@/src/domains/recordings/limits";
+import { formatIST } from "@/lib/ids";
 import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 import { getSettings } from "@/src/domains/settings/service";
 
+function recordingSummary(r: Recording | undefined): RecordingSummary {
+  if (!r) return { status: "none" };
+  if (isWatchable(r)) return { status: "live", liveUntil: formatIST(r.expiresAt) };
+  if (r.status === "ready") return { status: "expired" };
+  return { status: r.status };
+}
+
 export default async function ClassesPage() {
   const profile = await enforcePageRole([ROLES.ADMIN, ROLES.TEACHER]);
+  await settleRecordings();
 
   // 1. Fetch live class sessions joined with their parent batch
   // Admins see all classes; teachers only see classes for their assigned batches
@@ -64,6 +76,11 @@ export default async function ClassesPage() {
 
   // 3. Query centralized Google integration status
   const [googleConnection, settings] = await Promise.all([getConnectedClient(), getSettings()]);
+
+  // 4. Recordings for the classes shown under Past Lectures
+  const nowForRecordings = new Date();
+  const shownPast = sessions.filter((cls) => cls.status === "cancelled" || cls.status === "completed" || new Date(cls.endsAt) <= nowForRecordings).slice(0, 10);
+  const recordings = await recordingsFor(shownPast.map((cls) => cls.id));
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto">
@@ -281,7 +298,7 @@ export default async function ClassesPage() {
               }
 
               return (
-                <div className="flex flex-col gap-4 opacity-75">
+                <div className="flex flex-col gap-4">
                   {pastSessions.slice(0, 10).map((cls) => {
                     const startsAt = new Date(cls.startsAt);
                     const endsAt = new Date(cls.endsAt);
@@ -331,6 +348,16 @@ export default async function ClassesPage() {
                             </span>
                           </div>
                         </div>
+                        {!isCancelled && (
+                          <div className="mt-4 border-t border-line pt-4">
+                            <RecordingPanel
+                              sessionId={cls.id}
+                              recording={recordingSummary(recordings.get(cls.id))}
+                              driveReady={hasDriveScope(googleConnection?.scopes)}
+                              isAdmin={profile.role === "admin"}
+                            />
+                          </div>
+                        )}
                       </div>
                     );
                   })}

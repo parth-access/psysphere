@@ -4,7 +4,8 @@ import { DashboardCard } from "@/features/dashboard/ui/DashboardCard";
 import { SectionHeader } from "@/features/dashboard/ui/SectionHeader";
 import { enforcePageRole } from "@/server/authorization/requireRole";
 import { ROLES } from "@/server/authorization/roles";
-import { calendarAccount, getConnectedClient, hasMeetScope } from "@/server/integrations/google";
+import { calendarAccount, getConnectedClient, hasDriveScope, hasMeetScope } from "@/server/integrations/google";
+import { driveSpace } from "@/server/integrations/googleDrive";
 import { disconnectGoogleAction } from "./actions";
 import { getSettings } from "@/src/domains/settings/service";
 import { FREE_STORAGE_BYTES, storageUsedBytes } from "@/src/domains/settings/storageUsage";
@@ -37,6 +38,13 @@ export default async function SettingsPage({ searchParams }: PageProps) {
 
   const [googleConnection, settings, storageUsed] = await Promise.all([getConnectedClient(), getSettings(), storageUsedBytes()]);
   const storagePercent = storageUsed === null ? 0 : Math.min(100, Math.round((storageUsed / FREE_STORAGE_BYTES) * 100));
+  const drive = hasDriveScope(googleConnection?.scopes)
+    ? await driveSpace().catch((err) => {
+        console.error("[recordings] could not read Drive space:", err);
+        return null;
+      })
+    : null;
+  const drivePercent = drive?.limit ? Math.min(100, Math.round((drive.used / drive.limit) * 100)) : null;
 
   return (
     <div className="space-y-8">
@@ -114,6 +122,15 @@ export default async function SettingsPage({ searchParams }: PageProps) {
                   )}
                 </div>
               )}
+              {drive && drive.limit !== null && drivePercent !== null && (
+                <div className="mt-6 space-y-3 border-t border-line pt-5">
+                  <p className="text-sm text-ink-900"><strong className="font-semibold">{formatBytes(drive.used)}</strong> of {formatBytes(drive.limit)} used in Google Drive ({drivePercent}%)</p>
+                  <div role="progressbar" aria-label="Google Drive space used" aria-valuenow={drivePercent} aria-valuemin={0} aria-valuemax={100} className="h-2 overflow-hidden rounded-full bg-paper-deep">
+                    <div className={`h-full rounded-full ${drivePercent >= 80 ? "bg-rose-600" : "bg-forest-800"}`} style={{ width: `${drivePercent}%` }} />
+                  </div>
+                  <p className="text-[13px] text-ink-500">Class recordings, which are deleted after 24 hours. This space is shared with {googleConnection?.email}’s Gmail.</p>
+                </div>
+              )}
             </DashboardCard>
           </section>
 
@@ -138,9 +155,9 @@ export default async function SettingsPage({ searchParams }: PageProps) {
                           <CheckCircle className="w-4 h-4 text-sage-600" />
                           <span>Connected as: <strong className="font-bold">{googleConnection.email}</strong></span>
                         </div>
-                        {!hasMeetScope(googleConnection.scopes) && (
+                        {!(hasMeetScope(googleConnection.scopes) && hasDriveScope(googleConnection.scopes)) && (
                           <div className="flex flex-wrap items-center gap-3 rounded-xl border border-marigold-100 bg-marigold-100 px-3.5 py-2.5 text-xs font-medium text-gold-700">
-                            <span>Reconnect once to turn on automatic attendance from Google Meet.</span>
+                            <span>{hasMeetScope(googleConnection.scopes) ? "Reconnect once to turn on class recordings." : "Reconnect once to turn on automatic attendance from Google Meet and class recordings."}</span>
                             <a href="/api/integrations/google/connect" className="font-semibold underline underline-offset-2">Reconnect Google</a>
                           </div>
                         )}

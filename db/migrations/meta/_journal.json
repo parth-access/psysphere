@@ -113,6 +113,13 @@
       "when": 1793600552472,
       "tag": "0015_assignment_files",
       "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1793624394553,
+      "tag": "0016_class_recordings",
+      "breakpoints": true
     }
   ]
 }

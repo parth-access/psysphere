@@ -23,6 +23,14 @@ export const enrollmentStatusEnum = pgEnum("enrollment_status", [
   "dropped",
 ]);
 
+export const classRecordingStatusEnum = pgEnum("class_recording_status", [
+  "processing",
+  "ready",
+  "expired",
+  "deleted",
+  "failed",
+]);
+
 export const classSessionStatusEnum = pgEnum("class_session_status", [
   "scheduled",
   "in_progress",

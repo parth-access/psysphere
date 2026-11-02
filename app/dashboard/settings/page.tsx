@@ -7,6 +7,8 @@ import { ROLES } from "@/server/authorization/roles";
 import { calendarAccount, getConnectedClient, hasMeetScope } from "@/server/integrations/google";
 import { disconnectGoogleAction } from "./actions";
 import { getSettings } from "@/src/domains/settings/service";
+import { FREE_STORAGE_BYTES, storageUsedBytes } from "@/src/domains/settings/storageUsage";
+import { formatBytes } from "@/src/domains/assignments/limits";
 import { EMAIL_DEFAULTS } from "@/src/domains/email/constants";
 import { ContactSettingsForm, ClassDefaultsForm, NotificationsForm } from "@/features/dashboard/ui/SettingsForms";
 import { formatIST } from "@/lib/ids";
@@ -18,6 +20,7 @@ const SECTIONS = [
   { id: "contact", label: "Contact details" },
   { id: "classes", label: "Class defaults" },
   { id: "notifications", label: "Notifications" },
+  { id: "storage", label: "File storage" },
   { id: "google", label: "Google" },
 ];
 
@@ -32,13 +35,14 @@ export default async function SettingsPage({ searchParams }: PageProps) {
   const googleConnect = resolvedParams.google_connect;
   const errorMessage = resolvedParams.error_message;
 
-  const [googleConnection, settings] = await Promise.all([getConnectedClient(), getSettings()]);
+  const [googleConnection, settings, storageUsed] = await Promise.all([getConnectedClient(), getSettings(), storageUsedBytes()]);
+  const storagePercent = storageUsed === null ? 0 : Math.min(100, Math.round((storageUsed / FREE_STORAGE_BYTES) * 100));
 
   return (
     <div className="space-y-8">
       <PageHeader 
         title="Settings" 
-        description="Contact details, class defaults, notifications and Google." 
+        description="Contact details, class defaults, notifications, file storage and Google." 
       />
 
       {/* Connection Status Alerts */}
@@ -88,6 +92,28 @@ export default async function SettingsPage({ searchParams }: PageProps) {
           <section id="notifications" className="scroll-mt-6">
             <DashboardCard title="Notifications">
               <NotificationsForm settings={settings} envAlertEmail={EMAIL_DEFAULTS.ADMIN ?? null} />
+            </DashboardCard>
+          </section>
+
+          <section id="storage" className="scroll-mt-6">
+            <DashboardCard title="File storage">
+              {storageUsed === null ? (
+                <p className="text-sm text-ink-500">We couldn’t read this just now. Please check back shortly.</p>
+              ) : (
+                <div className="space-y-3">
+                  <p className="text-sm text-ink-900"><strong className="font-semibold">{formatBytes(storageUsed)}</strong> of {formatBytes(FREE_STORAGE_BYTES)} used ({storagePercent}%)</p>
+                  <div role="progressbar" aria-label="File storage used" aria-valuenow={storagePercent} aria-valuemin={0} aria-valuemax={100} className="h-2 overflow-hidden rounded-full bg-paper-deep">
+                    <div className={`h-full rounded-full ${storagePercent >= 80 ? "bg-rose-600" : "bg-forest-800"}`} style={{ width: `${storagePercent}%` }} />
+                  </div>
+                  <p className="text-[13px] text-ink-500">Assignments, study material, test images and profile photos, on the free Supabase plan.</p>
+                  {storagePercent >= 80 && (
+                    <p role="alert" className="flex items-start gap-2 rounded-xl bg-rose-100 px-4 py-3 text-sm font-medium text-rose-600">
+                      <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+                      Storage is nearly full, and uploads may stop working once it is. Delete old files or upgrade your storage soon.
+                    </p>
+                  )}
+                </div>
+              )}
             </DashboardCard>
           </section>
 

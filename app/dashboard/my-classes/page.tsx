@@ -1,6 +1,6 @@
 import { and, asc, desc, eq, gt, inArray, lte } from "drizzle-orm";
 import Link from "next/link";
-import { Video } from "lucide-react";
+import { PlayCircle, Video } from "lucide-react";
 import { db } from "@/db";
 import { classSessions } from "@/db/schema/academic/classSessions";
 import { attendance } from "@/db/schema/academic/attendance";
@@ -11,6 +11,8 @@ import { enforcePageRole } from "@/server/authorization/requireRole";
 import { ROLES } from "@/server/authorization/roles";
 import { visibleBatchIds } from "@/server/authorization/access";
 import { formatIST } from "@/lib/ids";
+import { recordingsFor, settleRecordings, type Recording } from "@/src/domains/recordings/service";
+import { isWatchable, timeLeftLabel } from "@/src/domains/recordings/limits";
 
 export const dynamic = "force-dynamic";
 
@@ -20,8 +22,22 @@ const ATT: Record<string, [string, string]> = {
   excused: ["Excused", "bg-paper-deep text-ink-700"],
 };
 
+function RecordingLink({ sessionId, recording }: { sessionId: string; recording?: Recording }) {
+  if (!recording) return null;
+  if (isWatchable(recording)) {
+    return (
+      <Link href={`/dashboard/recordings/${sessionId}`} className="inline-flex min-h-10 items-center gap-2 rounded-full border border-line bg-white px-4 text-sm font-semibold text-ink-900 hover:bg-paper">
+        <PlayCircle className="h-4 w-4" aria-hidden="true" /> Watch recording · {timeLeftLabel(recording.expiresAt!)}
+      </Link>
+    );
+  }
+  if (recording.status === "expired" || recording.status === "ready") return <span className="text-sm text-ink-500">Recording expired</span>;
+  return null;
+}
+
 export default async function MyClassesPage() {
   const me = await enforcePageRole([ROLES.STUDENT]);
+  await settleRecordings();
   const ids = await visibleBatchIds(me);
   const batchIds = ids === "all" ? [] : ids;
   const now = new Date();
@@ -52,6 +68,8 @@ export default async function MyClassesPage() {
     (await db.select().from(attendance).where(eq(attendance.studentProfileId, me.id))).map((a) => [a.sessionId, a.status])
   );
 
+  const recordings = await recordingsFor([...upcoming, ...past].map(({ s }) => s.id));
+
   return (
     <div className="space-y-6">
       <PageHeader title="My classes" description="Join live classes and see your attendance." />
@@ -71,6 +89,7 @@ export default async function MyClassesPage() {
                   <p className="font-semibold text-ink-900">{s.title}</p>
                   <p className="text-sm text-ink-500">{s.topicTitle} · {batchName} · {formatIST(s.startsAt)}</p>
                 </div>
+                <RecordingLink sessionId={s.id} recording={recordings.get(s.id)} />
                 {s.status !== "cancelled" ? (
                   <a href={s.meetingUrl} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-10 items-center gap-2 rounded-full bg-forest-800 px-4 text-sm font-semibold text-paper hover:bg-forest-900">
                     <Video className="h-4 w-4" aria-hidden="true" /> Join
@@ -92,7 +111,10 @@ export default async function MyClassesPage() {
                     <p className="font-medium text-ink-900">{s.title}</p>
                     <p className="text-sm text-ink-500">{batchName} · {formatIST(s.startsAt)}</p>
                   </div>
-                  <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${a ? a[1] : "bg-paper-deep text-ink-500"}`}>{a ? a[0] : "Not marked"}</span>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <RecordingLink sessionId={s.id} recording={recordings.get(s.id)} />
+                    <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${a ? a[1] : "bg-paper-deep text-ink-500"}`}>{a ? a[0] : "Not marked"}</span>
+                  </div>
                 </li>
               );
             })}

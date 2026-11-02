@@ -73,7 +73,12 @@ export async function getSettings(): Promise<Settings> {
   try {
     return await cachedSettings();
   } catch {
-    return readSettings();
+    try {
+      return await readSettings();
+    } catch (err) {
+      console.error("[settings] using defaults, could not read settings:", err);
+      return DEFAULT_SETTINGS;
+    }
   }
 }
 

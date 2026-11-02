@@ -18,7 +18,7 @@ const EACH_CLASS = [
   <>Press <strong>Start Recording</strong> in OBS, and <strong>Stop Recording</strong> when the class ends.</>,
   <>After class, go to <Link href="/dashboard/classes" className="font-semibold underline underline-offset-2">Classes</Link>, find it under Past Lectures, and choose <strong>Upload recording</strong>.</>,
   <>Keep the page open until the upload finishes. If the connection drops, choose the same file again and it carries on.</>,
-  <>Google Drive then processes the video. Students get an email when it’s ready, and it’s deleted 24 hours later.</>,
+  <>Google Drive then processes the video, which can take 20 minutes or longer. Students get an email when it’s ready, and it’s deleted 24 hours later.</>,
 ];
 
 function Steps({ steps }: { steps: React.ReactNode[] }) {

@@ -120,7 +120,7 @@ export function RecordingPanel({ sessionId, recording, driveReady, isAdmin }: { 
         <RefreshWhileProcessing />
         <p className="flex items-center gap-2 text-sm text-ink-900">
           <Loader2 className="h-4 w-4 animate-spin text-ink-500" aria-hidden="true" />
-          Google Drive is processing the video. You can leave this page, and the 24 hours start when it’s ready.
+          Google Drive is processing the video, which can take 20 minutes or longer. You can leave this page, and the 24 hours start when it’s ready.
         </p>
         <DeleteRecording sessionId={sessionId} />
       </div>

@@ -21,6 +21,7 @@ import type {
   EmailChangedNoticePayload,
   TeacherActivationPayload,
   WeeklyReportPayload,
+  RecordingReadyPayload,
 } from "./types";
 
 import {
@@ -38,6 +39,7 @@ import {
   getEmailChangedNoticeTemplate,
   getTeacherActivationTemplate,
   getWeeklyReportTemplate,
+  getRecordingReadyTemplate,
 } from "./templates";
 
 /* ============================================================
@@ -306,6 +308,10 @@ export class EmailService {
 
   sendWeeklyReport(to: string, p: WeeklyReportPayload, studentId?: string) {
     return this.send(to, `${p.studentName}’s week at Saarthi Classes`, getWeeklyReportTemplate(p), "weekly_report", "profile", studentId);
+  }
+
+  sendRecordingReady(to: string, p: RecordingReadyPayload, recordingId?: string) {
+    return this.send(to, `Recording ready: ${p.classTitle}`, getRecordingReadyTemplate(p), "recording_ready", "class_recording", recordingId);
   }
 
   sendTeacherActivation(to: string, p: TeacherActivationPayload, teacherId?: string): Promise<SendEmailResponse> {

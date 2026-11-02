@@ -15,6 +15,7 @@ import type {
   EmailChangedNoticePayload,
   TeacherActivationPayload,
   WeeklyReportPayload,
+  RecordingReadyPayload,
 } from "../types";
 
 /** Escape user-supplied text before putting it into email HTML. */
@@ -293,6 +294,22 @@ export function getTeacherActivationTemplate(x: TeacherActivationPayload): strin
     ${fallbackLink(x.passwordSetupUrl)}
     ${signOff}`;
   return renderBaseEmailLayout("Your teacher account | Saarthi Classes", content, `Set your password to start teaching on Saarthi Classes.`);
+}
+
+/* ------------------------------------------------------------------ */
+/* Class recording ready                                               */
+/* ------------------------------------------------------------------ */
+
+export function getRecordingReadyTemplate(x: RecordingReadyPayload): string {
+  const content = `
+    ${eyebrow("Class recording")}
+    ${h1("Your class recording is ready")}
+    ${p(`Hi ${e(firstName(x.studentName))},`)}
+    ${p(`The recording of <strong style="color:${C.ink900};">${e(x.classTitle)}</strong> (${e(x.batchName)}) is ready to watch until <strong style="color:${C.ink900};">${e(x.untilText)}</strong>. After that it's deleted.`)}
+    ${button(x.watchUrl, "Watch the recording")}
+    ${fallbackLink(x.watchUrl)}
+    ${signOff}`;
+  return renderBaseEmailLayout("Class recording ready | Saarthi Classes", content, `Watch ${x.classTitle} before ${x.untilText}.`);
 }
 
 /* ------------------------------------------------------------------ */

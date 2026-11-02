@@ -108,3 +108,11 @@ export interface WeeklyReportPayload {
   upcoming: { title: string; whenText: string }[];
   dashboardUrl: string;
 }
+
+export interface RecordingReadyPayload {
+  studentName: string;
+  classTitle: string;
+  batchName: string;
+  untilText: string;
+  watchUrl: string;
+}

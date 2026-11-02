@@ -57,9 +57,17 @@ export function hasMeetScope(scopes: string | null | undefined) {
   return (scopes ?? "").split(/\s+/).includes(MEET_SCOPE);
 }
 
+/** Only the files this app creates in the institute's Drive, which is where class recordings go. */
+export const DRIVE_SCOPE = "https://www.googleapis.com/auth/drive.file";
+
+/** True when the stored connection was made with Drive access (older connections need reconnecting once). */
+export function hasDriveScope(scopes: string | null | undefined) {
+  return (scopes ?? "").split(/\s+/).includes(DRIVE_SCOPE);
+}
+
 /**
  * Generates the Google OAuth authorization URL.
- * Uses least privilege scopes: calendar.events instead of full calendar, and read-only Meet.
+ * Uses least privilege scopes: calendar.events instead of full calendar, read-only Meet, and only the app's own Drive files.
  */
 export function getAuthorizationUrl(state: string) {
   const oauth2Client = getOAuth2Client();
@@ -70,6 +78,7 @@ export function getAuthorizationUrl(state: string) {
       "https://www.googleapis.com/auth/calendar.events",
       "https://www.googleapis.com/auth/userinfo.email",
       MEET_SCOPE,
+      DRIVE_SCOPE,
     ],
     state,
   });

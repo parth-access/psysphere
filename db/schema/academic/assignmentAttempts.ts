@@ -40,7 +40,13 @@ export const assignmentAttempts = pgTable(
 
     submissionContent: text("submission_content"),
 
+    /** A pasted link, only on answers from before file uploads existed. */
     attachmentUrl: text("attachment_url"),
+
+    /** The answer PDF, in the private assignment-files bucket. */
+    filePath: text("file_path"),
+    fileName: text("file_name"),
+    fileBytes: integer("file_bytes"),
 
     ...timestamps,
   },

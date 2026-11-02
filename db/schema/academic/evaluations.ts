@@ -3,6 +3,7 @@ import {
   uuid,
   text,
   numeric,
+  integer,
   timestamp,
   index,
   unique,
@@ -26,6 +27,11 @@ export const evaluations = pgTable(
     marksObtained: numeric("marks_obtained", { precision: 5, scale: 2 }),
 
     teacherFeedback: text("teacher_feedback"),
+
+    /** The copy the teacher checked and sent back, in the private assignment-files bucket. */
+    checkedFilePath: text("checked_file_path"),
+    checkedFileName: text("checked_file_name"),
+    checkedFileBytes: integer("checked_file_bytes"),
 
     evaluatedBy: uuid("evaluated_by")
       .references(() => profiles.id, {

@@ -7,6 +7,7 @@ import {
   integer,
   index,
   check,
+  boolean,
 } from "drizzle-orm/pg-core";
 
 import { sql } from "drizzle-orm";
@@ -27,7 +28,16 @@ export const assignments = pgTable(
 
     title: text("title").notNull(),
 
+    /** The pasted questions. Empty when the teacher only uploaded a PDF. */
     instructions: text("instructions").notNull(),
+
+    /** The uploaded question paper, in the private assignment-files bucket. */
+    questionFilePath: text("question_file_path"),
+    questionFileName: text("question_file_name"),
+    questionFileBytes: integer("question_file_bytes"),
+
+    /** Off: nothing can be submitted after the due date. */
+    allowLate: boolean("allow_late").default(true).notNull(),
 
     publishedAt: timestamp("published_at", {
       withTimezone: true,

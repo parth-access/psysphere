@@ -3,6 +3,7 @@ import { and, desc, eq, inArray, count } from "drizzle-orm";
 import { db } from "@/db";
 import { assignments } from "@/db/schema/academic/assignments";
 import { assignmentAttempts } from "@/db/schema/academic/assignmentAttempts";
+import { evaluations } from "@/db/schema/academic/evaluations";
 import { batches } from "@/db/schema/core/batches";
 import { PageHeader } from "@/features/dashboard/ui/PageHeader";
 import { DashboardCard } from "@/features/dashboard/ui/DashboardCard";
@@ -10,13 +11,10 @@ import { enforcePageRole } from "@/server/authorization/requireRole";
 import { ROLES } from "@/server/authorization/roles";
 import { visibleBatchIds } from "@/server/authorization/access";
 import { formatIST } from "@/lib/ids";
-import { createAssignmentAction } from "./actions";
-import { PendingButton } from "@/features/shared/ui/PendingButton";
+import { STATUS_STYLE, studentStatus } from "@/src/domains/assignments/status";
+import { AssignmentForm } from "@/features/assignments/ui/AssignmentForm";
 
 export const dynamic = "force-dynamic";
-
-const input = "w-full min-h-11 px-4 border border-line rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-ink-700/25 focus:border-ink-700";
-const label = "text-xs font-semibold text-ink-500 uppercase tracking-wider block mb-1";
 
 export default async function AssignmentsPage() {
   const me = await enforcePageRole([ROLES.ADMIN, ROLES.TEACHER, ROLES.STUDENT]);
@@ -34,12 +32,16 @@ export default async function AssignmentsPage() {
 
   const attemptIds = list.map((x) => x.a.id);
   const myAttempts = isStudent && attemptIds.length
-    ? new Set((await db.select({ id: assignmentAttempts.assignmentId }).from(assignmentAttempts)
-        .where(and(eq(assignmentAttempts.studentProfileId, me.id), inArray(assignmentAttempts.assignmentId, attemptIds)))).map((r) => r.id))
-    : new Set<string>();
+    ? new Map((await db.select({ id: assignmentAttempts.assignmentId, submittedAt: assignmentAttempts.submittedAt, evaluationId: evaluations.id })
+        .from(assignmentAttempts)
+        .leftJoin(evaluations, eq(evaluations.assignmentAttemptId, assignmentAttempts.id))
+        .where(and(eq(assignmentAttempts.studentProfileId, me.id), inArray(assignmentAttempts.assignmentId, attemptIds)))).map((r) => [r.id, r]))
+    : new Map<string, { submittedAt: Date | null; evaluationId: string | null }>();
   const submissionCounts = !isStudent && attemptIds.length
-    ? Object.fromEntries((await db.select({ id: assignmentAttempts.assignmentId, n: count() }).from(assignmentAttempts)
-        .where(inArray(assignmentAttempts.assignmentId, attemptIds)).groupBy(assignmentAttempts.assignmentId)).map((r) => [r.id, Number(r.n)]))
+    ? Object.fromEntries((await db.select({ id: assignmentAttempts.assignmentId, n: count(), checked: count(evaluations.id) })
+        .from(assignmentAttempts)
+        .leftJoin(evaluations, eq(evaluations.assignmentAttemptId, assignmentAttempts.id))
+        .where(inArray(assignmentAttempts.assignmentId, attemptIds)).groupBy(assignmentAttempts.assignmentId)).map((r) => [r.id, { n: Number(r.n), toCheck: Number(r.n) - Number(r.checked) }]))
     : {};
 
   const myBatches = isStudent || none ? [] : await db
@@ -51,7 +53,7 @@ export default async function AssignmentsPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="Assignments" description={isStudent ? "Your homework and tests, with marks once they’re out." : "Set work, read submissions and give marks."} />
+      <PageHeader title="Assignments" description={isStudent ? "Your homework, with marks once they’re out." : "Set work, read answers and give marks."} />
       <div className={`grid gap-8 ${isStudent ? "" : "lg:grid-cols-3"}`}>
         <div className={isStudent ? "" : "lg:col-span-2"}>
           <DashboardCard>
@@ -60,11 +62,14 @@ export default async function AssignmentsPage() {
             ) : (
               <ul className="divide-y divide-line">
                 {list.map(({ a, batchName }) => {
-                  const overdue = a.dueAt < now;
-                  const done = myAttempts.has(a.id);
+                  const mine = myAttempts.get(a.id);
+                  const status = studentStatus(a, mine, !!mine?.evaluationId, now);
+                  const counts = submissionCounts[a.id];
                   const badge = isStudent
-                    ? a.resultsPublishedAt ? ["Results out", "bg-ink-100 text-ink-700"] : done ? ["Submitted", "bg-sage-100 text-sage-600"] : overdue ? ["Missed", "bg-rose-100 text-rose-600"] : ["To do", "bg-marigold-100 text-gold-700"]
-                    : a.resultsPublishedAt ? ["Results out", "bg-ink-100 text-ink-700"] : [`${submissionCounts[a.id] ?? 0} submitted`, "bg-paper-deep text-ink-700"];
+                    ? [status, STATUS_STYLE[status]]
+                    : a.resultsPublishedAt ? ["Results out", "bg-ink-100 text-ink-700"]
+                    : counts?.toCheck ? [`${counts.toCheck} to check`, "bg-marigold-100 text-gold-700"]
+                    : [`${counts?.n ?? 0} submitted`, "bg-paper-deep text-ink-700"];
                   return (
                     <li key={a.id}>
                       <Link href={`/dashboard/assignments/${a.id}`} className="-mx-2 flex flex-wrap items-center justify-between gap-3 rounded-lg px-2 py-4 hover:bg-paper">
@@ -87,18 +92,7 @@ export default async function AssignmentsPage() {
             {myBatches.length === 0 ? (
               <p className="text-sm text-ink-500">You need a batch first.</p>
             ) : (
-              <form action={createAssignmentAction} className="space-y-4">
-                <div><label htmlFor="batchId" className={label}>Batch</label>
-                  <select id="batchId" name="batchId" required className={input}>{myBatches.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}</select></div>
-                <div><label htmlFor="title" className={label}>Title</label><input id="title" name="title" required className={input} /></div>
-                <div><label htmlFor="instructions" className={label}>Instructions</label><textarea id="instructions" name="instructions" rows={5} required className={`${input} py-3`} /></div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div><label htmlFor="dueDate" className={label}>Due date</label><input id="dueDate" type="date" name="dueDate" required className={input} /></div>
-                  <div><label htmlFor="dueTime" className={label}>Time</label><input id="dueTime" type="time" name="dueTime" defaultValue="21:00" required className={input} /></div>
-                </div>
-                <div><label htmlFor="maxMarks" className={label}>Out of (marks)</label><input id="maxMarks" type="number" name="maxMarks" min={1} defaultValue={20} required className={input} /></div>
-                <PendingButton className="w-full min-h-11 rounded-full bg-forest-800 text-sm font-semibold text-paper hover:bg-forest-900">Create and share</PendingButton>
-              </form>
+              <AssignmentForm batches={myBatches} />
             )}
           </DashboardCard>
         )}

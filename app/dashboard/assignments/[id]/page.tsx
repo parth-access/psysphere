@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { and, eq } from "drizzle-orm";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Pencil } from "lucide-react";
 import { db } from "@/db";
 import { assignments } from "@/db/schema/academic/assignments";
 import { assignmentAttempts } from "@/db/schema/academic/assignmentAttempts";
@@ -10,27 +10,49 @@ import { batches } from "@/db/schema/core/batches";
 import { enrollments } from "@/db/schema/core/enrollments";
 import { profiles } from "@/db/schema/core/profiles";
 import { DashboardCard } from "@/features/dashboard/ui/DashboardCard";
+import { AnswerForm } from "@/features/assignments/ui/AnswerForm";
+import { FileLink, type FileRef } from "@/features/assignments/ui/FileLink";
+import { MarkForm } from "@/features/assignments/ui/MarkForm";
 import { enforcePageRole } from "@/server/authorization/requireRole";
 import { ROLES } from "@/server/authorization/roles";
 import { canAccessBatch, canManageBatch } from "@/server/authorization/access";
 import { isUuid, formatIST } from "@/lib/ids";
-import { submitAssignmentAction, gradeAction, publishResultsAction } from "../actions";
+import { STATUS_STYLE, isClosed, isLate, studentStatus } from "@/src/domains/assignments/status";
+import { publishResultsAction, reopenAnswerAction } from "../actions";
 import { PendingButton } from "@/features/shared/ui/PendingButton";
 
 export const dynamic = "force-dynamic";
 
-const input = "w-full min-h-11 px-4 border border-line rounded-xl text-[15px] bg-white focus:outline-none focus:ring-2 focus:ring-ink-700/25 focus:border-ink-700";
+type Attempt = typeof assignmentAttempts.$inferSelect;
+
+const answerFile = (t: Attempt): FileRef | null => (t.filePath ? { kind: "answer", id: t.id, name: t.fileName, bytes: t.fileBytes } : null);
+const checkedFile = (t: Attempt, ev: typeof evaluations.$inferSelect | null | undefined): FileRef | null =>
+  ev?.checkedFilePath ? { kind: "checked", id: t.id, name: ev.checkedFileName, bytes: ev.checkedFileBytes } : null;
+
+/** Links pasted before uploads existed. Only ever a web address, so a bad one can't run anything when clicked. */
+function OldLink({ url }: { url: string | null }) {
+  if (!url || !/^https?:\/\//i.test(url)) return null;
+  return <a href={url} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-ink-900 underline">Open attachment</a>;
+}
+
+const FILTERS = [
+  { id: "all", label: "Everyone" },
+  { id: "tocheck", label: "To check" },
+  { id: "checked", label: "Checked" },
+  { id: "late", label: "Late" },
+  { id: "missing", label: "Not submitted" },
+] as const;
 
 export default async function AssignmentPage({
   params,
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ submitted?: string }>;
+  searchParams: Promise<{ show?: string }>;
 }) {
   const me = await enforcePageRole([ROLES.ADMIN, ROLES.TEACHER, ROLES.STUDENT]);
   const { id } = await params;
-  const { submitted } = await searchParams;
+  const { show } = await searchParams;
   if (!isUuid(id)) notFound();
 
   const [row] = await db
@@ -41,18 +63,33 @@ export default async function AssignmentPage({
   if (!row || !(await canAccessBatch(me, row.a.batchId))) notFound();
   const { a } = row;
   const max = Number(a.maxMarks);
+  const now = new Date();
+  const canManage = me.role !== "student" && (await canManageBatch(me, a.batchId));
 
   const header = (
     <>
       <Link href="/dashboard/assignments" className="inline-flex items-center gap-1 text-sm text-ink-500 hover:text-ink-900">
         <ArrowLeft className="h-4 w-4" aria-hidden="true" /> All assignments
       </Link>
-      <div>
-        <h1 className="font-serif text-[32px] text-ink-900">{a.title}</h1>
-        <p className="text-ink-500">{row.batchName} · due {formatIST(a.dueAt)} · out of {max}</p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="min-w-0">
+          <h1 className="font-serif text-[32px] text-ink-900">{a.title}</h1>
+          <p className="text-ink-500">
+            {row.batchName} · due {formatIST(a.dueAt)} · out of {max}
+            {!a.allowLate && " · no late work"}
+          </p>
+        </div>
+        {canManage && (
+          <Link href={`/dashboard/assignments/${a.id}/edit`} className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line px-4 text-sm font-semibold text-ink-900 hover:bg-paper">
+            <Pencil className="h-4 w-4" aria-hidden="true" /> Edit
+          </Link>
+        )}
       </div>
-      <DashboardCard title="Instructions">
-        <p className="whitespace-pre-line text-[15px] leading-relaxed text-ink-900">{a.instructions}</p>
+      <DashboardCard title="Questions">
+        <div className="space-y-4">
+          {a.instructions && <p className="whitespace-pre-line text-[15px] leading-relaxed text-ink-900">{a.instructions}</p>}
+          {a.questionFilePath && <FileLink file={{ kind: "question", id: a.id, name: a.questionFileName, bytes: a.questionFileBytes }} label="Question paper" preview />}
+        </div>
       </DashboardCard>
     </>
   );
@@ -65,34 +102,44 @@ export default async function AssignmentPage({
       .leftJoin(evaluations, eq(evaluations.assignmentAttemptId, assignmentAttempts.id))
       .where(and(eq(assignmentAttempts.assignmentId, a.id), eq(assignmentAttempts.studentProfileId, me.id)))
       .limit(1);
-    const closed = !!a.resultsPublishedAt;
+    const closed = isClosed(a, now);
+    const locked = !!mine?.ev && !a.resultsPublishedAt;
+    const status = studentStatus(a, mine?.attempt, !!mine?.ev, now);
+    const canAnswer = !closed && !mine?.ev;
+
     return (
       <div className="space-y-6">
         {header}
-        {submitted && <p role="status" className="rounded-xl bg-sage-100 px-4 py-3 text-sm font-medium text-sage-600">Submitted. You can edit it until results are out.</p>}
-        {closed && mine?.ev && (
+        <p><span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${STATUS_STYLE[status]}`}>{status}</span></p>
+        {a.resultsPublishedAt && mine?.ev && (
           <DashboardCard title="Your result">
             <p className="font-serif text-4xl text-ink-900">{Number(mine.ev.marksObtained)} <span className="text-xl text-ink-500">/ {max}</span></p>
             {mine.ev.teacherFeedback && <p className="mt-4 whitespace-pre-line text-[15px] text-ink-900">{mine.ev.teacherFeedback}</p>}
+            {checkedFile(mine.attempt, mine.ev) && <div className="mt-4"><FileLink file={checkedFile(mine.attempt, mine.ev)!} label="Checked copy" /></div>}
           </DashboardCard>
         )}
-        <DashboardCard title={mine ? "Your answer" : "Submit your answer"}>
-          {closed ? (
-            <p className="whitespace-pre-line text-[15px] text-ink-900">{mine?.attempt.submissionContent ?? "You didn’t submit this one."}</p>
+        {locked && (
+          <p role="status" className="rounded-xl bg-sage-100 px-4 py-3 text-sm font-medium text-sage-600">
+            Your teacher has checked this, so it can’t be changed now. Your marks will show here when results are published.
+          </p>
+        )}
+        <DashboardCard title={mine ? "Your answer" : canAnswer ? "Submit your answer" : "Your answer"}>
+          {canAnswer ? (
+            <AnswerForm
+              assignmentId={a.id}
+              savedText={mine?.attempt.submissionContent ?? ""}
+              savedFile={mine ? answerFile(mine.attempt) : null}
+              late={a.dueAt < now}
+            />
+          ) : mine ? (
+            <div className="space-y-4">
+              {mine.attempt.submissionContent && <p className="whitespace-pre-line text-[15px] text-ink-900">{mine.attempt.submissionContent}</p>}
+              {answerFile(mine.attempt) && <FileLink file={answerFile(mine.attempt)!} label="Your file" />}
+              <OldLink url={mine.attempt.attachmentUrl} />
+              {mine.attempt.submittedAt && <p className="text-sm text-ink-500">Submitted {formatIST(mine.attempt.submittedAt)}{isLate(a, mine.attempt) ? " · late" : ""}</p>}
+            </div>
           ) : (
-            <form action={submitAssignmentAction} className="space-y-4">
-              <input type="hidden" name="assignmentId" value={a.id} />
-              <label htmlFor="content" className="sr-only">Your answer</label>
-              <textarea id="content" name="content" rows={10} required defaultValue={mine?.attempt.submissionContent ?? ""} className={`${input} py-3`} />
-              <div>
-                <label htmlFor="attachmentUrl" className="mb-1 block text-sm font-semibold text-ink-900">Link to a photo or document (optional)</label>
-                <input id="attachmentUrl" name="attachmentUrl" type="url" placeholder="https://drive.google.com/…" defaultValue={mine?.attempt.attachmentUrl ?? ""} className={input} />
-              </div>
-              <PendingButton className="min-h-11 rounded-full bg-forest-800 px-6 text-sm font-semibold text-paper hover:bg-forest-900">
-                {mine ? "Update submission" : "Submit"}
-              </PendingButton>
-              {a.dueAt < new Date() && <p className="text-sm text-gold-700">This is past the due date. It will be marked as late.</p>}
-            </form>
+            <p className="text-[15px] text-ink-500">You didn’t submit this one.</p>
           )}
         </DashboardCard>
       </div>
@@ -100,7 +147,6 @@ export default async function AssignmentPage({
   }
 
   /* ---------------- Teacher / admin view ---------------- */
-  const canManage = await canManageBatch(me, a.batchId);
   const roster = await db
     .select({ id: profiles.id, name: profiles.fullName })
     .from(enrollments)
@@ -113,13 +159,35 @@ export default async function AssignmentPage({
     .leftJoin(evaluations, eq(evaluations.assignmentAttemptId, assignmentAttempts.id))
     .where(eq(assignmentAttempts.assignmentId, a.id));
   const byStudent = new Map(attempts.map((x) => [x.attempt.studentProfileId, x]));
-  const graded = attempts.filter((x) => x.ev?.marksObtained != null).length;
+
+  const rows = roster.map((st) => ({ st, x: byStudent.get(st.id) }));
+  type Row = (typeof rows)[number];
+  const matches: Record<(typeof FILTERS)[number]["id"], (r: Row) => boolean> = {
+    all: () => true,
+    tocheck: (r) => !!r.x && !r.x.ev,
+    checked: (r) => !!r.x?.ev,
+    late: (r) => isLate(a, r.x?.attempt),
+    missing: (r) => !r.x,
+  };
+  const filter = FILTERS.find((f) => f.id === show)?.id ?? "all";
+  const visible = rows.filter(matches[filter]);
 
   return (
     <div className="space-y-6">
       {header}
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-[15px] text-ink-500">{attempts.length} of {roster.length} submitted · {graded} marked</p>
+        <nav aria-label="Filter students" className="flex flex-wrap gap-2">
+          {FILTERS.map((f) => (
+            <Link
+              key={f.id}
+              href={`/dashboard/assignments/${a.id}${f.id === "all" ? "" : `?show=${f.id}`}`}
+              aria-current={filter === f.id ? "true" : undefined}
+              className={`inline-flex min-h-9 items-center rounded-full px-3.5 text-sm font-semibold ${filter === f.id ? "bg-forest-800 text-paper" : "bg-paper-deep text-ink-700 hover:text-ink-900"}`}
+            >
+              {f.label} · {rows.filter(matches[f.id]).length}
+            </Link>
+          ))}
+        </nav>
         {canManage && (
           <form action={publishResultsAction}>
             <input type="hidden" name="id" value={a.id} />
@@ -130,45 +198,46 @@ export default async function AssignmentPage({
         )}
       </div>
       <DashboardCard title="Submissions">
-        <ul className="divide-y divide-line">
-          {roster.map((st) => {
-            const x = byStudent.get(st.id);
-            return (
+        {visible.length === 0 ? (
+          <p className="text-sm text-ink-500">{roster.length === 0 ? "No students in this batch yet." : "Nobody here right now."}</p>
+        ) : (
+          <ul className="divide-y divide-line">
+            {visible.map(({ st, x }) => (
               <li key={st.id} className="space-y-3 py-5">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <p className="font-semibold text-ink-900">{st.name}</p>
                   <p className="text-sm text-ink-500">
-                    {x?.attempt.submittedAt ? `Submitted ${formatIST(x.attempt.submittedAt)}${x.attempt.submittedAt > a.dueAt ? " · late" : ""}` : "Not submitted"}
+                    {x?.attempt.submittedAt ? `Submitted ${formatIST(x.attempt.submittedAt)}${isLate(a, x.attempt) ? " · late" : ""}` : "Not submitted"}
                   </p>
                 </div>
                 {x && (
                   <>
-                    <p className="whitespace-pre-line rounded-xl bg-paper p-4 text-[15px] text-ink-900">{x.attempt.submissionContent}</p>
-                    {x.attempt.attachmentUrl && (
-                      <a href={x.attempt.attachmentUrl} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-ink-900 underline">Open attachment</a>
-                    )}
+                    {x.attempt.submissionContent && <p className="whitespace-pre-line rounded-xl bg-paper p-4 text-[15px] text-ink-900">{x.attempt.submissionContent}</p>}
+                    {answerFile(x.attempt) && <FileLink file={answerFile(x.attempt)!} label="Answer" preview />}
+                    <OldLink url={x.attempt.attachmentUrl} />
                     {canManage && (
-                      <form action={gradeAction} className="flex flex-wrap items-end gap-3">
+                      <MarkForm
+                        attemptId={x.attempt.id}
+                        max={max}
+                        marks={x.ev?.marksObtained != null ? Number(x.ev.marksObtained) : null}
+                        feedback={x.ev?.teacherFeedback ?? null}
+                        checkedFile={checkedFile(x.attempt, x.ev)}
+                      />
+                    )}
+                    {canManage && x.ev && !a.resultsPublishedAt && (
+                      <form action={reopenAnswerAction}>
                         <input type="hidden" name="attemptId" value={x.attempt.id} />
-                        <div>
-                          <label htmlFor={`m-${x.attempt.id}`} className="mb-1 block text-xs font-semibold text-ink-500">Marks / {max}</label>
-                          <input id={`m-${x.attempt.id}`} name="marks" type="number" step="0.5" min={0} max={max} required defaultValue={x.ev?.marksObtained ? Number(x.ev.marksObtained) : undefined} className={`${input} w-28`} />
-                        </div>
-                        <div className="min-w-60 flex-1">
-                          <label htmlFor={`f-${x.attempt.id}`} className="mb-1 block text-xs font-semibold text-ink-500">Feedback</label>
-                          <input id={`f-${x.attempt.id}`} name="feedback" defaultValue={x.ev?.teacherFeedback ?? ""} className={input} />
-                        </div>
-                        <PendingButton className="min-h-11 rounded-full bg-forest-800 px-5 text-sm font-semibold text-paper hover:bg-forest-900">
-                          {x.ev ? "Update" : "Save marks"}
+                        <PendingButton className="text-sm font-semibold text-ink-500 underline underline-offset-2 hover:text-ink-900">
+                          Clear marks and let them change their answer
                         </PendingButton>
                       </form>
                     )}
                   </>
                 )}
               </li>
-            );
-          })}
-        </ul>
+            ))}
+          </ul>
+        )}
       </DashboardCard>
     </div>
   );

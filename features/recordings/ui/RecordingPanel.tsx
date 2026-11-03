@@ -8,6 +8,7 @@ import { deleteRecordingAction } from "@/app/dashboard/recordings/actions";
 import { PendingButton } from "@/features/shared/ui/PendingButton";
 import { formatBytes } from "@/src/domains/assignments/limits";
 import { MAX_RECORDING_BYTES, VIDEO_EXTENSIONS } from "@/src/domains/recordings/limits";
+import { UploadBar } from "@/features/shared/ui/UploadBar";
 import { uploadRecording, type Progress } from "../lib/upload";
 
 export type RecordingSummary = { status: "none" | "processing" | "live" | "expired" | "deleted" | "failed"; liveUntil?: string };
@@ -69,9 +70,7 @@ function Uploader({ sessionId, note }: { sessionId: string; note?: string }) {
           <span>Uploading: {percent}% of {formatBytes(progress.total)}. Keep this page open.</span>
           <button type="button" onClick={() => stop.current?.abort()} className={`${textButton} text-ink-700`}>Pause</button>
         </div>
-        <div role="progressbar" aria-label="Upload progress" aria-valuenow={percent} aria-valuemin={0} aria-valuemax={100} className="h-2 overflow-hidden rounded-full bg-paper-deep">
-          <div className="h-full rounded-full bg-forest-800" style={{ width: `${percent}%` }} />
-        </div>
+        <UploadBar percent={percent} />
       </div>
     );
   }

@@ -4,7 +4,7 @@ import { useActionState, useEffect, useRef, useState } from "react";
 import { submitAnswerAction, type FormState } from "@/app/dashboard/assignments/actions";
 import { MAX_ANSWER_BYTES, formatBytes } from "@/src/domains/assignments/limits";
 import { FileLink, type FileRef } from "./FileLink";
-import { FilePicker, RemoveFileToggle, useFileSend } from "./FilePicker";
+import { FileProgress, FilePicker, RemoveFileToggle, useFileSend } from "./FilePicker";
 import { rethrowNavigation } from "../lib/upload";
 
 const box = "w-full min-h-11 px-4 py-3 border border-line rounded-xl text-[15px] bg-white focus:outline-none focus:ring-2 focus:ring-ink-700/25 focus:border-ink-700";
@@ -92,6 +92,7 @@ export function AnswerForm({
           <RemoveFileToggle removing={removing} onChange={setRemoving} label="Remove this file" />
         )}
         <FilePicker picked={file.picked} onPick={file.setPicked} disabled={pending} maxLabel={formatBytes(MAX_ANSWER_BYTES)} />
+        <FileProgress file={file} />
       </div>
       {late && <p className="text-sm font-medium text-gold-700">This is past the due date, so it will be marked as late.</p>}
       <div className="flex flex-wrap items-center gap-4">

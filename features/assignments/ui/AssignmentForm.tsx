@@ -33,12 +33,12 @@ export function AssignmentForm({ batches, existing }: { batches: { id: string; n
       file.setStep("Saving…");
       const result = await (existing ? updateAssignmentAction : createAssignmentAction)(prev, formData);
       if (result.fileRejected) file.forgetUpload();
+      file.setStep(null);
       return result;
     } catch (err) {
       rethrowNavigation(err);
-      return { error: err instanceof Error ? err.message : "Something went wrong. Please try again.", values: typedValues };
-    } finally {
       file.setStep(null);
+      return { error: err instanceof Error ? err.message : "Something went wrong. Please try again.", values: typedValues };
     }
   }, {});
 

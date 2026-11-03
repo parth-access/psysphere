@@ -13,6 +13,7 @@ import {
   type ProfileState,
 } from "@/app/dashboard/profile/actions";
 import { Avatar } from "@/features/shared/ui/Avatar";
+import { UploadBar } from "@/features/shared/ui/UploadBar";
 import { PendingButton } from "@/features/shared/ui/PendingButton";
 
 const input = "w-full min-h-11 px-4 border border-line rounded-xl text-[15px] bg-white focus:outline-none focus:ring-2 focus:ring-ink-700/25 focus:border-ink-700";
@@ -123,6 +124,7 @@ export function PhotoForm({ id, name, photo }: { id: string; name: string; photo
             </button>
           )}
         </div>
+        {pending && preview && <UploadBar label="Uploading your photo…" />}
         <p className="text-[13px] text-ink-500">{pending ? "Saving your photo…" : "A clear photo of your face works best. Teachers and classmates see it."}</p>
         <Msg s={state} />
       </div>

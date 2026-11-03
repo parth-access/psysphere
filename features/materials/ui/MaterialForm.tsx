@@ -23,6 +23,7 @@ export function MaterialForm({ batches, canShareWithAll }: { batches: { id: stri
     const values = { title: String(formData.get("title") ?? ""), description: String(formData.get("description") ?? ""), batchId: String(formData.get("batchId") ?? "") };
     if (!file) return { error: "Choose a file.", values };
     if (file.size > MAX_MATERIAL_BYTES) return { error: "Files must be under 20 MB.", values };
+    let saved = false;
     try {
       const ticket = await prepareMaterialUploadAction({ batchId: values.batchId, fileName: file.name, type: file.type, bytes: file.size });
       if ("error" in ticket) return { error: ticket.error, values };
@@ -37,16 +38,20 @@ export function MaterialForm({ batches, canShareWithAll }: { batches: { id: stri
       formData.set("filePath", ticket.path);
       return await saveMaterialAction(prev, formData);
     } catch (err) {
+      saved = true;
       rethrowNavigation(err);
+      saved = false;
       return { error: "Something went wrong. Please try again.", values };
     } finally {
-      setStep(null);
+      // After a save the page is still changing, so the bar keeps saying "Saving…" until it has.
+      if (saved) setFile(null);
+      else setStep(null);
       setPercent(null);
     }
   }, {});
 
   return (
-    <form action={action} className="space-y-4">
+    <form action={action} onSubmit={() => setStep(null)} className="space-y-4">
       {state.error && <p role="alert" className="rounded-xl bg-rose-100 px-4 py-3 text-sm font-medium text-rose-600">{state.error}</p>}
       <div>
         <label htmlFor="title" className={label}>Title</label>

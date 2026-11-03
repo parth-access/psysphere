@@ -2,8 +2,6 @@ import { createAdminClient } from "../auth/server";
 import { MATERIALS_BUCKET } from "./bucket";
 import { MATERIAL_TYPES, MAX_MATERIAL_BYTES } from "./limits";
 
-export { MAX_MATERIAL_BYTES };
-
 let bucketChecked = false;
 
 /** Creates the private bucket on first use. */
@@ -16,15 +14,6 @@ async function ensureBucket() {
     if (error && !/already exists/i.test(error.message)) throw new Error(`Could not create storage bucket: ${error.message}`);
   }
   bucketChecked = true;
-}
-
-export async function uploadMaterialFile(path: string, file: File) {
-  await ensureBucket();
-  const admin = createAdminClient();
-  const { error } = await admin.storage
-    .from(MATERIALS_BUCKET)
-    .upload(path, Buffer.from(await file.arrayBuffer()), { contentType: file.type || "application/octet-stream", upsert: false });
-  if (error) throw new Error(`Upload failed: ${error.message}`);
 }
 
 /** A one-time ticket that lets the browser send the file straight to storage (Vercel refuses request bodies over 4.5 MB). */

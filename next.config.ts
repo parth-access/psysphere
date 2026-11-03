@@ -14,7 +14,7 @@ const nextConfig: NextConfig = {
   },
   transpilePackages: ['motion'],
   experimental: {
-    // Study material uploads go through a server action
+    // Profile photos and test images go through server actions
     serverActions: { bodySizeLimit: '25mb' },
   },
   async headers() {

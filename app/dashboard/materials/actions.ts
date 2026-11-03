@@ -10,10 +10,8 @@ import { studyMaterials } from "@/db/schema/academic/studyMaterials";
 import { requireRole } from "@/server/authorization/requireRole";
 import { canManageBatch } from "@/server/authorization/access";
 import { blockedFor, hit, waitText } from "@/server/security/rateLimit";
-import { createMaterialUploadTicket, deleteMaterialFile, readStoredMaterial, uploadMaterialFile, MAX_MATERIAL_BYTES } from "@/src/domains/materials/storage";
-import { MATERIAL_TYPES, materialTypeOf } from "@/src/domains/materials/limits";
-
-const ALLOWED = /^(application\/pdf|image\/(png|jpeg|webp)|application\/vnd\.openxmlformats-officedocument\.(wordprocessingml\.document|presentationml\.presentation|spreadsheetml\.sheet)|application\/msword|application\/vnd\.ms-powerpoint|text\/plain)$/;
+import { createMaterialUploadTicket, deleteMaterialFile, readStoredMaterial } from "@/src/domains/materials/storage";
+import { MATERIAL_TYPES, MAX_MATERIAL_BYTES, materialTypeOf } from "@/src/domains/materials/limits";
 
 const schema = z.object({
   title: z.string().trim().min(2).max(150),
@@ -93,36 +91,6 @@ export async function saveMaterialAction(_prev: MaterialFormState, formData: For
     fileName: match[1],
     mimeType: stored.type,
     sizeBytes: stored.bytes,
-    uploadedBy: me.id,
-  });
-  revalidatePath("/dashboard/materials");
-  redirect("/dashboard/materials?uploaded=1");
-}
-
-export async function uploadMaterialAction(formData: FormData) {
-  const me = await requireRole(["admin", "teacher"]);
-  const v = schema.parse({ title: formData.get("title"), description: formData.get("description"), batchId: formData.get("batchId") });
-  const file = formData.get("file");
-  if (!(file instanceof File) || file.size === 0) redirect("/dashboard/materials?error=Choose+a+file");
-  if (file.size > MAX_MATERIAL_BYTES) redirect("/dashboard/materials?error=Files+must+be+under+20+MB");
-  if (!ALLOWED.test(file.type)) redirect("/dashboard/materials?error=Upload+a+PDF,+image,+Word,+PowerPoint,+Excel+or+text+file");
-
-  const batchId = v.batchId === "all" ? null : v.batchId;
-  if (batchId ? !(await canManageBatch(me, batchId)) : me.role !== "admin") {
-    redirect("/dashboard/materials?error=You+can+only+share+with+your+own+batches");
-  }
-
-  const safeName = file.name.replace(/[^\w.\- ]+/g, "_").slice(-120);
-  const path = `${batchId ?? "all"}/${crypto.randomUUID()}-${safeName}`;
-  await uploadMaterialFile(path, file);
-  await db.insert(studyMaterials).values({
-    batchId,
-    title: v.title,
-    description: v.description,
-    storagePath: path,
-    fileName: safeName,
-    mimeType: file.type,
-    sizeBytes: file.size,
     uploadedBy: me.id,
   });
   revalidatePath("/dashboard/materials");

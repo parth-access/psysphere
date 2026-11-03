@@ -14,6 +14,7 @@ const missing = new Proxy({} as PostgresJsDatabase<typeof schema>, {
 });
 
 export const db = connectionString
-  // Disable prefetch as it is not supported for "Transaction" pool mode
-  ? drizzle(postgres(connectionString, { prepare: false }), { schema })
+  // Disable prefetch as it is not supported for "Transaction" pool mode.
+  // A paused serverless function can wake up holding dead connections, so they're closed when idle and checked sooner.
+  ? drizzle(postgres(connectionString, { prepare: false, idle_timeout: 20, connect_timeout: 10, keep_alive: 10 }), { schema })
   : missing;

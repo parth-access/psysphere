@@ -71,7 +71,7 @@ export function AssignmentForm({ batches, existing }: { batches: { id: string; n
           <RemoveFileToggle removing={removing} onChange={setRemoving} label="Remove this PDF" />
         )}
         <FilePicker picked={file.picked} onPick={file.setPicked} disabled={pending} allowPhotos={false} maxLabel={formatBytes(MAX_QUESTION_BYTES)} />
-        <FileProgress file={file} />
+        <FileProgress file={file} pending={pending} />
       </div>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
         <div>

@@ -92,7 +92,7 @@ export function AnswerForm({
           <RemoveFileToggle removing={removing} onChange={setRemoving} label="Remove this file" />
         )}
         <FilePicker picked={file.picked} onPick={file.setPicked} disabled={pending} maxLabel={formatBytes(MAX_ANSWER_BYTES)} />
-        <FileProgress file={file} />
+        <FileProgress file={file} pending={pending} />
       </div>
       {late && <p className="text-sm font-medium text-gold-700">This is past the due date, so it will be marked as late.</p>}
       <div className="flex flex-wrap items-center gap-4">

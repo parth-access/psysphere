@@ -52,9 +52,9 @@ export function useFileSend(role: FileRole) {
 }
 
 /** Only shows while a picked file is on its way, so saving a form without a file doesn't look like an upload. */
-export function FileProgress({ file }: { file: Pick<ReturnType<typeof useFileSend>, "picked" | "step" | "percent"> }) {
-  if (!file.picked || !file.step) return null;
-  return <UploadBar label={file.step} percent={file.percent} />;
+export function FileProgress({ file, pending }: { file: Pick<ReturnType<typeof useFileSend>, "picked" | "step" | "percent">; pending: boolean }) {
+  if (!file.picked || !pending) return null;
+  return <UploadBar label={file.step ?? "Getting your file ready…"} percent={file.percent} />;
 }
 
 /** A hidden field, not a checkbox: React resets checkboxes after a failed save, which would undo the choice without showing it. */

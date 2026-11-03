@@ -67,7 +67,7 @@ export function MarkForm({
             <RemoveFileToggle removing={removing} onChange={setRemoving} label="Remove this copy" />
           )}
           <FilePicker picked={file.picked} onPick={file.setPicked} disabled={pending} maxLabel={formatBytes(MAX_ANSWER_BYTES)} />
-          <FileProgress file={file} />
+          <FileProgress file={file} pending={pending} />
         </div>
       </details>
       <div className="flex flex-wrap items-center gap-4">

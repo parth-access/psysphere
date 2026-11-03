@@ -4,7 +4,7 @@ import { useActionState, useState } from "react";
 import { saveMarksAction, type FormState } from "@/app/dashboard/assignments/actions";
 import { MAX_ANSWER_BYTES, formatBytes } from "@/src/domains/assignments/limits";
 import { FileLink, type FileRef } from "./FileLink";
-import { FilePicker, RemoveFileToggle, useFileSend } from "./FilePicker";
+import { FileProgress, FilePicker, RemoveFileToggle, useFileSend } from "./FilePicker";
 import { rethrowNavigation } from "../lib/upload";
 
 const input = "w-full min-h-11 px-4 border border-line rounded-xl text-[15px] bg-white focus:outline-none focus:ring-2 focus:ring-ink-700/25 focus:border-ink-700";
@@ -67,6 +67,7 @@ export function MarkForm({
             <RemoveFileToggle removing={removing} onChange={setRemoving} label="Remove this copy" />
           )}
           <FilePicker picked={file.picked} onPick={file.setPicked} disabled={pending} maxLabel={formatBytes(MAX_ANSWER_BYTES)} />
+          <FileProgress file={file} />
         </div>
       </details>
       <div className="flex flex-wrap items-center gap-4">

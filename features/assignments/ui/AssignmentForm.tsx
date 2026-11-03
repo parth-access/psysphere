@@ -4,7 +4,7 @@ import { useActionState, useState } from "react";
 import { createAssignmentAction, updateAssignmentAction, type FormState } from "@/app/dashboard/assignments/actions";
 import { MAX_QUESTION_BYTES, formatBytes } from "@/src/domains/assignments/limits";
 import { FileLink, type FileRef } from "./FileLink";
-import { FilePicker, RemoveFileToggle, useFileSend } from "./FilePicker";
+import { FileProgress, FilePicker, RemoveFileToggle, useFileSend } from "./FilePicker";
 import { rethrowNavigation } from "../lib/upload";
 
 const input = "w-full min-h-11 px-4 border border-line rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-ink-700/25 focus:border-ink-700";
@@ -71,6 +71,7 @@ export function AssignmentForm({ batches, existing }: { batches: { id: string; n
           <RemoveFileToggle removing={removing} onChange={setRemoving} label="Remove this PDF" />
         )}
         <FilePicker picked={file.picked} onPick={file.setPicked} disabled={pending} allowPhotos={false} maxLabel={formatBytes(MAX_QUESTION_BYTES)} />
+        <FileProgress file={file} />
       </div>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
         <div>

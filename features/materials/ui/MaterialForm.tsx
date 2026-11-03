@@ -24,7 +24,6 @@ export function MaterialForm({ batches, canShareWithAll }: { batches: { id: stri
     if (!file) return { error: "Choose a file.", values };
     if (file.size > MAX_MATERIAL_BYTES) return { error: "Files must be under 20 MB.", values };
     try {
-      setStep("Uploading…");
       const ticket = await prepareMaterialUploadAction({ batchId: values.batchId, fileName: file.name, type: file.type, bytes: file.size });
       if ("error" in ticket) return { error: ticket.error, values };
       setPercent(0);
@@ -77,10 +76,10 @@ export function MaterialForm({ batches, canShareWithAll }: { batches: { id: stri
         />
         {file && state.error && <p className="mt-2 text-[13px] text-ink-500">Still selected: {file.name} · {formatBytes(file.size)}</p>}
       </div>
-      {step && <UploadBar label={step} percent={percent} />}
+      {pending && <UploadBar label={step ?? "Uploading…"} percent={percent} />}
       <button type="submit" disabled={pending} className="inline-flex w-full min-h-11 items-center justify-center gap-2 rounded-full bg-forest-800 text-sm font-semibold text-paper hover:bg-forest-900 disabled:opacity-60">
         {pending && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}
-        {step ?? "Upload"}
+        {pending ? step ?? "Uploading…" : "Upload"}
       </button>
     </form>
   );

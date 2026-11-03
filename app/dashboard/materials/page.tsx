@@ -53,7 +53,7 @@ export default async function MaterialsPage({ searchParams }: { searchParams: Pr
                 {files.map(({ m, batchName }) => (
                   <li key={m.id} className="flex flex-wrap items-center gap-4 py-4">
                     <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-ink-100 text-ink-900"><FileText className="h-5 w-5" aria-hidden="true" /></span>
-                    <div className="min-w-0 flex-1">
+                    <div className="min-w-0 flex-1 basis-48">
                       <p className="font-semibold text-ink-900">{m.title}</p>
                       <p className="text-sm text-ink-500">{batchName ?? "All batches"} · {size(m.sizeBytes)} · {formatIST(m.createdAt, { dateStyle: "medium" })}</p>
                       {m.description && <p className="text-sm text-ink-500">{m.description}</p>}

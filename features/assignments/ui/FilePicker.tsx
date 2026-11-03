@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowDown, ArrowUp, Camera, FileText, X } from "lucide-react";
 import { MAX_PHOTOS, formatBytes } from "@/src/domains/assignments/limits";
 import type { UploadRequest } from "@/app/dashboard/assignments/actions";
+import { UploadBar } from "@/features/shared/ui/UploadBar";
 import type { FileRole, Picked } from "../lib/compress";
 import { sendFile, type SentFile } from "../lib/upload";
 
@@ -17,6 +18,7 @@ const iconButton = "inline-flex h-9 w-9 items-center justify-center rounded-lg t
 export function useFileSend(role: FileRole) {
   const [picked, setPicked] = useState<Picked | null>(null);
   const [step, setStep] = useState<string | null>(null);
+  const [percent, setPercent] = useState<number | null>(null);
   const [summary, setSummary] = useState<string | null>(null);
   const done = useRef<{ picked: Picked; target: string; file: SentFile } | null>(null);
 
@@ -25,7 +27,11 @@ export function useFileSend(role: FileRole) {
     if (!picked) return;
     const key = JSON.stringify(target);
     if (done.current?.picked !== picked || done.current.target !== key) {
-      done.current = { picked, target: key, file: await sendFile(picked, role, target, setStep) };
+      try {
+        done.current = { picked, target: key, file: await sendFile(picked, role, target, setStep, setPercent) };
+      } finally {
+        setPercent(null);
+      }
     }
     const { file } = done.current;
     formData.set("filePath", file.path);
@@ -42,7 +48,13 @@ export function useFileSend(role: FileRole) {
     forgetUpload();
   }
 
-  return { picked, setPicked, step, setStep, summary, send, clear, forgetUpload };
+  return { picked, setPicked, step, setStep, percent, summary, send, clear, forgetUpload };
+}
+
+/** Only shows while a picked file is on its way, so saving a form without a file doesn't look like an upload. */
+export function FileProgress({ file }: { file: Pick<ReturnType<typeof useFileSend>, "picked" | "step" | "percent"> }) {
+  if (!file.picked || !file.step) return null;
+  return <UploadBar label={file.step} percent={file.percent} />;
 }
 
 /** A hidden field, not a checkbox: React resets checkboxes after a failed save, which would undo the choice without showing it. */

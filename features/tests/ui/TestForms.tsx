@@ -4,6 +4,7 @@ import { startTransition, useActionState, useEffect, useRef, useState, type Form
 import { AlertCircle, CheckCircle2, ImagePlus, Loader2 } from "lucide-react";
 import type { FormState } from "@/app/dashboard/tests/actions";
 import { BULK_FORMAT_EXAMPLE } from "@/src/domains/tests/logic";
+import { UploadBar } from "@/features/shared/ui/UploadBar";
 
 export const input =
   "w-full min-h-11 px-4 border border-line rounded-xl text-sm bg-white text-ink-900 focus:outline-none focus:ring-2 focus:ring-forest-800/25 focus:border-forest-800 disabled:bg-paper disabled:text-ink-500";
@@ -194,6 +195,7 @@ export function QuestionForm({
 }) {
   const [state, onSubmit, pending] = useFormAction(action);
   const [count, setCount] = useState(Math.max(4, defaults.options.filter(Boolean).length));
+  const [sendingImage, setSendingImage] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
   const editing = !!defaults.id;
 
@@ -203,8 +205,14 @@ export function QuestionForm({
     else formRef.current?.reset();
   }, [state, editing, onDone]);
 
+  const submit = (e: FormEvent<HTMLFormElement>) => {
+    const image = new FormData(e.currentTarget).get("image");
+    setSendingImage(image instanceof File && image.size > 0);
+    onSubmit(e);
+  };
+
   return (
-    <form ref={formRef} onSubmit={onSubmit} className="space-y-4">
+    <form ref={formRef} onSubmit={submit} className="space-y-4">
       <input type="hidden" name="testId" value={testId} />
       {defaults.id && <input type="hidden" name="questionId" value={defaults.id} />}
       <div>
@@ -263,6 +271,7 @@ export function QuestionForm({
         <p className="mt-1 text-xs text-ink-500">PNG, JPG, WebP or GIF, up to 3 MB.</p>
       </div>
 
+      {pending && sendingImage && <UploadBar label="Uploading the image…" />}
       <Status state={state} />
       <div className="flex flex-wrap gap-2">
         <Submit pending={pending}>{editing ? "Save question" : "Add question"}</Submit>

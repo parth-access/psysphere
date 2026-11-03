@@ -4,7 +4,8 @@ import { useActionState, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { prepareMaterialUploadAction, saveMaterialAction, type MaterialFormState } from "@/app/dashboard/materials/actions";
 import { rethrowNavigation } from "@/features/assignments/lib/upload";
-import { createClient } from "@/src/domains/auth/client";
+import { sendToStorage } from "@/features/shared/lib/sendToStorage";
+import { UploadBar } from "@/features/shared/ui/UploadBar";
 import { MATERIALS_BUCKET } from "@/src/domains/materials/bucket";
 import { MATERIAL_ACCEPT, MAX_MATERIAL_BYTES } from "@/src/domains/materials/limits";
 import { formatBytes } from "@/src/domains/assignments/limits";
@@ -16,6 +17,7 @@ const label = "text-xs font-semibold text-ink-500 uppercase tracking-wider block
 export function MaterialForm({ batches, canShareWithAll }: { batches: { id: string; name: string }[]; canShareWithAll: boolean }) {
   const [file, setFile] = useState<File | null>(null);
   const [step, setStep] = useState<string | null>(null);
+  const [percent, setPercent] = useState<number | null>(null);
 
   const [state, action, pending] = useActionState<MaterialFormState, FormData>(async (prev, formData) => {
     const values = { title: String(formData.get("title") ?? ""), description: String(formData.get("description") ?? ""), batchId: String(formData.get("batchId") ?? "") };
@@ -25,10 +27,13 @@ export function MaterialForm({ batches, canShareWithAll }: { batches: { id: stri
       setStep("Uploading…");
       const ticket = await prepareMaterialUploadAction({ batchId: values.batchId, fileName: file.name, type: file.type, bytes: file.size });
       if ("error" in ticket) return { error: ticket.error, values };
-      const { error } = await createClient()
-        .storage.from(MATERIALS_BUCKET)
-        .uploadToSignedUrl(ticket.path, ticket.token, await file.arrayBuffer(), { contentType: ticket.type });
-      if (error) return { error: "The upload didn't go through. Please check your connection and try again.", values };
+      setPercent(0);
+      try {
+        await sendToStorage({ bucket: MATERIALS_BUCKET, path: ticket.path, token: ticket.token, file, type: ticket.type, onPercent: setPercent });
+      } catch {
+        return { error: "The upload didn't go through. Please check your connection and try again.", values };
+      }
+      setPercent(null);
       setStep("Saving…");
       formData.set("filePath", ticket.path);
       return await saveMaterialAction(prev, formData);
@@ -37,6 +42,7 @@ export function MaterialForm({ batches, canShareWithAll }: { batches: { id: stri
       return { error: "Something went wrong. Please try again.", values };
     } finally {
       setStep(null);
+      setPercent(null);
     }
   }, {});
 
@@ -71,6 +77,7 @@ export function MaterialForm({ batches, canShareWithAll }: { batches: { id: stri
         />
         {file && state.error && <p className="mt-2 text-[13px] text-ink-500">Still selected: {file.name} · {formatBytes(file.size)}</p>}
       </div>
+      {step && <UploadBar label={step} percent={percent} />}
       <button type="submit" disabled={pending} className="inline-flex w-full min-h-11 items-center justify-center gap-2 rounded-full bg-forest-800 text-sm font-semibold text-paper hover:bg-forest-900 disabled:opacity-60">
         {pending && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}
         {step ?? "Upload"}

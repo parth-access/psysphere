@@ -10,6 +10,7 @@ import { studyMaterials } from "@/db/schema/academic/studyMaterials";
 import { requireRole } from "@/server/authorization/requireRole";
 import { canManageBatch } from "@/server/authorization/access";
 import { blockedFor, hit, waitText } from "@/server/security/rateLimit";
+import { stepTimer } from "@/server/stepTimer";
 import { createMaterialUploadTicket, deleteMaterialFile, readStoredMaterial } from "@/src/domains/materials/storage";
 import { MATERIAL_TYPES, MAX_MATERIAL_BYTES, materialTypeOf } from "@/src/domains/materials/limits";
 
@@ -39,7 +40,9 @@ const uploadRequest = z.object({
 
 /** Checks the person may share here, and only then hands out a ticket for a path the server chose. */
 export async function prepareMaterialUploadAction(request: z.infer<typeof uploadRequest>): Promise<{ path: string; token: string; type: string } | { error: string }> {
+  const step = stepTimer("material-prepare");
   const me = await requireRole(["admin", "teacher"]);
+  step("login check");
   const parsed = uploadRequest.safeParse(request);
   if (!parsed.success) return { error: "Choose a file." };
   const { fileName, bytes } = parsed.data;
@@ -54,15 +57,19 @@ export async function prepareMaterialUploadAction(request: z.infer<typeof upload
   const wait = await blockedFor(limit);
   if (wait > 0) return { error: `That's a lot of uploads. Please try again in ${waitText(wait)}.` };
   await hit(limit);
+  step("permission and rate limit");
 
   const safeName = fileName.replace(/[^\w.\- ]+/g, "_").slice(-120);
   const ticket = await createMaterialUploadTicket(`${folderFor(batchId)}/${crypto.randomUUID()}-${safeName}`);
+  step("upload ticket");
   return { ...ticket, type };
 }
 
 /** Saves a file the browser has already uploaded. If anything's wrong with it, it's removed, and the form sends it again on a retry. */
 export async function saveMaterialAction(_prev: MaterialFormState, formData: FormData): Promise<MaterialFormState> {
+  const step = stepTimer("material-save");
   const me = await requireRole(["admin", "teacher"]);
+  step("login check");
   const values = { title: String(formData.get("title") ?? ""), description: String(formData.get("description") ?? ""), batchId: String(formData.get("batchId") ?? "") };
   const parsed = schema.safeParse(values);
   const path = String(formData.get("filePath") ?? "");
@@ -75,8 +82,10 @@ export async function saveMaterialAction(_prev: MaterialFormState, formData: For
   const folder = folderFor(batchId);
   const match = path.startsWith(`${folder}/`) ? path.slice(folder.length + 1).match(/^[0-9a-f-]{36}-([\w.\- ]+)$/) : null;
   if (!match) return { error: "We couldn't find your upload. Please try again.", values };
+  step("permission");
 
   const stored = await readStoredMaterial(path);
+  step("read stored file");
   const problem = !stored ? "We couldn't find your upload. Please try again." : !stored.bytes || stored.bytes > MAX_MATERIAL_BYTES ? TOO_BIG : !MATERIAL_TYPES.includes(stored.type) ? WRONG_TYPE : null;
   if (problem || !stored) {
     await deleteMaterialFile(path);
@@ -93,6 +102,7 @@ export async function saveMaterialAction(_prev: MaterialFormState, formData: For
     sizeBytes: stored.bytes,
     uploadedBy: me.id,
   });
+  step("save record");
   revalidatePath("/dashboard/materials");
   redirect("/dashboard/materials?uploaded=1");
 }

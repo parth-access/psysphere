@@ -1,5 +1,5 @@
 import { createClient } from "@/src/domains/auth/server";
-import { db } from "../db";
+import { db } from "@/db";
 import { profiles } from "../../db/schema";
 import { eq } from "drizzle-orm";
 import { cache } from "react";
